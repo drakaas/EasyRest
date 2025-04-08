@@ -119,24 +119,49 @@ def setup_schema(db):
     db.orders.create_index("status")
     
     print("Schema setup completed successfully!")
+from bson import ObjectId
+from datetime import datetime
+
+def parse_date(value):
+    if isinstance(value, str):
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return value
 
 def import_data(db):
     """Import data from JSON files"""
     try:
-        # Import product categories
+        # --- Import users ---
+        user_file = os.path.join(DATA_DIR, "users.json")
+        if os.path.exists(user_file):
+            with open(user_file, "r") as f:
+                users = json.load(f)
+                for user in users:
+                    if "_id" in user:
+                        user["_id"] = ObjectId(user["_id"])
+                    if "createdAt" in user:
+                        user["createdAt"] = parse_date(user["createdAt"])
+                    if "updatedAt" in user:
+                        user["updatedAt"] = parse_date(user["updatedAt"])
+                    if "p" in user:
+                        del user["p"]  # remove plaintext password if present
+                if users:
+                    db.users.insert_many(users)
+                    print(f"Imported {len(users)} users")
+
+        # --- Import product categories ---
         with open(os.path.join(DATA_DIR, "productCategories.json"), "r") as f:
             categories = json.load(f)
             if categories:
                 db.productCategories.insert_many(categories)
                 print(f"Imported {len(categories)} product categories")
-        
-        # Import products
+
+        # --- Import products ---
         with open(os.path.join(DATA_DIR, "products.json"), "r") as f:
             products = json.load(f)
             if products:
                 db.products.insert_many(products)
                 print(f"Imported {len(products)} products")
-        
+
         print("Data import completed successfully!")
     except Exception as e:
         print(f"Error importing data: {e}")
