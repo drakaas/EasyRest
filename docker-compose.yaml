@@ -24,6 +24,7 @@ services:
       - mongodb
     restart: unless-stopped
     networks:
+    - default     
     - backend-network  # 👈 add this line
 
   mongodb:
