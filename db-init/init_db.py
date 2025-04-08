@@ -144,6 +144,7 @@ def import_data(db):
                         user["updatedAt"] = parse_date(user["updatedAt"])
                     if "p" in user:
                         del user["p"]  # remove plaintext password if present
+                print(users)
                 if users:
                     db.users.insert_many(users)
                     print(f"Imported {len(users)} users")
