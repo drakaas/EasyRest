@@ -1,41 +1,34 @@
-// productController.js
-const Product = require("../models/Product");
-const ProductCategory = require("../models/ProductCategory");
+const {getAllProducts,getProductCategory}=require("../dao/product-dao");
+const {categoryBySlug,categoryById}=require("../dao/productCategory-dao");
+const ProductByCategorySlug= async(req,res)=>{
+     try {
+          const slug = req.params.slug;
+          if (!slug) return res.status(404).send({message:"erreur categorie introuvable"});
+          let categorie = await categoryBySlug(slug);
+          if(categorie.message) return res.status(500).send(categorie.message);
 
-const getAllProducts = async () => {
-  try {
-    const products = await Product.find().populate('category');
-    if (!products.length) return { success: false, message: "No products found" };
-    return { success: true, data: products };
-  } catch (error) {
-    return { success: false, message: "Error: " + error.message };
-  }
-};
+          let products=await  getProductCategory(categorie._id );
+          if(products.message) return res.status(500).send(categorie.message);
+          return res.status(200).send(products);
+     } catch (error) {
+          return res.status(500).send({message:"erreur "+ error})
+     }
+}
+const ProductByCategoryId= async(req,res)=>{
+     try {
+          const id = req.body.id;
+          if (!id) return res.status(404).send({message:"erreur id introuvable"});
+ 
 
-const getProductsByCategory = async (categoryId) => {
-  try {
-    if (!categoryId) return { success: false, message: "No category specified" };
-    
-    // Validate if ID is a valid MongoDB ObjectId
-    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
-      return { success: false, message: "Invalid category ID format" };
-    }
-
-    const products = await Product.find({ category: categoryId })
-      .populate('category')
-      .sort({ createdAt: -1 });
-
-    if (!products.length) {
-      return { success: false, message: "No products found in this category" };
-    }
-
-    return { success: true, data: products };
-  } catch (error) {
-    return { success: false, message: "Error: " + error.message };
-  }
-};
+          let products=await  getProductCategory(id);
+          if(products.message) return res.status(500).send(categorie.message);
+          return res.status(200).send(products);
+     } catch (error) {
+          return res.status(500).send({message:"erreur "+ error})
+     }
+}
 
 module.exports = {
-  getAllProducts,
-  getProductsByCategory
-};
+     ProductByCategoryId,
+     ProductByCategorySlug
+}
