@@ -37,7 +37,6 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=secret
       - MONGO_INITDB_DATABASE=mydatabase
     volumes:
-      - mongodb_data:/data/db
       - ./mongodb/init:/docker-entrypoint-initdb.d
     restart: unless-stopped
     networks:
