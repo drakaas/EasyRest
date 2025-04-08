@@ -1,4 +1,3 @@
-// mongodb/init/init.js
 db = db.getSiblingDB('mydatabase');
 
 // Create users collection
@@ -98,3 +97,5 @@ db.products.createIndex({ name: "text", description: "text" });
 db.products.createIndex({ category: 1 });
 db.orders.createIndex({ user: 1 });
 db.orders.createIndex({ status: 1 });
+
+print("Database initialization complete");

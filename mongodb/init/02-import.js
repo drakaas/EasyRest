@@ -1,4 +1,3 @@
-// mongodb/init/02-import.js
 print("Starting data import...");
 
 // Wait function
@@ -22,7 +21,10 @@ waitForConnection();
 // Import product categories
 print("Importing product categories...");
 try {
-  load("/docker-entrypoint-initdb.d/collections/importCategories.js");
+  const fs = require('fs');
+  const categoriesData = fs.readFileSync('/docker-entrypoint-initdb.d/collections/productCategories.json', 'utf8');
+  const categories = JSON.parse(categoriesData);
+  db.productCategories.insertMany(categories);
   print("Product categories imported successfully");
 } catch (e) {
   print("Error importing product categories: " + e);
@@ -31,7 +33,10 @@ try {
 // Import products
 print("Importing products...");
 try {
-  load("/docker-entrypoint-initdb.d/collections/importProducts.js");
+  const fs = require('fs');
+  const productsData = fs.readFileSync('/docker-entrypoint-initdb.d/collections/products.json', 'utf8');
+  const products = JSON.parse(productsData);
+  db.products.insertMany(products);
   print("Products imported successfully");
 } catch (e) {
   print("Error importing products: " + e);
