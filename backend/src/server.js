@@ -1,7 +1,6 @@
 const express = require("express");
 const AuthRouter = require("./routes/auth-router")
-
-const ChatbotRouter = require("./routes/chatbot.route");
+const ProductRouter = require("./routes/product-routes")
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -33,7 +32,8 @@ function init(port, callback) {
      app.use(passport.session());
 
      app.use(express.json());
-    
+     app.use('/product',ProductRouter)
+
 
 
      // app.get('/',(req,res)=>{

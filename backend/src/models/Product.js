@@ -34,7 +34,16 @@ const productSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+productSchema.virtual('categoryDetails', {
+  ref: 'ProductCategory',
+  localField: 'category',
+  foreignField: '_id',
+  justOne: true
+});
 
+// Enable virtuals in toJSON output
+productSchema.set('toJSON', { virtuals: true });
+productSchema.set('toObject', { virtuals: true });
 // Update timestamp on update
 productSchema.pre('findOneAndUpdate', function(next) {
   this.set({ updatedAt: Date.now() });
