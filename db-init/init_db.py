@@ -156,6 +156,7 @@ def main():
             print("Schema already exists, skipping schema creation")
         
         # Check if we need to import data
+        print("test")
         if db.productCategories.count_documents({}) == 0:
             print("Importing initial data...")
             import_data(db)
