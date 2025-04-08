@@ -1,5 +1,6 @@
 [
   {
+    "_id": "5f8d3a7e4a7e3a1a7e3a7e5a",
     "name": "Smartphone X",
     "description": "Latest smartphone with advanced features",
     "price": 799.99,
@@ -10,6 +11,7 @@
     "updatedAt": "2023-01-03T00:00:00Z"
   },
   {
+    "_id": "5f8d3a7e4a7e3a1a7e3a7e5b",
     "name": "T-Shirt",
     "description": "Comfortable cotton t-shirt",
     "price": 19.99,
