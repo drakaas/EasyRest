@@ -44,10 +44,10 @@ services:
       - backend-network
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh --quiet -u admin -p secret || exit 1
-      interval: 10s    # Increased from 5s to 10s
-      timeout: 10s
+      interval: 15s    # Increased from 5s to 10s
+      timeout: 15s
       retries: 10    
-    entrypoint: ["/bin/bash", "-c", "chmod +x /docker-entrypoint-initdb.d/import.sh && /docker-entrypoint-initdb.d/import.sh"]
+    entrypoint: ["/bin/bash", "-c", "sleep 30 && chmod +x /docker-entrypoint-initdb.d/import.sh && /docker-entrypoint-initdb.d/import.sh"]
 
 volumes:
   mongodb_data:
