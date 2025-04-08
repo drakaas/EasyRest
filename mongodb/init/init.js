@@ -1,5 +1,5 @@
 // mongodb/init/init.js
-db = db.getSiblingDB('ecommerce');
+db = db.getSiblingDB('mydatabase');
 
 // Create users collection
 db.createCollection('users', {

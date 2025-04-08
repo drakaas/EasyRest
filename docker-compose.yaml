@@ -23,6 +23,8 @@ services:
     depends_on:
       - mongodb
     restart: unless-stopped
+    networks:
+    - backend-network  # 👈 add this line
 
   mongodb:
     image: mongo:6
@@ -32,13 +34,19 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=secret
-      - MONGO_INITDB_DATABASE=ecommerce
+      - MONGO_INITDB_DATABASE=mydatabase
     volumes:
       - mongodb_data:/data/db
       - ./mongodb/init:/docker-entrypoint-initdb.d:ro
     restart: unless-stopped
     networks:
       - backend-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet -u admin -p secret || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
 
 volumes:
   mongodb_data:
