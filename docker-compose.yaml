@@ -47,7 +47,7 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
-
+    entrypoint: ["/bin/bash", "-c", "chmod +x /docker-entrypoint-initdb.d/import.sh && /usr/local/bin/docker-entrypoint.sh mongod"]
 
 volumes:
   mongodb_data:
