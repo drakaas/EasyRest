@@ -1,0 +1,2 @@
+*.sh text eol=lf
+mongodb/init/*.sh text eol=lf executable

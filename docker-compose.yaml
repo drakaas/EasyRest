@@ -38,17 +38,15 @@ services:
       - MONGO_INITDB_DATABASE=mydatabase
     volumes:
       - mongodb_data:/data/db
-      - ./mongodb/init:/docker-entrypoint-initdb.d:rw
+      - ./mongodb/init:/docker-entrypoint-initdb.d
     restart: unless-stopped
     networks:
       - backend-network
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh --quiet -u admin -p secret || exit 1
-      interval: 15s    # Increased from 5s to 10s
+      interval: 15s
       timeout: 15s
-      retries: 10    
-    entrypoint: ["/bin/bash", "-c", "sleep 30 && chmod +x /docker-entrypoint-initdb.d/import.sh && /docker-entrypoint-initdb.d/import.sh"]
-
+      retries: 10
 volumes:
   mongodb_data:
 
