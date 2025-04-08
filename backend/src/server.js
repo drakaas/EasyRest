@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 
-require('./routes/auth');
+// require('./routes/auth');
 
 function init(port, callback) {
     const app = express();
