@@ -1,12 +1,10 @@
 const express = require("express");
-const AuthRouter = require("./routes/auth-router")
 const ProductRouter = require("./routes/product-routes")
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
-const dbConnection = require("./repository/db");
 
 require('./routes/auth');
 
