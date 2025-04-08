@@ -1,18 +1,15 @@
-// db.js (or your connection file)
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongodb:27017/ecommerce', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 10s
-      socketTimeoutMS: 45000 // Close sockets after 45s of inactivity
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://admin:secret@mongodb:27017/mydatabase?authSource=admin', {
+      serverSelectionTimeoutMS: 5000, // 5 seconds timeout
+      socketTimeoutMS: 45000 // 45 seconds socket timeout
     });
-    console.log('MongoDB connected');
+    console.log('MongoDB connected successfully');
   } catch (err) {
     console.error('MongoDB connection error:', err);
-    process.exit(1);
+    process.exit(1); // Exit process with failure
   }
 };
 
