@@ -1,24 +1,24 @@
 [
-     {
-       "_id": { "$oid": "5f8d3a7e4a7e3a1a7e3a7e5a" },
-       "name": "Smartphone X",
-       "description": "Latest smartphone with advanced features",
-       "price": { "$numberDecimal": "799.99" },
-       "stock": 100,
-       "category": { "$oid": "5f8d3a7e4a7e3a1a7e3a7e4a" },
-       "images": ["/uploads/products/smartphone-x.jpg"],
-       "createdAt": { "$date": "2023-01-03T00:00:00Z" },
-       "updatedAt": { "$date": "2023-01-03T00:00:00Z" }
-     },
-     {
-       "_id": { "$oid": "5f8d3a7e4a7e3a1a7e3a7e5b" },
-       "name": "T-Shirt",
-       "description": "Comfortable cotton t-shirt",
-       "price": { "$numberDecimal": "19.99" },
-       "stock": 50,
-       "category": { "$oid": "5f8d3a7e4a7e3a1a7e3a7e4b" },
-       "images": ["/uploads/products/tshirt.jpg"],
-       "createdAt": { "$date": "2023-01-04T00:00:00Z" },
-       "updatedAt": { "$date": "2023-01-04T00:00:00Z" }
-     }
-   ]
+  {
+    "_id": "5f8d3a7e4a7e3a1a7e3a7e5a",
+    "name": "Smartphone X",
+    "description": "Latest smartphone with advanced features",
+    "price": 799.99,
+    "stock": 100,
+    "category": "5f8d3a7e4a7e3a1a7e3a7e4a",
+    "images": ["/uploads/products/smartphone-x.jpg"],
+    "createdAt": "2023-01-03T00:00:00Z",
+    "updatedAt": "2023-01-03T00:00:00Z"
+  },
+  {
+    "_id": "5f8d3a7e4a7e3a1a7e3a7e5b",
+    "name": "T-Shirt",
+    "description": "Comfortable cotton t-shirt",
+    "price": 19.99,
+    "stock": 50,
+    "category": "5f8d3a7e4a7e3a1a7e3a7e4b",
+    "images": ["/uploads/products/tshirt.jpg"],
+    "createdAt": "2023-01-04T00:00:00Z",
+    "updatedAt": "2023-01-04T00:00:00Z"
+  }
+]
