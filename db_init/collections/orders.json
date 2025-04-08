@@ -1,0 +1,25 @@
+[
+     {
+       "_id": { "$oid": "5f8d3a7e4a7e3a1a7e3a7e6a" },
+       "user": { "$oid": "5f8d3a7e4a7e3a1a7e3a7e3b" },
+       "items": [
+         {
+           "product": { "$oid": "5f8d3a7e4a7e3a1a7e3a7e5a" },
+           "quantity": 1,
+           "price": { "$numberDecimal": "799.99" }
+         }
+       ],
+       "total": { "$numberDecimal": "799.99" },
+       "status": "delivered",
+       "shippingAddress": {
+         "street": "123 Main St",
+         "city": "New York",
+         "state": "NY",
+         "zip": "10001",
+         "country": "USA"
+       },
+       "paymentMethod": "credit_card",
+       "createdAt": { "$date": "2023-01-05T00:00:00Z" },
+       "updatedAt": { "$date": "2023-01-07T00:00:00Z" }
+     }
+   ]

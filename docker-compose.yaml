@@ -37,7 +37,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=secret
       - MONGO_INITDB_DATABASE=mydatabase
     volumes:
-      - ./mongodb/init:/docker-entrypoint-initdb.d
+      - mongodb_data:/data/db
     restart: unless-stopped
     networks:
       - backend-network
@@ -46,6 +46,17 @@ services:
       interval: 15s
       timeout: 15s
       retries: 10
+
+  mongodb-init:
+    build: ./db-init
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - backend-network
+
+volumes:
+  mongodb_data:
 
 networks:
   backend-network:
