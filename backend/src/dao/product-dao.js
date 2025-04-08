@@ -28,5 +28,6 @@ const getProductCategory = async(category)=>{
 }
 
 module.exports={
-     getAllProducts
+     getAllProducts,
+     getProductCategory
 }
