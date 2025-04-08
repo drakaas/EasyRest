@@ -38,7 +38,7 @@ services:
       - MONGO_INITDB_DATABASE=mydatabase
     volumes:
       - mongodb_data:/data/db
-      - ./mongodb/init:/docker-entrypoint-initdb.d:ro
+      - ./mongodb/init:/docker-entrypoint-initdb.d:rw
     restart: unless-stopped
     networks:
       - backend-network
