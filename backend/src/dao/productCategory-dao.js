@@ -1,4 +1,4 @@
-const ProductCategory = require('../models/productCategories');
+const productCategories = require('../models/productCategories');
 
 
 
@@ -6,8 +6,8 @@ const categoryBySlug =async(slug)=>{
      try {
           console.log(slug)
           
-          let category = await ProductCategory.findOne({ slug });
-          let test = await ProductCategory.find();
+          let category = await productCategories.findOne({ slug });
+          let test = await productCategories.find();
           console.log(test);
           if (!category) {
                return { message: 'Category not found' };
@@ -20,7 +20,7 @@ const categoryBySlug =async(slug)=>{
 const categoryById =async(id)=>{
      try {
           
-          let category = await ProductCategory.findOne({ category:id });
+          let category = await productCategories.findOne({ category:id });
           
           if (!category) {
                return { message: 'Category not found' };
