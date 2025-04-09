@@ -12,10 +12,10 @@ const getAllProducts = async()=>{
      }
 
 }
-const getProductCategory = async(category)=>{
+const getProductCategory = async(id)=>{
      try {
-          if(!category) return {message:" erreur aucune categorie n'a été selectionnée"};
-          const products = await Product.find({ category: req.params.id })
+          if(!id) return {message:" erreur aucune categorie n'a été selectionnée"};
+          const products = await Product.find({ category: id})
           .populate('category')
           .sort({ createdAt: -1 });
           if (!products ) return {message :"aucun produit n'a été trouvé"}
