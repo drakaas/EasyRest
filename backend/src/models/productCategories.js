@@ -24,4 +24,4 @@ productCategorySchema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('productCategories', productCategorySchema);
+module.exports = mongoose.model('productCategories', productCategorySchema, 'ProductCategories');
