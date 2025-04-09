@@ -15,9 +15,12 @@ const getAllProducts = async()=>{
 const getProductCategory = async(id)=>{
      try {
           if(!id) return {message:" erreur aucune categorie n'a été selectionnée"};
+          console.log(id)
+          console.log("before problem")
           const products = await Product.find({ category: id})
           .populate('category')
           .sort({ createdAt: -1 });
+          console.log("after problem")
           if (!products ) return {message :"aucun produit n'a été trouvé"}
           return products;
           
