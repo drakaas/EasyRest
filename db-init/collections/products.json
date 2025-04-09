@@ -5,8 +5,8 @@
     "description": "Latest smartphone with advanced features",
     "price": 799.99,
     "stock": 100,
-    "category": "5f8d3a7e4a7e3a1a7e3a7e4a",
     "images": ["/uploads/products/smartphone-x.jpg"],
+    "category": "5f8d3a7e4a7e3a1a7e3a7e4a",
     "createdAt": "2023-01-03T00:00:00Z",
     "updatedAt": "2023-01-03T00:00:00Z"
   },
