@@ -1,17 +1,21 @@
+import time
+import json
+import os
+from pymongo import MongoClient
+
+# Connection parameters
+MONGODB_URI = "mongodb://admin:secret@mongodb:27017/mydatabase?authSource=admin"
+DB_NAME = "mydatabase"
+DATA_DIR = "/app/collections"  # Directory containing JSON files
 import os
 import json
 from bson import ObjectId
 from pymongo import MongoClient
 from datetime import datetime
-from dotenv import load_dotenv
 
-load_dotenv()
 
-MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
-DB_NAME = os.getenv("DB_NAME", "mern-ecommerce")
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
-client = MongoClient(MONGO_URL)
+client = MongoClient(MONGODB_URI)
 db = client[DB_NAME]
 
 def parse_date(value):
