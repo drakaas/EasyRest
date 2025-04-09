@@ -16,8 +16,8 @@
     "description": "Comfortable cotton t-shirt",
     "price": 19.99,
     "stock": 50,
-    "category": "5f8d3a7e4a7e3a1a7e3a7e4b",
     "images": ["/uploads/products/tshirt.jpg"],
+    "category": "5f8d3a7e4a7e3a1a7e3a7e4b",
     "createdAt": "2023-01-04T00:00:00Z",
     "updatedAt": "2023-01-04T00:00:00Z"
   }
