@@ -18,13 +18,19 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ProductCategory',
+    ref: 'productcategories',
     required: [true, 'Product category is required']
   },
   images: [{
     type: String,
     required: [true, 'At least one image is required']
   }],
+  price: {
+    type: Number,
+    required: [true, 'Product price is required'],
+    min: [0, 'Price cannot be negative']
+  }
+,  
   createdAt: {
     type: Date,
     default: Date.now
@@ -35,7 +41,7 @@ const productSchema = new mongoose.Schema({
   }
 });
 productSchema.virtual('categoryDetails', {
-  ref: 'ProductCategory',
+  ref: 'productCategories',
   localField: 'category',
   foreignField: '_id',
   justOne: true
@@ -55,4 +61,4 @@ productSchema.virtual('formattedPrice').get(function() {
   return parseFloat(this.price.toString()).toFixed(2);
 });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('products', productSchema);

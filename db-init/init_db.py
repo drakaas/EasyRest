@@ -67,13 +67,22 @@ def import_data(db):
                         count += 1
                 print(f"Imported {count} new product categories")
 
-        # --- Import products ---
         prod_file = os.path.join(DATA_DIR, "products.json")
         if os.path.exists(prod_file):
             with open(prod_file, "r") as f:
                 products = json.load(f)
                 count = 0
                 for prod in products:
+                    # Cast string ID fields to ObjectId
+                    if "_id" in prod:
+                        prod["_id"] = ObjectId(prod["_id"])
+                    if "category" in prod:
+                        prod["category"] = ObjectId(prod["category"])
+                    if "createdAt" in prod:
+                        prod["createdAt"] = parse_date(prod["createdAt"])
+                    if "updatedAt" in prod:
+                        prod["updatedAt"] = parse_date(prod["updatedAt"])
+                    
                     result = db.products.update_one(
                         {"name": prod["name"]},
                         {"$setOnInsert": prod},
@@ -82,7 +91,6 @@ def import_data(db):
                     if result.upserted_id:
                         count += 1
                 print(f"Imported {count} new products")
-
         print("✅ Data import completed successfully!")
 
     except Exception as e:
