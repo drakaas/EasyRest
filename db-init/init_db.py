@@ -1,126 +1,18 @@
-import time
-import json
 import os
-from pymongo import MongoClient
-
-# Connection parameters
-MONGODB_URI = "mongodb://admin:secret@mongodb:27017/mydatabase?authSource=admin"
-DB_NAME = "mydatabase"
-DATA_DIR = "/app/collections"  # Directory containing JSON files
-
-def wait_for_mongodb():
-    """Wait until MongoDB is available"""
-    max_attempts = 30
-    attempt = 0
-    
-    while attempt < max_attempts:
-        try:
-            client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
-            client.admin.command('ping')
-            print("MongoDB connection successful!")
-            return client
-        except Exception as e:
-            attempt += 1
-            print(f"Attempt {attempt}/{max_attempts}: MongoDB not available yet. Retrying in 2 seconds...")
-            print(f"Error: {e}")
-            time.sleep(2)
-    
-    raise Exception("Could not connect to MongoDB after multiple attempts")
-
-def setup_schema(db):
-    """Set up collections with validation schemas"""
-    # Create users collection
-    db.create_collection("users", validator={
-        "$jsonSchema": {
-            "bsonType": "object",
-            "required": ["username", "email", "createdAt"],
-            "properties": {
-                "username": {"bsonType": "string"},
-                "email": {"bsonType": "string", "pattern": "^.+@.+\\..+$"},
-                "password": {"bsonType": "string"},
-                "role": {"enum": ["user", "admin"]},
-                "createdAt": {"bsonType": "date"},
-                "updatedAt": {"bsonType": "date"}
-            }
-        }
-    })
-    
-    # Create product categories collection
-    db.create_collection("productCategories", validator={
-        "$jsonSchema": {
-            "bsonType": "object",
-            "required": ["name", "slug"],
-            "properties": {
-                "name": {"bsonType": "string"},
-                "slug": {"bsonType": "string"},
-                "description": {"bsonType": "string"}
-            }
-        }
-    })
-    
-    # Create products collection
-    db.create_collection("products", validator={
-        "$jsonSchema": {
-            "bsonType": "object",
-            "required": ["name", "price", "category"],
-            "properties": {
-                "name": {"bsonType": "string"},
-                "description": {"bsonType": "string"},
-                "price": {"bsonType": "decimal"},
-                "stock": {"bsonType": "int", "minimum": 0},
-                "category": {"bsonType": "objectId"},
-                "images": {
-                    "bsonType": "array",
-                    "items": {"bsonType": "string"}
-                },
-                "createdAt": {"bsonType": "date"},
-                "updatedAt": {"bsonType": "date"}
-            }
-        }
-    })
-    
-    # Create orders collection
-    db.create_collection("orders", validator={
-        "$jsonSchema": {
-            "bsonType": "object",
-            "required": ["user", "items", "total", "status"],
-            "properties": {
-                "user": {"bsonType": "objectId"},
-                "items": {
-                    "bsonType": "array",
-                    "items": {
-                        "bsonType": "object",
-                        "required": ["product", "quantity"],
-                        "properties": {
-                            "product": {"bsonType": "objectId"},
-                            "quantity": {"bsonType": "int", "minimum": 1},
-                            "price": {"bsonType": "decimal"}
-                        }
-                    }
-                },
-                "total": {"bsonType": "decimal"},
-                "status": {
-                    "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
-                },
-                "shippingAddress": {"bsonType": "object"},
-                "paymentMethod": {"bsonType": "string"},
-                "createdAt": {"bsonType": "date"},
-                "updatedAt": {"bsonType": "date"}
-            }
-        }
-    })
-    
-    # Create indexes
-    db.users.create_index("email", unique=True)
-    db.productCategories.create_index("slug", unique=True)
-    db.products.create_index([("name", "text"), ("description", "text")])
-    db.products.create_index("category")
-    db.orders.create_index("user")
-    db.orders.create_index("status")
-    
-    print("Schema setup completed successfully!")
+import json
 from bson import ObjectId
+from pymongo import MongoClient
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+DB_NAME = os.getenv("DB_NAME", "mern-ecommerce")
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+
+client = MongoClient(MONGO_URL)
+db = client[DB_NAME]
 
 def parse_date(value):
     if isinstance(value, str):
@@ -128,13 +20,14 @@ def parse_date(value):
     return value
 
 def import_data(db):
-    """Import data from JSON files"""
+    """Import data from JSON files without duplicate key errors"""
     try:
         # --- Import users ---
         user_file = os.path.join(DATA_DIR, "users.json")
         if os.path.exists(user_file):
             with open(user_file, "r") as f:
                 users = json.load(f)
+                count = 0
                 for user in users:
                     if "_id" in user:
                         user["_id"] = ObjectId(user["_id"])
@@ -143,56 +36,53 @@ def import_data(db):
                     if "updatedAt" in user:
                         user["updatedAt"] = parse_date(user["updatedAt"])
                     if "p" in user:
-                        del user["p"]  # remove plaintext password if present
-                print(users)
-                if users:
-                    db.users.insert_many(users)
-                    print(f"Imported {len(users)} users")
+                        del user["p"]
+
+                    result = db.users.update_one(
+                        {"email": user["email"]},
+                        {"$setOnInsert": user},
+                        upsert=True
+                    )
+                    if result.upserted_id:
+                        count += 1
+                print(f"Imported {count} new users")
 
         # --- Import product categories ---
-        with open(os.path.join(DATA_DIR, "productCategories.json"), "r") as f:
-            categories = json.load(f)
-            if categories:
-                db.productCategories.insert_many(categories)
-                print(f"Imported {len(categories)} product categories")
+        cat_file = os.path.join(DATA_DIR, "productCategories.json")
+        if os.path.exists(cat_file):
+            with open(cat_file, "r") as f:
+                categories = json.load(f)
+                count = 0
+                for cat in categories:
+                    result = db.productCategories.update_one(
+                        {"slug": cat["slug"]},
+                        {"$setOnInsert": cat},
+                        upsert=True
+                    )
+                    if result.upserted_id:
+                        count += 1
+                print(f"Imported {count} new product categories")
 
         # --- Import products ---
-        with open(os.path.join(DATA_DIR, "products.json"), "r") as f:
-            products = json.load(f)
-            if products:
-                db.products.insert_many(products)
-                print(f"Imported {len(products)} products")
+        prod_file = os.path.join(DATA_DIR, "products.json")
+        if os.path.exists(prod_file):
+            with open(prod_file, "r") as f:
+                products = json.load(f)
+                count = 0
+                for prod in products:
+                    result = db.products.update_one(
+                        {"name": prod["name"]},
+                        {"$setOnInsert": prod},
+                        upsert=True
+                    )
+                    if result.upserted_id:
+                        count += 1
+                print(f"Imported {count} new products")
 
-        print("Data import completed successfully!")
-    except Exception as e:
-        print(f"Error importing data: {e}")
+        print("✅ Data import completed successfully!")
 
-def main():
-    print("Starting MongoDB initialization...")
-    
-    try:
-        client = wait_for_mongodb()
-        db = client[DB_NAME]
-        
-        # Check if we need to set up the schema
-        if "users" not in db.list_collection_names():
-            print("Setting up database schema...")
-            setup_schema(db)
-        else:
-            print("Schema already exists, skipping schema creation")
-        
-        # Check if we need to import data
-        print("test")
-        if db.productCategories.count_documents({}) == 0:
-            print("Importing initial data...")
-            import_data(db)
-        else:
-            print("Data already exists, skipping data import")
-            
-        print("MongoDB initialization completed successfully!")
     except Exception as e:
-        print(f"ERROR: {e}")
-        exit(1)
+        print(f"❌ Error importing data: {e}")
 
 if __name__ == "__main__":
-    main()
+    import_data(db)
