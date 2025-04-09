@@ -72,6 +72,7 @@ def import_data(db):
             with open(prod_file, "r") as f:
                 products = json.load(f)
                 count = 0
+                print(products)
                 for prod in products:
                     # Cast string ID fields to ObjectId
                     if "_id" in prod:
@@ -83,7 +84,6 @@ def import_data(db):
                     if "updatedAt" in prod:
                         prod["updatedAt"] = parse_date(prod["updatedAt"])
                     
-                    print(prod)
                     result = db.products.update_one(
                         {"name": prod["name"]},
                         {"$setOnInsert": prod},
