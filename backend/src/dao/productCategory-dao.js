@@ -4,9 +4,11 @@ const ProductCategory = require('../models/productCategories');
 
 const categoryBySlug =async(slug)=>{
      try {
+          console.log(slug)
           
           let category = await ProductCategory.findOne({ slug });
-          
+          let test = await ProductCategory.find();
+          console.log(test);
           if (!category) {
                return { message: 'Category not found' };
           }
