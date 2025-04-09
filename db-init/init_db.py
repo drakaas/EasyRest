@@ -83,6 +83,7 @@ def import_data(db):
                     if "updatedAt" in prod:
                         prod["updatedAt"] = parse_date(prod["updatedAt"])
                     
+                    print(prod)
                     result = db.products.update_one(
                         {"name": prod["name"]},
                         {"$setOnInsert": prod},
