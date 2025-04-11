@@ -5,6 +5,12 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
+const express = require("express");
+const AuthRouter = require("./routes/auth-router")
+
+
+require('./routes/auth');
+
 
 // require('./routes/auth');
 
@@ -38,7 +44,7 @@ function init(port, callback) {
      //      res.send('<a href="/auth/google/">Authenticate with Google</a>')
      // })
 
-     // app.use('/auth',AuthRouter);
+     app.use('/auth',AuthRouter);
 
 
 
