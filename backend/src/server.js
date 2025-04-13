@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
-const express = require("express");
 const AuthRouter = require("./routes/auth-router")
 
 
