@@ -4,7 +4,7 @@ const router = Router()
 const passport = require("passport")
 const jwt = require("jsonwebtoken");
 
-const {isLoggedIn} = require("../middlewares/is_logged");
+// const {isLoggedIn} = require("../middlewares/is_logged");
 router.get('/protected',isLoggedIn,(req,res)=>{
      res.send("hello"+req.user.displayName)
 })
