@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const router = Router()
-const service = require("../services/auth-services")
+// const service = require("../services/auth-services")
 const passport = require("passport")
 const jwt = require("jsonwebtoken");
 
