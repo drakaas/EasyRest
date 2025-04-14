@@ -9,6 +9,13 @@ export default function LoginModal() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const handleGoogleLogin = () => {
+    // Redirect user to the Google OAuth login route
+    window.location.href = 'http://localhost:5000/google'; // Change URL as per your backend URL
+  };
+
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -84,6 +91,7 @@ export default function LoginModal() {
             <button 
               className="w-full flex items-center justify-center py-3 px-4 bg-white border-2 border-gray-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 group mb-4"
               disabled={isLoading}
+              onClick={handleGoogleLogin}
             >
               <span className="mr-4">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">

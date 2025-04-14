@@ -36,13 +36,7 @@ passport.use(new GoogleStrategy({
     }
   }
 ));
-
-// Serialize user
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-// Deserialize user
-passport.deserializeUser((user, done) => {
-  done(null, user);
+passport.serializeUser((user, done) => done(null, user.id));
+passport.deserializeUser((id, done) => {
+  User.findById(id).then((user) => done(null, user));
 });

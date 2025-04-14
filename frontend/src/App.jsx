@@ -8,6 +8,7 @@ import Menu from './pages/Menu/Menu'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import LoginModal from './components/auth/LoginModal'
+import GoogleCallback from './components/auth/GoogleCallback'
 
 export default function App() {
   return (
@@ -21,6 +22,8 @@ export default function App() {
               {/* <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<Cart />} /> */}
+               <Route path="/auth/google/callback" component={GoogleCallback} /> {/* The callback route */}
+               <Route path="/dashboard" component={Home} /> {/* The protected dashboard route */}
             </Routes>
           </Layout>
           <LoginModal />
