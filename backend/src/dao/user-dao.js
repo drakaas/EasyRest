@@ -33,4 +33,4 @@ const findByEmail= async(email)=>{
 
  
 }
-export { insertUser ,findByEmail};
+module.exports = { insertUser ,findByEmail};
