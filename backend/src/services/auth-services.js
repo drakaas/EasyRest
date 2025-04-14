@@ -1,4 +1,4 @@
-const {insertUser,findByEmail} =require( "../dao/user-dao")
+const {insertUser,findByEmail,findLocal} =require( "../dao/user-dao")
 const jwt = require("jsonwebtoken")
 let dotenv = require('dotenv').config()
 
@@ -27,7 +27,7 @@ const register = async (req, res) => {
       user: {
         id: user._id,
         email: user.email,
-        username: user.username
+        username: user.name
       }
     });
   } catch (error) {
@@ -35,5 +35,26 @@ const register = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+const login =async(req,res)=>{
 
-module.exports= { register};
+
+  
+  try {
+    const { email, password } = req.body;
+    const user = await findLocal({email});
+    if (user.message!=null) return res.status(401).json({ message: user.message });
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    res.json({ token, user: { id: user._id, email: user.email, username: user.username } });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+module.exports= { register,login};

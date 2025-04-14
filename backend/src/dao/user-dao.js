@@ -34,4 +34,17 @@ const findByEmail= async(email)=>{
 
  
 }
-module.exports = { insertUser ,findByEmail};
+const findLocal=async(email,oauthProvider=null)=>{
+     try {
+          const user = await User.findOne({ email, oauthProvider }).select('+password');
+          if(!user){
+               return {message:"erreur user introuvable"}
+          }
+          return user
+
+     } catch (error) {
+          return {message:"errour "+error.message}
+
+     }
+}
+module.exports = { insertUser ,findByEmail,findLocal};
