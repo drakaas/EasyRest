@@ -5,7 +5,6 @@ let dotenv = require('dotenv').config()
 
 const register = async (req, res) => {
   try {
-     console.log(req.body)
     const { email, password, name } = req.body;
 
     // Check if user already exists
@@ -20,8 +19,7 @@ const register = async (req, res) => {
     if(user.message!=null) return res.status(500).json({message:user.message});
     const payload = { id: user._id, email: user.email };
     const token = jwt.sign(payload, process.env.JWT_SECRET , { expiresIn: '7d' });
-    console.log("main")
-    console.log(user)
+
     return res.status(201).json({
       message: "User registered successfully",
       token,
@@ -44,7 +42,7 @@ const login =async(req,res)=>{
     const { email, password } = req.body;
     const user = await findLocal({email});
     if (user.message!=null) return res.status(401).json({ message: user.message });
-
+    console.log(user)
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ message: 'Invalid credentials' });
     console.log(object)
