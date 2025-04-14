@@ -10,10 +10,10 @@ router.post("/register",register)
 
 router.post("/login",login)
 
-// const {isLoggedIn} = require("../middlewares/is_logged");
-// router.get('/protected',isLoggedIn,(req,res)=>{
-//      res.send("hello"+req.user.displayName)
-// })
+const {isLoggedIn} = require("../middlewares/isLoggedIn");
+router.get('/protected',isLoggedIn,(req,res)=>{
+     res.send("hello"+req.user.displayName)
+})
 
 // Route for initiating Google login
 router.get(
@@ -51,10 +51,6 @@ router.get(
   }
 );
   router.get("/me",(req, res) => {
-    const token = req.cookies.csrftoken;
-    console.log(req.cookies);
-    if (!token) return res.status(401).json({ authenticated: false });
-  
     try {
       const decoded = jwt.verify(token,  process.env.JWT_SECRET);
       res.json({ authenticated: true, user: decoded });
