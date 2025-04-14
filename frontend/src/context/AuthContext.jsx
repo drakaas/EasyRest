@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser)
       // Optional: You can add logic to verify if the session is still valid (e.g. JWT expiration check)
+      console.log(savedUser);
       setUser(parsedUser)
     }
   }, [])
