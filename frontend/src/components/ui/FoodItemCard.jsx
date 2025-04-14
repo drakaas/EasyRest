@@ -40,8 +40,8 @@ const FoodItemCard = React.memo(({ item }) => {
           ) : (
             <button 
               onClick={() => alert('Please login to add items to cart')}
-              className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center cursor-not-allowed"
-            >
+              className="bg-gray-300 text-gray-600 px-4 py-2 rounded-lg text-sm font-medium flex items-center cursor-not-allowed border border-black shadow-sm"
+              >
               <span className="material-symbols-outlined text-sm mr-1">lock</span>
               Login to order
             </button>
