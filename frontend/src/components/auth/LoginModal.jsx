@@ -31,7 +31,7 @@ export default function LoginModal() {
       if (!response.ok) {
         // You can adjust this depending on your backend error format
         setError(data.message|| 'Invalid credentials');
-      }else{
+      }
         console.log(data)
         console.log("after data")
         console.log(data.user)
@@ -44,7 +44,7 @@ export default function LoginModal() {
           rememberMe
         });
 
-      }
+      
   
 
     } catch (err) {
