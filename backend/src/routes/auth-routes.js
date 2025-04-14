@@ -14,7 +14,13 @@ router.post("/login",login)
 // router.get('/protected',isLoggedIn,(req,res)=>{
 //      res.send("hello"+req.user.displayName)
 // })
-router.get('/google',passport.authenticate("google",{scope:['email','profile']}))
+router.get(
+  '/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email'],
+    prompt: 'select_account' // optional: forces account chooser
+  })
+);
 
 
 // router.get('/google/callback', 
