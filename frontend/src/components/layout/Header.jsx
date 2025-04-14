@@ -8,7 +8,13 @@ import UserDropdown from '../ui/UserDropDown'
 export default function Header() {
   const { cartCount } = useCart()
   const { user, setShowLoginModal } = useAuth()
-  console.log(user);
+  const handleCartClick = () => {
+    if (!user) {
+      setShowLoginModal(true)
+      return false
+    }
+    return true
+  }
 
   return (
     <header className="py-6 px-8 bg-neutral-50 border-b border-neutral-200 flex justify-between items-center">
@@ -36,7 +42,11 @@ export default function Header() {
       
       <div className="flex items-center space-x-4">
         <IconButton icon="search" />
-        <NavLink to="/cart">
+        <NavLink 
+          to="/cart" 
+          onClick={(e) => !handleCartClick() && e.preventDefault()}
+          className={({isActive}) => isActive ? 'text-primary-600' : ''}
+        >
           <IconButton icon="shopping_cart" badgeCount={cartCount} />
         </NavLink>
         {user ? (

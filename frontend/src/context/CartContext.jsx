@@ -7,20 +7,18 @@ export function CartProvider({ children }) {
 
   const addToCart = (item) => {
     setCartItems(prev => {
-      // Check if item already exists in cart
       const existingItem = prev.find(cartItem => cartItem.id === item.id)
       if (existingItem) {
-        // If exists, increase quantity
-        return prev.map(cartItem => 
-          cartItem.id === item.id 
-            ? { ...cartItem, quantity: cartItem.quantity + 1 } 
+        return prev.map(cartItem =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem
         )
       }
-      // If new item, add to cart with quantity 1
-      return [...prev, { ...item, quantity: 1 }]
+      return [...prev, item]
     })
   }
+
 
   const removeFromCart = (itemId) => {
     setCartItems(prev => prev.filter(item => item.id !== itemId))
