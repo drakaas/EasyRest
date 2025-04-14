@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const GoogleCallback = () => {
-  const history = useHistory();
+  const history = useNavigate();
 
   useEffect(() => {
     // Function to handle the Google callback
@@ -20,7 +20,7 @@ const GoogleCallback = () => {
           localStorage.setItem('authToken', token); // Store it in localStorage
 
           // Optionally, you can redirect the user to a protected page (e.g., dashboard)
-          history.push('/dashboard'); // Example route after login
+          history('/'); // Example route after login
         } else {
           console.error('Google login failed:', data.message);
         }
