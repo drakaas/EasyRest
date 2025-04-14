@@ -11,6 +11,7 @@ export default function Home() {
     
     return data.reduce((acc, item) => {
       const category = item.slug; // Using slug as category key
+      console.log(item)
       if (!acc[category]) {
         acc[category] = [];
       }
