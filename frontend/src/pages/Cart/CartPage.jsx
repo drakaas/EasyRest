@@ -31,7 +31,7 @@ import { useCart } from '../../context/CartContext';
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
-      <Header />
+
       
       <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-8">
@@ -56,7 +56,6 @@ import { useCart } from '../../context/CartContext';
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 };
