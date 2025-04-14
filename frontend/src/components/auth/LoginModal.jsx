@@ -27,7 +27,7 @@ export default function LoginModal() {
       });
   
       const data = await response.json();
-      console.log(object)
+      console.log("before data")
       if (!response.ok) {
         // You can adjust this depending on your backend error format
         setError(data.message|| 'Invalid credentials');
