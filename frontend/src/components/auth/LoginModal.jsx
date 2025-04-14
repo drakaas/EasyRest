@@ -38,11 +38,11 @@ export default function LoginModal() {
         console.log(data.token)
     
         // Save the user data from your backend (you can adjust based on actual response)
-        login({
-          userData: data.user , // or whatever your backend returns
-          token: data.token, // assuming token is returned,
+        login(
+          data.user , // or whatever your backend returns
+          data.token, // assuming token is returned,
           rememberMe
-        });
+        );
 
       
   
