@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
 
   // Load user from localStorage if exists
   useEffect(() => {
-    const savedUser = localStorage.getItem('authUser')
+    const savedUser = localStorage.getItem('authToken')
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser)
       // Optional: You can add logic to verify if the session is still valid (e.g. JWT expiration check)
