@@ -2,7 +2,7 @@ const { error } = require("console");
 const {insertUser,findByEmail,findLocal} =require( "../dao/user-dao")
 const jwt = require("jsonwebtoken")
 let dotenv = require('dotenv').config()
-
+const bcrypt = require('bcryptjs');
 const register = async (req, res) => {
   try {
     const { email, password, name } = req.body;
