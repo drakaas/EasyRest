@@ -1,31 +1,19 @@
 import SectionHeader from '../../../components/ui/SectionHeader'
 import FoodItemCard from '../../../components/ui/FoodItemCard'
-
-const categoryIcons = {
-  Pizza: 'local_pizza',
-  Burgers: 'lunch_dining',
-  Sides: 'restaurant',
-  Drinks: 'local_bar',
-  Desserts: 'cake',
-  Specials: 'star'
-}
-
-const categoryColors = {
-  Pizza: 'red',
-  Burgers: 'amber',
-  Sides: 'green',
-  Drinks: 'blue',
-  Desserts: 'purple',
-  Specials: 'pink'
-}
+import { useCategories } from '../../../context/CategoryContext';
+import SectionHeader from '../../../components/ui/SectionHeader';
+import FoodItemCard from '../../../components/ui/FoodItemCard';
 
 export default function MenuSection({ category, items }) {
+  const { getCategoryMeta } = useCategories();
+  const { icon, color } = getCategoryMeta(category);
+
   return (
     <section id={category.toLowerCase()} className="mb-10">
       <SectionHeader 
-        icon={categoryIcons[category] || 'restaurant'}
+        icon={icon}
         title={category}
-        color={categoryColors[category] || 'gray'}
+        color={color}
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -34,5 +22,5 @@ export default function MenuSection({ category, items }) {
         ))}
       </div>
     </section>
-  )
+  );
 }
