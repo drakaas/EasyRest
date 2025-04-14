@@ -5,7 +5,7 @@ const passport = require("passport")
 const jwt = require("jsonwebtoken");
 const {register} =require("../services/auth-services")
 
-router.get("/register",register)
+router.post("/register",register)
 
 
 
