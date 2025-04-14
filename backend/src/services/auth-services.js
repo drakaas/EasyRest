@@ -19,7 +19,8 @@ const register = async (req, res) => {
     if(user.message!=null) return res.status(500).json({message:user.message});
     const payload = { id: user._id, email: user.email };
     const token = jwt.sign(payload, process.env.JWT_SECRET , { expiresIn: '7d' });
-
+    console.log("main")
+    console.log(user)
     return res.status(201).json({
       message: "User registered successfully",
       token,
