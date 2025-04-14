@@ -1,14 +1,38 @@
 [
   {
-    "_id":  "5f8d3a7e4a7e3a1a7e3a7e4a" ,
-    "name": "Electronics",
-    "slug": "electronics",
-    "description": "All electronic devices and gadgets"
+    "_id": "cat_pizza",
+    "name": "Pizza",
+    "slug": "pizza",
+    "description": "Delicious hand-tossed pizzas with various toppings"
   },
   {
-    "_id": "5f8d3a7e4a7e3a1a7e3a7e4b" ,
-    "name": "Clothing",
-    "slug": "clothing",
-    "description": "Men's and women's clothing"
+    "_id": "cat_burgers",
+    "name": "Burgers",
+    "slug": "burgers",
+    "description": "Juicy burgers with premium ingredients"
+  },
+  {
+    "_id": "cat_sides",
+    "name": "Sides",
+    "slug": "sides",
+    "description": "Perfect accompaniments to your meal"
+  },
+  {
+    "_id": "cat_drinks",
+    "name": "Drinks",
+    "slug": "drinks",
+    "description": "Refreshing beverages to complement your food"
+  },
+  {
+    "_id": "cat_desserts",
+    "name": "Desserts",
+    "slug": "desserts",
+    "description": "Sweet treats to end your meal perfectly"
+  },
+  {
+    "_id": "cat_specials",
+    "name": "Specials",
+    "slug": "specials",
+    "description": "Chef's specials and seasonal offerings"
   }
 ]
