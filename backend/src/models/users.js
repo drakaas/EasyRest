@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, 'Username is required'],
-    unique: true,
     trim: true,
     minlength: [3, 'Username must be at least 3 characters']
   },
@@ -19,9 +20,21 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
     minlength: [8, 'Password must be at least 8 characters'],
-    select: false
+    select: false // excluded by default
+  },
+  isOAuth: {
+    type: Boolean,
+    default: false
+  },
+  oauthProvider: {
+    type: String, // e.g., 'google', 'facebook'
+    enum: ['google', 'facebook', 'github', null],
+    default: null
+  },
+  oauthId: {
+    type: String, // e.g., Google profile ID
+    default: null
   },
   role: {
     type: String,
@@ -38,20 +51,18 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving
+
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || this.isOAuth) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// Update timestamp on update
 userSchema.pre('findOneAndUpdate', function(next) {
   this.set({ updatedAt: Date.now() });
   next();
 });
 
-// Method to check password
 userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };

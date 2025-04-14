@@ -3,6 +3,12 @@ const router = Router()
 // const service = require("../services/auth-services")
 const passport = require("passport")
 const jwt = require("jsonwebtoken");
+import register from "../services/auth-services"
+
+
+router.get("/register",register)
+
+
 
 // const {isLoggedIn} = require("../middlewares/is_logged");
 router.get('/protected',isLoggedIn,(req,res)=>{
