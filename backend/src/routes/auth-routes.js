@@ -12,7 +12,7 @@ router.post("/login",login)
 
 const {isLoggedIn} = require("../middlewares/isLoggedIn");
 router.get('/protected',isLoggedIn,(req,res)=>{
-     res.send("hello"+req.user.displayName)
+     res.send("hello"+req.user)
 })
 
 // Route for initiating Google login
