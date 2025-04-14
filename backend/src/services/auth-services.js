@@ -1,8 +1,4 @@
-import {insertUser,findByEmail} from "../services/user-services"
-
-
-import User from "../models/users.js";
-import bcrypt from "bcryptjs";
+const {insertUser,findByEmail} =require( "../services/user-services")
 
 const register = async (req, res) => {
   try {
@@ -18,11 +14,22 @@ const register = async (req, res) => {
     // Create and save new user
     const user = insertUser({email,password,username:name})
     if(user.message) return res.status(500).json({message:user.message});
-    return res.status(201).json({ message: "User registered successfully" });
+    const payload = { id: user._id, email: user.email };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+
+    return res.status(201).json({
+      message: "User registered successfully",
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username
+      }
+    });
   } catch (error) {
     console.error("Registration error:", error.message);
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-export { register, findByEmail};
+module.exports= { register};
