@@ -35,7 +35,7 @@ const AuthSuccess = () => {
       // Handle authentication error
       navigate('/login', { state: { error: 'Authentication failed: Missing token or user data' } });
     }
-  }, [location, navigate, login]);
+  }, []);
 
   return (
     <div className="flex items-center justify-center h-screen">
