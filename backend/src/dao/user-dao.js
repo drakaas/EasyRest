@@ -34,7 +34,7 @@ const findByEmail= async(email)=>{
 
  
 }
-const findLocal=async(email,oauthProvider=null)=>{
+const findLocal=async({email,oauthProvider=null})=>{
      try {
           const user = await User.findOne({ email, oauthProvider }).select('+password');
           if(!user){
