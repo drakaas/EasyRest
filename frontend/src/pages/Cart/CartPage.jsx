@@ -2,9 +2,10 @@
 // import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { CartItems } from "./CartItems";
-import { OrderSummary } from "./OrderSummary";
-import { DeliveryInfo } from "./DeliveryInfo";
+import { CartItems } from "../../components/cart/CartItems";
+import { OrderSummary } from "../../components/cart/OrderSummary";
+import { DeliveryInfo } from "../../components/cart/DeliveryInfo";
+
 import { Footer } from "../../components/layout/Footer";
 import { Header } from "../../components/layout/Header";
 import { useAuth } from "../../context/AuthContext";
