@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
     min: [0, 'Stock cannot be negative']
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'productCategories',
     required: [true, 'Product category is required']
   },

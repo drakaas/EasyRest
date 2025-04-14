@@ -78,7 +78,7 @@ def import_data(db):
                     if "_id" in prod:
                         prod["_id"] = ObjectId(prod["_id"])
                     if "category" in prod:
-                        prod["category"] = ObjectId(prod["category"])
+                        prod["category"] = prod["category"]
                     if "createdAt" in prod:
                         prod["createdAt"] = parse_date(prod["createdAt"])
                     if "updatedAt" in prod:
