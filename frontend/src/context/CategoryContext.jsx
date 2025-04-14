@@ -1,6 +1,6 @@
 // context/CategoryContext.js
 import { createContext, useContext, useState, useEffect } from 'react';
-import { useFetch } from '../../hooks/useFetch'; // Import the useFetch hook
+import { useFetch } from '../hooks/useFetch'
 
 const CategoryContext = createContext();
 
