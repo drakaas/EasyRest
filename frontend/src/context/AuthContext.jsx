@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 
+// Create Auth Context
 const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
@@ -10,10 +11,13 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const savedUser = localStorage.getItem('authUser')
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      const parsedUser = JSON.parse(savedUser)
+      // Optional: You can add logic to verify if the session is still valid (e.g. JWT expiration check)
+      setUser(parsedUser)
     }
   }, [])
 
+  // Function to login user
   const login = (userData, rememberMe = false) => {
     setUser(userData)
     setShowLoginModal(false)
@@ -24,6 +28,7 @@ export function AuthProvider({ children }) {
     }
   }
 
+  // Function to logout user
   const logout = () => {
     setUser(null)
     localStorage.removeItem('authUser')
