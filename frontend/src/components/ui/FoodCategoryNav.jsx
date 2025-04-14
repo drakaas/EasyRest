@@ -1,7 +1,7 @@
 // components/FoodCategoryNav.js
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useFetch } from '../hooks/useFetch';
+import  useFetch  from '../hooks/useFetch';
 // import { fetchCategories } from '../api/categoryService';
 
 export default function FoodCategoryNav() {
