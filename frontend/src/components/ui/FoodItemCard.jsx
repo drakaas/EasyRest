@@ -10,7 +10,7 @@ const FoodItemCard = React.memo(({ item }) => {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
       <div className="h-48 bg-neutral-200 relative overflow-hidden">
-        <img src={`127.0.0.1:5000/images/${images[0]}`} alt={name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
+        <img src={`127.0.0.1:5000${images[0]}`} alt={name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
         {tags?.map(tag => (
           <span 
             key={tag.text}
