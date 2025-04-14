@@ -1,5 +1,4 @@
-import User from "../models/users";
-import bcrypt from "bcryptjs";
+const  User = require( "../models/users");
 
 const insertUser = async ({ email, password, name, isOAuth = false, oauthProvider = null, oauthId = null }) => {
   try {
