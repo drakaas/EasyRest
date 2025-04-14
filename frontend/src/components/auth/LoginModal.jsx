@@ -11,7 +11,7 @@ export default function LoginModal() {
 
   const handleGoogleLogin = () => {
     // Redirect user to the Google OAuth login route
-    window.location.href = 'http://localhost:5000/google'; // Change URL as per your backend URL
+    window.location.href = 'http://localhost:5000/auth/google'; // Change URL as per your backend URL
   };
 
   
