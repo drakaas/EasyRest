@@ -22,7 +22,8 @@ export function AuthProvider({ children }) {
   const login = (userData, token, rememberMe = false) => {
     setUser(userData);
     setShowLoginModal(false);
-    
+    console.log(userData)
+    console.log(token)
     // // Save user data and token in localStorage if rememberMe is true
     // if (rememberMe) {
       localStorage.setItem('authUser', JSON.stringify(userData));
