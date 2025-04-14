@@ -16,7 +16,7 @@ const register = async (req, res) => {
 
     // Create and save new user
     const user = insertUser({email,password,username:name})
-    if(user.message) return res.status(500).json({message:user.message});
+    if(user.message!=null) return res.status(500).json({message:user.message});
     const payload = { id: user._id, email: user.email };
     const token = jwt.sign(payload, process.env.JWT_SECRET , { expiresIn: '7d' });
 
