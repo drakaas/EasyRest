@@ -41,7 +41,7 @@ router.get(
     };
     
     // Use the frontend service name as defined in docker-compose.yml
-    res.redirect(`http://frontend:3000/auth-success?token=${token}&id=${userData.id}&email=${encodeURIComponent(userData.email)}`);
+    res.redirect(`http://127.0.0.1:3000/auth-success?token=${token}&id=${userData.id}&email=${encodeURIComponent(userData.email)}`);
   }
 );
   router.get("/me",(req, res) => {
