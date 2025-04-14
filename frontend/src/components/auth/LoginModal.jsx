@@ -31,14 +31,17 @@ export default function LoginModal() {
       if (!response.ok) {
         // You can adjust this depending on your backend error format
         setError(data.message|| 'Invalid credentials');
+      }else{
+        console.log(data)
+    
+        // Save the user data from your backend (you can adjust based on actual response)
+        login({
+          name: data.user , // or whatever your backend returns
+          token: data.token, // assuming token is returned,
+          rememberMe
+        });
+
       }
-  
-      // Save the user data from your backend (you can adjust based on actual response)
-      login({
-        name: data.user , // or whatever your backend returns
-        token: data.token, // assuming token is returned,
-        rememberMe
-      });
   
 
     } catch (err) {
