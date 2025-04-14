@@ -9,7 +9,7 @@ export default function FoodCategoryNav() {
     data: categories, 
     loading, 
     error 
-  } = useFetch('/products/categories');
+  } = useFetch('/product/categories');
 
   const scrollToCategory = (categorySlug) => {
     const element = document.getElementById(categorySlug);
