@@ -27,15 +27,25 @@ const categoryById =async(id)=>{
           }
           return category
      } catch (error) {
-          return {message :"erreur "+error};
+          return {message :"erreur "+error.message};
      }
 } 
 
+const allCategories = async()=>{
+     try {
+          const categories = await productCategories.find();
+          if(!categories) return {message:"erreur aucun categorie n'a été trouvée"};
+          return categories;
+     } catch (error) {
+          return {message:"erreeur "+error.message}
+     }
+}
 
 
 
 
 module.exports={
      categoryBySlug,
-     categoryById
+     categoryById,
+     allCategories
 }

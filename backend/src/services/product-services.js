@@ -1,5 +1,5 @@
 const {getAllProducts,getProductCategory}=require("../dao/product-dao");
-const {categoryBySlug,categoryById}=require("../dao/productCategory-dao");
+const {categoryBySlug,categoryById,allCategories}=require("../dao/productCategory-dao");
 const ProductByCategorySlug= async(req,res)=>{
      try {
           const slug = req.params.slug;
@@ -28,7 +28,18 @@ const ProductByCategoryId= async(req,res)=>{
      }
 }
 
+const GetAllCategories = async(req,res)=>{
+     try {
+          const categories = await allCategories()
+          if(categories.message!=null) return res.status(500).send(res.message);
+          return res.status(200).send(categories);
+     } catch (error) {
+          return res.status(500).send({message:"erreur "+ error})
+
+     }
+}
+
 module.exports = {
      ProductByCategoryId,
-     ProductByCategorySlug
+     ProductByCategorySlug,GetAllCategories
 }
