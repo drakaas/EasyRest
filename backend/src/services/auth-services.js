@@ -1,5 +1,5 @@
 const {insertUser,findByEmail} =require( "../dao/user-dao")
-
+const jwt = require("jsonwebtoken")
 const register = async (req, res) => {
   try {
      console.log(req.body)
