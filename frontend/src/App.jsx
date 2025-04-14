@@ -1,14 +1,14 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import Home from './pages/Home/Home'
-import Menu from './pages/Menu/Menu'
+// import Menu from './pages/Menu/Menu'
 // import About from './pages/About/About'
 // import Contact from './pages/Contact/Contact'
 // import Cart from './pages/Cart/Cart'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import LoginModal from './components/auth/LoginModal'
-import GoogleCallback from './components/auth/GoogleCallback'
+import AuthSuccess from './components/auth/AuthSuccess'
 
 export default function App() {
   return (
@@ -22,8 +22,7 @@ export default function App() {
               {/* <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<Cart />} /> */}
-               <Route path="/auth/google/callback" component={GoogleCallback} /> {/* The callback route */}
-               <Route path="/dashboard" component={Home} /> {/* The protected dashboard route */}
+          <Route path="/auth-success" element={<AuthSuccess />} />
             </Routes>
           </Layout>
           <LoginModal />

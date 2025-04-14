@@ -25,29 +25,26 @@ router.get(
     session: false, // No sessions, we're handling JWT instead
   })
 );
-
-// Google callback URL after authentication
 router.get(
   '/google/callback',
-  passport.authenticate('google', { session: false }), // Don't store in session, handle JWT directly
+  passport.authenticate('google', { session: false }),
   (req, res) => {
     const user = req.user;
-
-    // Sign the JWT after successful authentication
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-
-    // Send the token back in the response, and include user data
-    res.json({
-      success: true,
-      message: "Login successful",
-      token: token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        role: user.role,
-      },
-    });
+    
+    // Create a userData object with all the fields you want to pass
+    const userData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role
+    };
+    
+    // Encode the user data as a URL-safe string
+    const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+    
+    // Redirect to your frontend with both token and user data
+    res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}&userData=${encodedUserData}`);
   }
 );
   router.get("/me",(req, res) => {
