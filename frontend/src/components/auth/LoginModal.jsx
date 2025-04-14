@@ -33,6 +33,9 @@ export default function LoginModal() {
         setError(data.message|| 'Invalid credentials');
       }else{
         console.log(data)
+        console.log("after data")
+        console.log(data.user)
+        console.log(data.token)
     
         // Save the user data from your backend (you can adjust based on actual response)
         login({
