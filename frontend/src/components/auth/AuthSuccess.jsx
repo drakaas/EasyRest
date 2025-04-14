@@ -23,7 +23,10 @@ const AuthSuccess = () => {
         login({id,email}, token, true);
         
         // Redirect to the dashboard or home page
-        navigate('/');
+        setTimeout(() => {
+          navigate('/');
+          
+        }, 1500);
       } catch (error) {
         console.error('Failed to parse user data:', error);
         navigate('/login', { state: { error: 'Authentication failed' } });
