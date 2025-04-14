@@ -44,7 +44,7 @@ router.get(
     const encodedUserData = encodeURIComponent(JSON.stringify(userData));
     
     // Redirect to your frontend with both token and user data
-    res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}&userData=${encodedUserData}`);
+    res.redirect(`localhost:3000/auth-success?token=${token}&userData=${encodedUserData}`);
   }
 );
   router.get("/me",(req, res) => {
