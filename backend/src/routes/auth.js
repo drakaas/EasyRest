@@ -5,7 +5,7 @@ const User = require('../models/users');  // Ensure the correct path to your Use
 let dotenv = require('dotenv').config();
 console.log(process.env.CLIENT_ID)
 console.log(process.env.CLIENT_SECRET)
-ppassport.use(new GoogleStrategy({
+passport.use(new GoogleStrategy({
      clientID: process.env.CLIENT_ID,
      clientSecret: process.env.CLIENT_SECRET,
      callbackURL: "http://127.0.0.1:5000/auth/google/callback",
