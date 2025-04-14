@@ -8,7 +8,7 @@ import Home from './pages/Home/Home'
 import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import LoginModal from './components/auth/LoginModal'
-import AuthSuccess from './components/auth/AuthSuccess'
+import Auth from './components/auth/AuthSuccess'
 
 export default function App() {
   return (
@@ -21,7 +21,8 @@ export default function App() {
               {/* <Route path="/menu" element={<Menu />} /> */}
               {/* <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/cart" element={<Cart />} /> */}
+               */}
+               <Route path="/cart" element={<Cart />} />
           <Route path="/auth-success" element={<AuthSuccess />} />
             </Routes>
           </Layout>
