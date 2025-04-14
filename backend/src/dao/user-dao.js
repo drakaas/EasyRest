@@ -11,10 +11,11 @@ const insertUser = async ({ email, password, name, isOAuth = false, oauthProvide
       oauthProvider,
       oauthId,
     });
-
+    console.log(user)
     const res = await user.save();
     return res;
   } catch (error) {
+     console.log(error)
     return { message: "error " + error.message };
   }
 };
