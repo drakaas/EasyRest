@@ -5,7 +5,7 @@ import { OrderSummary } from "../../components/cart/OrderSummary";
 import { DeliveryInfo } from "../../components/cart/DeliveryInfo";
 
 import { Footer } from "../../components/layout/Footer";
-import { Header } from "../../components/layout/Header";
+import  Header  from "../../components/layout/Header";
 import { useAuth } from "../../context/AuthContext";
 
 // components/CartPage.tsx
