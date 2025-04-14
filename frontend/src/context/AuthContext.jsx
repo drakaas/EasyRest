@@ -5,11 +5,16 @@ const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
+  const [token,setToken]=useState(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
 
   // Load user from localStorage if exists
   useEffect(() => {
-    const savedUser = localStorage.getItem('authToken')
+    const savedUser = localStorage.getItem('authUser')
+    const token = localStorage.getItem("authToken")
+    if(token){
+      setToken(token)
+    }
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser)
       // Optional: You can add logic to verify if the session is still valid (e.g. JWT expiration check)
@@ -42,7 +47,7 @@ export function AuthProvider({ children }) {
       }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, showLoginModal, setShowLoginModal }}>
+    <AuthContext.Provider value={{ user, login, logout, showLoginModal, setShowLoginModal ,token}}>
       {children}
     </AuthContext.Provider>
   )
