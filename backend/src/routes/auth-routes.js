@@ -41,10 +41,10 @@ router.get(
     };
     
     // Encode the user data as a URL-safe string
-    const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+    // const encodedUserData = encodeURIComponent(JSON.stringify(userData));
     
     // Redirect to your frontend with both token and user data
-    res.redirect(`localhost:3000/auth-success?token=${token}&userData=${encodedUserData}`);
+    res.redirect(`frontend/auth-success?token=${token}&id=${userData.id}&email=${userData.email}`);
   }
 );
   router.get("/me",(req, res) => {

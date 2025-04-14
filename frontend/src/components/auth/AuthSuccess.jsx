@@ -11,16 +11,16 @@ const AuthSuccess = () => {
     // Parse the URL parameters
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
-    const encodedUserData = params.get('userData');
+    const id = params.get('id');
+    const email = params.get('email');
     
     if (token && encodedUserData) {
       try {
         // Decode and parse the user data
-        const userData = JSON.parse(decodeURIComponent(encodedUserData));
         
         // Call the login function from your context
         // The true parameter is for rememberMe (set to true for OAuth logins)
-        login(userData, token, true);
+        login({id,email}, token, true);
         
         // Redirect to the dashboard or home page
         navigate('/');
