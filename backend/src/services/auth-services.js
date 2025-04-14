@@ -1,5 +1,7 @@
 const {insertUser,findByEmail} =require( "../dao/user-dao")
 const jwt = require("jsonwebtoken")
+let dotenv = require('dotenv').config()
+
 const register = async (req, res) => {
   try {
      console.log(req.body)
@@ -16,7 +18,7 @@ const register = async (req, res) => {
     const user = insertUser({email,password,username:name})
     if(user.message) return res.status(500).json({message:user.message});
     const payload = { id: user._id, email: user.email };
-    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign(payload, process.env.JWT_SECRET , { expiresIn: '7d' });
 
     return res.status(201).json({
       message: "User registered successfully",
