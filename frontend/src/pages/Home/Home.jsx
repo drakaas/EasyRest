@@ -1,30 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useFetch } from '../../hooks/useFetch';
 import FoodCategoryNav from '../../components/ui/FoodCategoryNav';
 import MenuSection from './components/MenuSection';
 
 export default function Home() {
-  const [menuData, setMenuData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchMenuData = async () => {
-      try {
-        const response = await fetch('/product/allProducts'); // Your API endpoint
-        if (!response.ok) {
-          throw new Error('Failed to fetch menu data');
-        }
-        const data = await response.json();
-        setMenuData(data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMenuData();
-  }, []);
+  const { data: menuData, loading, error } = useFetch('/product/allProducts');
 
   // Transform the flat array into categorized data structure
   const transformData = (data) => {
