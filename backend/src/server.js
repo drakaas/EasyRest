@@ -22,8 +22,8 @@ function init(port, callback) {
     };
     
     // Apply CORS middleware with the specified options
-    app.use("/images", express.static(path.join(__dirname, "public/images")));
-    console.log(path.join(__dirname, "public/images"))
+    app.use("/images", express.static(path.join(__dirname, "../public/images")));
+        console.log(path.join(__dirname, "public/images"))
     app.use(cors(corsOptions));
     app.use(express.json());
     app.use(cookieParser());
