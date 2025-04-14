@@ -3,36 +3,51 @@
     "_id": "cat_pizza",
     "name": "Pizza",
     "slug": "pizza",
-    "description": "Delicious hand-tossed pizzas with various toppings"
+    "description": "Delicious hand-tossed pizzas with various toppings",
+    "icon":"local_pizza",
+    "color":"red"
   },
   {
     "_id": "cat_burgers",
     "name": "Burgers",
     "slug": "burgers",
-    "description": "Juicy burgers with premium ingredients"
+    "description": "Juicy burgers with premium ingredients",
+    "color":"amber",
+    "icon":"lunch_dining"
   },
   {
     "_id": "cat_sides",
     "name": "Sides",
     "slug": "sides",
-    "description": "Perfect accompaniments to your meal"
+    "description": "Perfect accompaniments to your meal",
+    "color":"green",
+    "icon":"restaurant"
   },
   {
     "_id": "cat_drinks",
     "name": "Drinks",
     "slug": "drinks",
-    "description": "Refreshing beverages to complement your food"
+    "description": "Refreshing beverages to complement your food",
+    "color":"blue",
+    "icon":"local_bar"
   },
   {
     "_id": "cat_desserts",
     "name": "Desserts",
     "slug": "desserts",
-    "description": "Sweet treats to end your meal perfectly"
+    "description": "Sweet treats to end your meal perfectly",
+    "icon":"cake",
+    "color":"purple"
   },
   {
     "_id": "cat_specials",
     "name": "Specials",
     "slug": "specials",
-    "description": "Chef's specials and seasonal offerings"
+    "description": "Chef's specials and seasonal offerings",
+    "color":"pink",
+    "icon":"star"
   }
 ]
+
+
+
