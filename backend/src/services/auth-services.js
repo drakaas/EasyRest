@@ -1,4 +1,4 @@
-const {insertUser,findByEmail} =require( "../services/user-services")
+const {insertUser,findByEmail} =require( "../dao/user-dao")
 
 const register = async (req, res) => {
   try {

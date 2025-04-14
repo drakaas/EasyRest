@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 
 const insertUser = async ({ email, password, name, isOAuth = false, oauthProvider = null, oauthId = null }) => {
   try {
-    let hashedPassword = null;
 
     const user = new User({
       email,
@@ -20,7 +19,7 @@ const insertUser = async ({ email, password, name, isOAuth = false, oauthProvide
     return { message: "error " + error.message };
   }
 };
-const findByEmail= async(emai)=>{
+const findByEmail= async(email)=>{
      try {
           const existingUser = await User.findOne({ email });
           if(!existingUser){
