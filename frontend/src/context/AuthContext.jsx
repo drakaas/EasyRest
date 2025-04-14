@@ -23,21 +23,22 @@ export function AuthProvider({ children }) {
     setUser(userData);
     setShowLoginModal(false);
     
-    // Save user data and token in localStorage if rememberMe is true
-    if (rememberMe) {
+    // // Save user data and token in localStorage if rememberMe is true
+    // if (rememberMe) {
       localStorage.setItem('authUser', JSON.stringify(userData));
       localStorage.setItem('authToken', token); // Save the token
-    } else {
-      localStorage.removeItem('authUser');
-      localStorage.removeItem('authToken');
-    }
+    // } else {
+    //   localStorage.removeItem('authUser');
+    //   localStorage.removeItem('authToken');
+    // }
   };
   
   // Function to logout user
   const logout = () => {
     setUser(null)
-    localStorage.removeItem('authUser')
-  }
+      localStorage.removeItem('authUser');
+      localStorage.removeItem('authToken');
+      }
 
   return (
     <AuthContext.Provider value={{ user, login, logout, showLoginModal, setShowLoginModal }}>
