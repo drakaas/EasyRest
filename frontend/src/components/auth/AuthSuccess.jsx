@@ -13,8 +13,8 @@ const AuthSuccess = () => {
     const token = params.get('token');
     const id = params.get('id');
     const email = params.get('email');
-    
-    if (token && encodedUserData) {
+    console.log(id+" "+email)
+    if (token && id&&email) {
       try {
         // Decode and parse the user data
         
