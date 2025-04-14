@@ -3,8 +3,8 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');  // Ensure the correct path to your User model
 let dotenv = require('dotenv').config();
-console.log(process.env.GOOGLE_ID)
-console.log(process.env.GOOGLE_SECRET)
+console.log(process.env.CLIENT_ID)
+console.log(process.env.CLIENT_SECRET)
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
