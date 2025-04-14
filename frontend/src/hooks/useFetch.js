@@ -9,7 +9,7 @@ export function useFetch(url, options = {}) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("localhost:5000"+url, options);
+        const response = await fetch("http://127.0.0.1:5000"+url, options);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
