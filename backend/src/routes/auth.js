@@ -16,6 +16,8 @@ passport.use(new GoogleStrategy({
       const existingUser = await User.findOne({ googleId: profile.id });
 
       let user = existingUser;
+      console.log(profile)
+      console.log(existingUser)
       if (!existingUser) {
         user = await User.create({
           googleId: profile.id,
@@ -24,7 +26,6 @@ passport.use(new GoogleStrategy({
           oauth: 'google'
         });
       }
-
       // Sign JWT here
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
       user.token = token; // Optional: attach token to user object
