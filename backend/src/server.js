@@ -15,7 +15,13 @@ require('./routes/auth');
 
 function init(port, callback) {
     const app = express();
-    app.use(cors());
+    const corsOptions = {
+      origin: 'http://localhost:3000',  // Replace with your frontend URL
+      credentials: true,  // Allow credentials (cookies, authorization headers)
+    };
+    
+    // Apply CORS middleware with the specified options
+    app.use(cors(corsOptions));
     app.use(express.json());
     app.use(cookieParser());
 
@@ -27,7 +33,10 @@ function init(port, callback) {
           saveUninitialized: true,
         })
       );
-           app.use(express.static('public'));
+      
+      app.use("/images", express.static(path.join(__dirname, "public/images")));
+
+
      app.use(passport.initialize())
      app.use(passport.session());
 
