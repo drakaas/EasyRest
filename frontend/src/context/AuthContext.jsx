@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext()
 
@@ -6,25 +6,31 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
 
-  const login = (userData) => {
+  // Load user from localStorage if exists
+  useEffect(() => {
+    const savedUser = localStorage.getItem('authUser')
+    if (savedUser) {
+      setUser(JSON.parse(savedUser))
+    }
+  }, [])
+
+  const login = (userData, rememberMe = false) => {
     setUser(userData)
     setShowLoginModal(false)
-    // In a real app, you would save to localStorage if rememberMe is true
+    if (rememberMe) {
+      localStorage.setItem('authUser', JSON.stringify(userData))
+    } else {
+      localStorage.removeItem('authUser')
+    }
   }
 
   const logout = () => {
     setUser(null)
-    // In a real app, you would clear localStorage/sessionStorage
+    localStorage.removeItem('authUser')
   }
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      showLoginModal, 
-      setShowLoginModal, 
-      login, 
-      logout 
-    }}>
+    <AuthContext.Provider value={{ user, login, logout, showLoginModal, setShowLoginModal }}>
       {children}
     </AuthContext.Provider>
   )

@@ -18,4 +18,5 @@ const isLoggedIn = (req, res, next) => {
   }
 };
 
-module.exports = {isLoggedIn};
+module.exports = {};
+isLoggedIn

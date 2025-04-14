@@ -13,27 +13,44 @@ export default function LoginModal() {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    
+  
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (email && password) {
-        login({ 
-          name: 'Demo User', 
+      const response = await fetch('http://localhost:3000/auth/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           email,
-          token: 'demo-token' 
-        });
-      } else {
-        setError('Please enter both email and password');
+          password,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        // You can adjust this depending on your backend error format
+        setError(data.message|| 'Invalid credentials');
+      }
+  
+      // Save the user data from your backend (you can adjust based on actual response)
+      login({
+        name: data.name , // or whatever your backend returns
+        email: data.email,
+        token: data.token, // assuming token is returned
+      });
+  
+      // Optional: save token in localStorage if rememberMe is true
+      if (rememberMe) {
+        localStorage.setItem('authToken', data.token);
       }
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError(err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   if (!showLoginModal) return null;
 
   return (
