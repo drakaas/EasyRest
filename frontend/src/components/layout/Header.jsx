@@ -8,6 +8,7 @@ import UserDropdown from '../ui/UserDropDown'
 export default function Header() {
   const { cartCount } = useCart()
   const { user, setShowLoginModal } = useAuth()
+  console.log(user);
 
   return (
     <header className="py-6 px-8 bg-neutral-50 border-b border-neutral-200 flex justify-between items-center">

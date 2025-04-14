@@ -36,7 +36,7 @@ export default function LoginModal() {
     
         // Save the user data from your backend (you can adjust based on actual response)
         login({
-          name: data.user , // or whatever your backend returns
+          userData: data.user , // or whatever your backend returns
           token: data.token, // assuming token is returned,
           rememberMe
         });
