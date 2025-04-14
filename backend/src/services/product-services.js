@@ -7,7 +7,7 @@ const ProductByCategorySlug= async(req,res)=>{
           if (!slug) return res.status(400).send({ message: "Slug is required" });
           let categorie = await categoryBySlug(slug);
           if(categorie.message) return res.status(500).send(categorie.message);
-          let products=await  getProductCategory(categorie._id );
+          let products=await  getProductCategory(slug );
           if(products.message) return res.status(500).send(products.message);
           return res.status(200).send(products);
      } catch (error) {
