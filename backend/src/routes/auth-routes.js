@@ -32,7 +32,7 @@ router.get(
     const user = req.user;
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
     
-    // Create a userData object with all the fields you want to pass
+    // Create a userData object with the fields you want to pass
     const userData = {
       id: user._id,
       username: user.username,
@@ -40,11 +40,8 @@ router.get(
       role: user.role
     };
     
-    // Encode the user data as a URL-safe string
-    // const encodedUserData = encodeURIComponent(JSON.stringify(userData));
-    
-    // Redirect to your frontend with both token and user data
-    res.redirect(`frontend/auth-success?token=${token}&id=${userData.id}&email=${userData.email}`);
+    // Use the frontend service name as defined in docker-compose.yml
+    res.redirect(`http://frontend:3000/auth-success?token=${token}&id=${userData.id}&email=${encodeURIComponent(userData.email)}`);
   }
 );
   router.get("/me",(req, res) => {
