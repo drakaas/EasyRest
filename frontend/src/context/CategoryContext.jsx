@@ -26,3 +26,9 @@ export function CategoryProvider({ children }) {
     </CategoryContext.Provider>
   );
 }
+
+
+
+export function useCategories() {
+  return useContext(CategoryContext);
+}
