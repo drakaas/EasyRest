@@ -14,6 +14,7 @@ export function useFetch(url, options = {}) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const json = await response.json();
+        console.log(json)
         setData(json);
       } catch (err) {
         setError(err.message);
