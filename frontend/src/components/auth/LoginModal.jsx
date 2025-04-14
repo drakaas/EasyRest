@@ -27,7 +27,7 @@ export default function LoginModal() {
       });
   
       const data = await response.json();
-  
+      console.log(object)
       if (!response.ok) {
         // You can adjust this depending on your backend error format
         setError(data.message|| 'Invalid credentials');
@@ -49,6 +49,7 @@ export default function LoginModal() {
 
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
+      console.log(err)
     } finally {
       setIsLoading(false);
     }
