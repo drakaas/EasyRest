@@ -28,7 +28,7 @@ export function useFetch(url, options = {}) {
    
      fetchData(); // Don't forget to call it
    
-   }, [url, options]); // add dependencies
+   }, [ ]); // add dependencies
    
   return { data, loading, error };
 }
