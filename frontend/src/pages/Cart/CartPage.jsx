@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 
 
-export const CartPage = () => {
+ export default function CartPage () {
   const { user } = useAuth();
   const { cartItems } = useCart();
   const navigate = useNavigate();
@@ -60,3 +60,5 @@ export const CartPage = () => {
     </div>
   );
 };
+
+

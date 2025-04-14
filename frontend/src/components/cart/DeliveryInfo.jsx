@@ -1,7 +1,7 @@
 // components/DeliveryInfo.tsx
 import { useState } from 'react';
 
-export const DeliveryInfo = () => {
+export default function DeliveryInfo ()  {
   const [deliveryInfo, setDeliveryInfo] = useState({
     address: '',
     city: '',

@@ -10,6 +10,7 @@ import { AuthProvider } from './context/AuthContext'
 import LoginModal from './components/auth/LoginModal'
 import Auth from './components/auth/AuthSuccess'
 import Cart from './pages/Cart/CartPage'
+import AuthSuccess from './components/auth/AuthSuccess'
 export default function App() {
   return (
     <AuthProvider>

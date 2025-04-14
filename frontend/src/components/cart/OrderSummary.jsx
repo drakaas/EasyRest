@@ -2,7 +2,7 @@
 import { useCart } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
-export const OrderSummary = () => {
+export default function OrderSummary () {
   const { cartTotal, cartItems, clearCart } = useCart();
   const navigate = useNavigate();
   

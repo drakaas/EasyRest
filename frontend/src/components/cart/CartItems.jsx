@@ -1,7 +1,7 @@
 // components/CartItems.tsx
 import { useCart } from '../../context/CartContext';
 
-export const CartItems = () => {
+export default function CartItems() {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
 
   if (cartItems.length === 0) {
