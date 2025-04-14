@@ -9,7 +9,7 @@ import { CartProvider } from './context/CartContext'
 import { AuthProvider } from './context/AuthContext'
 import LoginModal from './components/auth/LoginModal'
 import Auth from './components/auth/AuthSuccess'
-
+import Cart from './pages/Cart/CartPage'
 export default function App() {
   return (
     <AuthProvider>
