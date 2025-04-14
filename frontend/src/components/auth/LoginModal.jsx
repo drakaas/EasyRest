@@ -35,15 +35,12 @@ export default function LoginModal() {
   
       // Save the user data from your backend (you can adjust based on actual response)
       login({
-        name: data.name , // or whatever your backend returns
-        email: data.email,
-        token: data.token, // assuming token is returned
+        name: data.user , // or whatever your backend returns
+        token: data.token, // assuming token is returned,
+        rememberMe
       });
   
-      // Optional: save token in localStorage if rememberMe is true
-      if (rememberMe) {
-        localStorage.setItem('authToken', data.token);
-      }
+
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
     } finally {

@@ -19,16 +19,20 @@ export function AuthProvider({ children }) {
   }, [])
 
   // Function to login user
-  const login = (userData, rememberMe = false) => {
-    setUser(userData)
-    setShowLoginModal(false)
+  const login = (userData, token, rememberMe = false) => {
+    setUser(userData);
+    setShowLoginModal(false);
+    
+    // Save user data and token in localStorage if rememberMe is true
     if (rememberMe) {
-      localStorage.setItem('authUser', JSON.stringify(userData))
+      localStorage.setItem('authUser', JSON.stringify(userData));
+      localStorage.setItem('authToken', token); // Save the token
     } else {
-      localStorage.removeItem('authUser')
+      localStorage.removeItem('authUser');
+      localStorage.removeItem('authToken');
     }
-  }
-
+  };
+  
   // Function to logout user
   const logout = () => {
     setUser(null)
