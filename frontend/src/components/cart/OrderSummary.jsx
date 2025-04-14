@@ -56,7 +56,7 @@ export default function OrderSummary () {
           </button>
           <button 
             className="w-full border border-gray-300 py-3 rounded-md font-medium hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
-            onClick={() => navigate('/menu')}
+            onClick={() => navigate('/')}
           >
             <span className="material-symbols-outlined">arrow_back</span>
             Continue Shopping

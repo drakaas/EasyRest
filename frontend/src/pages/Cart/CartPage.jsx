@@ -20,8 +20,8 @@ import { useCart } from '../../context/CartContext';
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate('/auth/login');
+    if (user==null) {
+      navigate('/');
     }
   }, [user, navigate]);
 
