@@ -1,8 +1,7 @@
 import SectionHeader from '../../../components/ui/SectionHeader'
 import FoodItemCard from '../../../components/ui/FoodItemCard'
 import { useCategories } from '../../../context/CategoryContext';
-import SectionHeader from '../../../components/ui/SectionHeader';
-import FoodItemCard from '../../../components/ui/FoodItemCard';
+
 
 export default function MenuSection({ category, items }) {
   const { getCategoryMeta } = useCategories();
