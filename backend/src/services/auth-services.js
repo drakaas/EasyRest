@@ -2,6 +2,7 @@ const {insertUser,findByEmail} =require( "../services/user-services")
 
 const register = async (req, res) => {
   try {
+     console.log(req.body)
     const { email, password, name } = req.body;
 
     // Check if user already exists
