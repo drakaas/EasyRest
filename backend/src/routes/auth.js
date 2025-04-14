@@ -11,6 +11,8 @@ passport.use(new GoogleStrategy({
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
+     console.log(process.env.GOOGLE_ID)
+     console.log(process.env.GOOGLE_SECRET)
       const existingUser = await User.findOne({ googleId: profile.id });
 
       let user = existingUser;
