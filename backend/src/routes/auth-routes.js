@@ -14,48 +14,42 @@ router.post("/login",login)
 // router.get('/protected',isLoggedIn,(req,res)=>{
 //      res.send("hello"+req.user.displayName)
 // })
+
+// Route for initiating Google login
 router.get(
   '/google',
   passport.authenticate('google', {
     scope: ['profile', 'email'],
-    prompt: 'select_account' // optional: forces account chooser
+    prompt: 'consent', // Forces the consent screen every time
+    accessType: 'offline', // Requests access to the user's offline data (refresh tokens)
+    session: false, // No sessions, we're handling JWT instead
   })
 );
 
+// Google callback URL after authentication
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { session: false }), // Don't store in session, handle JWT directly
+  (req, res) => {
+    const user = req.user;
 
-// router.get('/google/callback', 
-//     passport.authenticate('google', { failureRedirect: '/login' }), 
-//     (req, res) => {
-//       const user = req.user;
-//       const token = jwt.sign({ id: user.id, name: user.displayName, email: user.emails[0].value },  process.env.JWT_SECRET, {
-//         expiresIn: "1h",
-//       });
-//       console.log(token);
-//       res.cookie("token", token, { httpOnly: true, secure: false });
-//       res.redirect("http://localhost:5173/dashboard");
-//     }
-//   );
-  router.get(
-    "/google/callback",
-    passport.authenticate("google", { session: false }),
-    (req, res) => {
-      const user = req.user;
-      const token = jwt.sign({ id: user.id, name: user.displayName, email: user.emails[0].value },  process.env.JWT_SECRET, {
-        expiresIn: "7d",
-      });
-      res.json({
-        success: true,
-        message: "Login successful",
-        token: token,
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-        },
-      });
-    }
-  );
+    // Sign the JWT after successful authentication
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    // Send the token back in the response, and include user data
+    res.json({
+      success: true,
+      message: "Login successful",
+      token: token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    });
+  }
+);
   router.get("/me",(req, res) => {
     const token = req.cookies.csrftoken;
     console.log(req.cookies);
