@@ -11,7 +11,15 @@ const FoodItemCard = React.memo(({ item }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   
   const handleAddToCart = () => {
-    addToCart({ ...item, quantity: 1 })
+    console.log('Adding item to cart:', item)
+    // Make sure the item has an id property
+    const itemWithId = {
+      ...item,
+      id: item._id || item.id, // Use _id from MongoDB if available, otherwise use existing id
+      quantity: 1
+    }
+    console.log('Prepared item for cart:', itemWithId)
+    addToCart(itemWithId)
     setIsModalOpen(true)
   }
   

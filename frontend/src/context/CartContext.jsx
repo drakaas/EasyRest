@@ -34,6 +34,7 @@ export function CartProvider({ children }) {
       }
       
       const data = await response.json()
+      console.log('Cart data from backend:', data)
       
       // Transform backend cart format to frontend format
       if (data && data.items && Array.isArray(data.items)) {
@@ -58,8 +59,19 @@ export function CartProvider({ children }) {
   
   // Add item to cart - both locally and on the backend
   const addToCart = async (item) => {
+    console.log('CartContext addToCart called with item:', item)
+    
+    // Get the correct ID (handle both MongoDB _id and regular id)
+    const productId = item._id || item.id
+    
+    if (!productId) {
+      console.error('Missing product ID, cannot add to cart:', item)
+      return
+    }
+    
     if (user && token) {
       try {
+        console.log('Adding to backend with productId:', productId)
         // Add to backend
         const response = await fetch('http://localhost:5000/cart/add', {
           method: 'POST',
@@ -68,14 +80,16 @@ export function CartProvider({ children }) {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            productId: item.id,
-            quantity: 1
+            productId: productId,
+            quantity: item.quantity || 1
           }),
           credentials: 'include'
         })
         
         if (!response.ok) {
-          throw new Error('Failed to add item to cart')
+          const errorText = await response.text()
+          console.error('Backend error:', errorText)
+          throw new Error('Failed to add item to cart: ' + errorText)
         }
         
         // Refetch the cart to get the updated state from backend
@@ -86,15 +100,19 @@ export function CartProvider({ children }) {
     } else {
       // If not logged in, just update local state
       setCartItems(prev => {
-        const existingItem = prev.find(cartItem => cartItem.id === item.id)
+        const existingItem = prev.find(cartItem => cartItem.id === productId)
         if (existingItem) {
           return prev.map(cartItem =>
-            cartItem.id === item.id
+            cartItem.id === productId
               ? { ...cartItem, quantity: cartItem.quantity + 1 }
               : cartItem
           )
         }
-        return [...prev, { ...item, quantity: 1 }]
+        return [...prev, { 
+          ...item, 
+          id: productId, 
+          quantity: item.quantity || 1 
+        }]
       })
     }
   }
