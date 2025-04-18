@@ -1,11 +1,11 @@
 const express = require('express');
 const { GetUserCart, AddItemToCart, UpdateCartItem, RemoveCartItem, ClearUserCart } = require('../services/cart-services');
-const authMiddleware = require('../middleware/auth-middleware');
+const { isLoggedIn } = require('../middlewares/isLoggedIn');
 
 const router = express.Router();
 
 // All cart routes require authentication
-router.use(authMiddleware);
+router.use(isLoggedIn);
 
 // Get the user's cart
 router.get('/', GetUserCart);
