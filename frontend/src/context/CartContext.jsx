@@ -195,6 +195,15 @@ export function CartProvider({ children }) {
       return
     }
     
+    // Optimistically update the UI first
+    setCartItems(prev => {
+      const updatedItems = prev.map(item =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      )
+      logCartState('updateQuantity (optimistic)', updatedItems)
+      return updatedItems
+    })
+    
     if (user && token) {
       try {
         const response = await fetch('http://localhost:5000/cart/update', {
@@ -213,26 +222,20 @@ export function CartProvider({ children }) {
         if (!response.ok) {
           const errorText = await response.text()
           console.error('Failed to update item:', errorText)
+          // Revert to previous state on error
+          fetchCartFromBackend()
           throw new Error('Failed to update cart item: ' + errorText)
         }
         
-        console.log('Successfully updated in backend, fetching updated cart...')
-        // Refetch the cart to get the updated state
-        await fetchCartFromBackend()
+        // No need to refetch the entire cart since we already updated optimistically
+        console.log('Successfully updated in backend')
       } catch (error) {
         console.error('Error updating cart:', error)
+        // On error, revert to the server state
+        fetchCartFromBackend()
       }
-    } else {
-      // If not logged in, just update local state
-      console.log('User not logged in, updating local cart state...')
-      setCartItems(prev => {
-        const updatedItems = prev.map(item =>
-          item.id === itemId ? { ...item, quantity: newQuantity } : item
-        )
-        logCartState('updateQuantity', updatedItems)
-        return updatedItems
-      })
     }
+    // No else needed since we already optimistically updated the cart for both cases
   }
 
   // Clear the entire cart
