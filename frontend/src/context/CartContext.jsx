@@ -8,12 +8,19 @@ export function CartProvider({ children }) {
   const [loading, setLoading] = useState(false)
   const { user, token } = useAuth()
   
+  // Debug function to log cart state
+  const logCartState = (source, items) => {
+    console.log(`[${source}] Cart state:`, items)
+    console.log(`[${source}] Cart count:`, items.reduce((sum, item) => sum + item.quantity, 0))
+  }
+  
   // Fetch cart from the backend when user logs in
   useEffect(() => {
     if (user && token) {
+      console.log('User logged in, fetching cart...')
       fetchCartFromBackend()
     } else {
-      // Clear cart when user logs out
+      console.log('No user or token, clearing cart...')
       setCartItems([])
     }
   }, [user, token])
@@ -21,6 +28,7 @@ export function CartProvider({ children }) {
   // Fetch cart data from the backend
   const fetchCartFromBackend = async () => {
     try {
+      console.log('Fetching cart from backend...')
       setLoading(true)
       const response = await fetch('http://localhost:5000/cart', {
         headers: {
@@ -30,25 +38,42 @@ export function CartProvider({ children }) {
       })
       
       if (!response.ok) {
-        throw new Error('Failed to fetch cart')
+        const errorText = await response.text()
+        console.error('Failed to fetch cart:', errorText)
+        throw new Error('Failed to fetch cart: ' + errorText)
       }
       
       const data = await response.json()
-      console.log('Cart data from backend:', data)
+      console.log('Raw cart data from backend:', data)
       
       // Transform backend cart format to frontend format
       if (data && data.items && Array.isArray(data.items)) {
-        const transformedItems = data.items.map(item => ({
-          id: item.product._id,
-          name: item.product.name,
-          price: item.product.price,
-          quantity: item.quantity,
-          images: item.product.images,
-          image: item.product.images && item.product.images.length > 0 
-            ? item.product.images[0] 
-            : null
-        }))
+        console.log('Transforming cart items...')
+        const transformedItems = data.items.map(item => {
+          if (!item.product) {
+            console.error('Malformed cart item from backend:', item)
+            return null
+          }
+          
+          console.log('Processing item:', item)
+          return {
+            id: item.product._id,
+            name: item.product.name,
+            price: item.product.price,
+            quantity: item.quantity,
+            images: item.product.images,
+            image: item.product.images && item.product.images.length > 0 
+              ? item.product.images[0] 
+              : null
+          }
+        }).filter(Boolean) // Remove any null items
+        
+        console.log('Transformed items:', transformedItems)
         setCartItems(transformedItems)
+        logCartState('fetchCartFromBackend', transformedItems)
+      } else {
+        console.log('No items in cart data or invalid format:', data)
+        setCartItems([])
       }
     } catch (error) {
       console.error('Error fetching cart:', error)
@@ -92,6 +117,7 @@ export function CartProvider({ children }) {
           throw new Error('Failed to add item to cart: ' + errorText)
         }
         
+        console.log('Successfully added to backend, fetching updated cart...')
         // Refetch the cart to get the updated state from backend
         await fetchCartFromBackend()
       } catch (error) {
@@ -99,26 +125,35 @@ export function CartProvider({ children }) {
       }
     } else {
       // If not logged in, just update local state
+      console.log('User not logged in, updating local cart state...')
       setCartItems(prev => {
         const existingItem = prev.find(cartItem => cartItem.id === productId)
         if (existingItem) {
-          return prev.map(cartItem =>
+          console.log('Item already in cart, updating quantity...')
+          const updatedItems = prev.map(cartItem =>
             cartItem.id === productId
               ? { ...cartItem, quantity: cartItem.quantity + 1 }
               : cartItem
           )
+          logCartState('addToCart (update)', updatedItems)
+          return updatedItems
         }
-        return [...prev, { 
+        console.log('Item not in cart, adding as new...')
+        const newItem = { 
           ...item, 
           id: productId, 
           quantity: item.quantity || 1 
-        }]
+        }
+        const updatedItems = [...prev, newItem]
+        logCartState('addToCart (new)', updatedItems)
+        return updatedItems
       })
     }
   }
 
   // Remove item from cart
   const removeFromCart = async (itemId) => {
+    console.log('Removing item from cart:', itemId)
     if (user && token) {
       try {
         const response = await fetch(`http://localhost:5000/cart/remove/${itemId}`, {
@@ -130,9 +165,12 @@ export function CartProvider({ children }) {
         })
         
         if (!response.ok) {
-          throw new Error('Failed to remove item from cart')
+          const errorText = await response.text()
+          console.error('Failed to remove item:', errorText)
+          throw new Error('Failed to remove item from cart: ' + errorText)
         }
         
+        console.log('Successfully removed from backend, fetching updated cart...')
         // Refetch the cart to get the updated state
         await fetchCartFromBackend()
       } catch (error) {
@@ -140,12 +178,18 @@ export function CartProvider({ children }) {
       }
     } else {
       // If not logged in, just update local state
-      setCartItems(prev => prev.filter(item => item.id !== itemId))
+      console.log('User not logged in, updating local cart state...')
+      setCartItems(prev => {
+        const updatedItems = prev.filter(item => item.id !== itemId)
+        logCartState('removeFromCart', updatedItems)
+        return updatedItems
+      })
     }
   }
 
   // Update item quantity
   const updateQuantity = async (itemId, newQuantity) => {
+    console.log('Updating quantity for item:', itemId, 'to', newQuantity)
     if (newQuantity < 1) {
       removeFromCart(itemId)
       return
@@ -167,9 +211,12 @@ export function CartProvider({ children }) {
         })
         
         if (!response.ok) {
-          throw new Error('Failed to update cart item')
+          const errorText = await response.text()
+          console.error('Failed to update item:', errorText)
+          throw new Error('Failed to update cart item: ' + errorText)
         }
         
+        console.log('Successfully updated in backend, fetching updated cart...')
         // Refetch the cart to get the updated state
         await fetchCartFromBackend()
       } catch (error) {
@@ -177,16 +224,20 @@ export function CartProvider({ children }) {
       }
     } else {
       // If not logged in, just update local state
-      setCartItems(prev =>
-        prev.map(item =>
+      console.log('User not logged in, updating local cart state...')
+      setCartItems(prev => {
+        const updatedItems = prev.map(item =>
           item.id === itemId ? { ...item, quantity: newQuantity } : item
         )
-      )
+        logCartState('updateQuantity', updatedItems)
+        return updatedItems
+      })
     }
   }
 
   // Clear the entire cart
   const clearCart = async () => {
+    console.log('Clearing cart...')
     if (user && token) {
       try {
         const response = await fetch('http://localhost:5000/cart/clear', {
@@ -198,9 +249,12 @@ export function CartProvider({ children }) {
         })
         
         if (!response.ok) {
-          throw new Error('Failed to clear cart')
+          const errorText = await response.text()
+          console.error('Failed to clear cart:', errorText)
+          throw new Error('Failed to clear cart: ' + errorText)
         }
         
+        console.log('Successfully cleared in backend, updating local state...')
         // Clear local state
         setCartItems([])
       } catch (error) {
@@ -208,6 +262,7 @@ export function CartProvider({ children }) {
       }
     } else {
       // If not logged in, just clear local state
+      console.log('User not logged in, clearing local cart state...')
       setCartItems([])
     }
   }

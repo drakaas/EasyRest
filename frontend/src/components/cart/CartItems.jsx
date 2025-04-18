@@ -1,10 +1,22 @@
 // components/CartItems.tsx
 import { useCart } from '../../context/CartContext';
+import { useEffect } from 'react';
 
 export default function CartItems() {
-  const { cartItems, removeFromCart, updateQuantity, loading } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, loading, refreshCart } = useCart();
+
+  useEffect(() => {
+    console.log('CartItems component rendered with cartItems:', cartItems);
+  }, [cartItems]);
+  
+  // Force refresh cart on initial mount
+  useEffect(() => {
+    console.log('CartItems component mounted, refreshing cart...');
+    refreshCart && refreshCart();
+  }, [refreshCart]);
 
   if (loading) {
+    console.log('CartItems component is in loading state');
     return (
       <div className="bg-white rounded-lg shadow-md p-8">
         <div className="animate-pulse">
@@ -28,6 +40,7 @@ export default function CartItems() {
   }
 
   if (cartItems.length === 0) {
+    console.log('CartItems component has empty cart');
     return (
       <div className="bg-white rounded-lg shadow-md p-8 text-center">
         <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">shopping_cart</span>
@@ -48,59 +61,62 @@ export default function CartItems() {
         <div className="col-span-1 text-center">Actions</div>
       </div>
 
-      {cartItems.map((item) => (
-        <div key={item.id} className="grid grid-cols-12 gap-4 p-4 items-center border-b hover:bg-gray-50 transition-colors">
-          <div className="col-span-6 flex gap-4">
-            <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
-              {item.image ? (
-                <img 
-                  src={item.image} 
-                  alt={item.name} 
-                  className="w-full h-full object-cover" 
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <span className="material-symbols-outlined">image_not_supported</span>
-                </div>
-              )}
+      {cartItems.map((item) => {
+        console.log('Rendering cart item:', item);
+        return (
+          <div key={item.id} className="grid grid-cols-12 gap-4 p-4 items-center border-b hover:bg-gray-50 transition-colors">
+            <div className="col-span-6 flex gap-4">
+              <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
+                {item.image ? (
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover" 
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <span className="material-symbols-outlined">image_not_supported</span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <h3 className="font-medium">{item.name}</h3>
+                <p className="text-sm text-gray-500 truncate max-w-xs">{item.description || 'No description available'}</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-medium">{item.name}</h3>
-              <p className="text-sm text-gray-500 truncate max-w-xs">{item.description || 'No description available'}</p>
+            <div className="col-span-2 text-center">${item.price?.toFixed(2) || '0.00'}</div>
+            <div className="col-span-2 flex justify-center items-center">
+              <button 
+                className="w-8 h-8 bg-gray-200 rounded-l-md hover:bg-gray-300 transition-colors flex items-center justify-center"
+                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+              >
+                <span className="material-symbols-outlined text-sm">remove</span>
+              </button>
+              <input 
+                type="text" 
+                value={item.quantity} 
+                className="w-8 h-8 text-center border-t border-b" 
+                readOnly 
+              />
+              <button 
+                className="w-8 h-8 bg-gray-200 rounded-r-md hover:bg-gray-300 transition-colors flex items-center justify-center"
+                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+              >
+                <span className="material-symbols-outlined text-sm">add</span>
+              </button>
+            </div>
+            <div className="col-span-1 text-center">${((item.price || 0) * item.quantity).toFixed(2)}</div>
+            <div className="col-span-1 text-center">
+              <button 
+                className="text-gray-400 hover:text-red-500 transition-colors"
+                onClick={() => removeFromCart(item.id)}
+              >
+                <span className="material-symbols-outlined">delete</span>
+              </button>
             </div>
           </div>
-          <div className="col-span-2 text-center">${item.price?.toFixed(2) || '0.00'}</div>
-          <div className="col-span-2 flex justify-center items-center">
-            <button 
-              className="w-8 h-8 bg-gray-200 rounded-l-md hover:bg-gray-300 transition-colors flex items-center justify-center"
-              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-            >
-              <span className="material-symbols-outlined text-sm">remove</span>
-            </button>
-            <input 
-              type="text" 
-              value={item.quantity} 
-              className="w-8 h-8 text-center border-t border-b" 
-              readOnly 
-            />
-            <button 
-              className="w-8 h-8 bg-gray-200 rounded-r-md hover:bg-gray-300 transition-colors flex items-center justify-center"
-              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-            >
-              <span className="material-symbols-outlined text-sm">add</span>
-            </button>
-          </div>
-          <div className="col-span-1 text-center">${((item.price || 0) * item.quantity).toFixed(2)}</div>
-          <div className="col-span-1 text-center">
-            <button 
-              className="text-gray-400 hover:text-red-500 transition-colors"
-              onClick={() => removeFromCart(item.id)}
-            >
-              <span className="material-symbols-outlined">delete</span>
-            </button>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
