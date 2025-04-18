@@ -40,7 +40,7 @@ const FoodItemCard = React.memo(({ item }) => {
             {user ? (
               <button 
                 onClick={handleAddToCart}
-                className="bg-primary-600 hover:bg-primary-700 text-black px-4 py-2 rounded-lg text-sm font-medium border border-black transition-colors flex items-center"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center"
               >
                 <span className="material-symbols-outlined text-sm mr-1">add_shopping_cart</span>
                 Add to cart
