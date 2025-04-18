@@ -1,13 +1,21 @@
 // components/CartItems.tsx
 import { useCart } from '../../context/CartContext';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function CartItems() {
   const { cartItems, removeFromCart, updateQuantity, loading, refreshCart } = useCart();
   const initialRenderRef = useRef(true);
+  // Local state for item quantities to prevent re-renders
+  const [localQuantities, setLocalQuantities] = useState({});
 
   useEffect(() => {
     console.log('CartItems component rendered with cartItems:', cartItems);
+    // Initialize local quantities from cart items
+    const initialQuantities = {};
+    cartItems.forEach(item => {
+      initialQuantities[item.id] = item.quantity;
+    });
+    setLocalQuantities(initialQuantities);
   }, [cartItems]);
   
   // Force refresh cart only on initial mount
@@ -18,6 +26,20 @@ export default function CartItems() {
       initialRenderRef.current = false;
     }
   }, [refreshCart]);
+
+  // Handle quantity changes locally
+  const handleQuantityChange = (itemId, newQuantity) => {
+    if (newQuantity < 1) return;
+    
+    // Update local state immediately
+    setLocalQuantities(prev => ({
+      ...prev,
+      [itemId]: newQuantity
+    }));
+    
+    // Update backend without refreshing component
+    updateQuantity(itemId, newQuantity);
+  };
 
   if (loading) {
     console.log('CartItems component is in loading state');
@@ -67,6 +89,9 @@ export default function CartItems() {
 
       {cartItems.map((item) => {
         console.log('Rendering cart item:', item);
+        // Use local quantity state if available, otherwise fall back to item.quantity
+        const quantity = localQuantities[item.id] !== undefined ? localQuantities[item.id] : item.quantity;
+        
         return (
           <div key={item.id} className="grid grid-cols-12 gap-4 p-4 items-center border-b hover:bg-gray-50 transition-colors">
             <div className="col-span-6 flex gap-4">
@@ -92,24 +117,24 @@ export default function CartItems() {
             <div className="col-span-2 flex justify-center items-center">
               <button 
                 className="w-8 h-8 bg-gray-200 rounded-l-md hover:bg-gray-300 transition-colors flex items-center justify-center"
-                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                onClick={() => handleQuantityChange(item.id, quantity - 1)}
               >
                 <span className="material-symbols-outlined text-sm">remove</span>
               </button>
               <input 
                 type="text" 
-                value={item.quantity} 
+                value={quantity} 
                 className="w-8 h-8 text-center border-t border-b" 
                 readOnly 
               />
               <button 
                 className="w-8 h-8 bg-gray-200 rounded-r-md hover:bg-gray-300 transition-colors flex items-center justify-center"
-                onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                onClick={() => handleQuantityChange(item.id, quantity + 1)}
               >
                 <span className="material-symbols-outlined text-sm">add</span>
               </button>
             </div>
-            <div className="col-span-1 text-center">${((item.price || 0) * item.quantity).toFixed(2)}</div>
+            <div className="col-span-1 text-center">${((item.price || 0) * quantity).toFixed(2)}</div>
             <div className="col-span-1 text-center">
               <button 
                 className="text-gray-400 hover:text-red-500 transition-colors"
