@@ -1,18 +1,22 @@
 // components/CartItems.tsx
 import { useCart } from '../../context/CartContext';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function CartItems() {
   const { cartItems, removeFromCart, updateQuantity, loading, refreshCart } = useCart();
+  const initialRenderRef = useRef(true);
 
   useEffect(() => {
     console.log('CartItems component rendered with cartItems:', cartItems);
   }, [cartItems]);
   
-  // Force refresh cart on initial mount
+  // Force refresh cart only on initial mount
   useEffect(() => {
-    console.log('CartItems component mounted, refreshing cart...');
-    refreshCart && refreshCart();
+    if (initialRenderRef.current && refreshCart) {
+      console.log('CartItems component mounted, refreshing cart...');
+      refreshCart();
+      initialRenderRef.current = false;
+    }
   }, [refreshCart]);
 
   if (loading) {
