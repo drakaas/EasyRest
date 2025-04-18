@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const AuthRouter = require("./routes/auth-routes")
+const CartRouter = require("./routes/cart-routes")
 
 const path = require('path');
 
@@ -44,6 +45,7 @@ function init(port, callback) {
 
      app.use(express.json());
      app.use('/product',ProductRouter)
+     app.use('/cart', CartRouter)
 
 
 

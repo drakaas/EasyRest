@@ -49,7 +49,7 @@ const CartModal = ({ isOpen, onClose, item }) => {
               onClose()
               navigate('/cart')
             }}
-            className="flex-1 bg-primary-600 hover:bg-primary-700 text-black border border-black py-2 rounded-lg font-medium transition-colors"
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-medium transition-colors"
           >
             View Cart
           </button>
