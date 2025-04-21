@@ -158,7 +158,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
               </div>
               <div className="col-span-2 flex justify-center">
                 <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap bg-${categoryColor}-100 text-${categoryColor}-600`}>
-                  {categoryName}
+                  {categorySlug}
                 </span>
               </div>
               <div className="col-span-2 flex justify-center space-x-1">
