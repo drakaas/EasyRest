@@ -48,24 +48,45 @@ const COLOR_MAP = {
 };
 
 export default function CategoryManagement() {
-  const { categories, addCategory, updateCategory, deleteCategory, reorderCategories } = useCategories();
+  const { categories, addCategory, updateCategory, deleteCategory, reorderCategories, setCategories } = useCategories();
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryIcon, setNewCategoryIcon] = useState('local_pizza');
   const [newCategoryColor, setNewCategoryColor] = useState('red');
   const [editingCategory, setEditingCategory] = useState(null);
 
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     if (!newCategoryName.trim()) return;
-    
-    addCategory({
-      name: newCategoryName,
-      icon: newCategoryIcon,
-      color: newCategoryColor
-    });
-    
-    setNewCategoryName('');
-    setNewCategoryIcon('local_pizza');
-    setNewCategoryColor('red');
+
+    try {
+      const response = await fetch('/api/addCategory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: newCategoryName,
+          icon: newCategoryIcon,
+          color: newCategoryColor,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add category');
+      }
+
+      const addedCategory = await response.json();
+      
+      // Update the categories state with the new category
+      setCategories(prevCategories => [...prevCategories, addedCategory]);
+      
+      // Reset form
+      setNewCategoryName('');
+      setNewCategoryIcon('local_pizza');
+      setNewCategoryColor('red');
+    } catch (error) {
+      console.error('Error adding category:', error);
+      // You might want to show an error message to the user here
+    }
   };
 
   const handleEditCategory = (category) => {

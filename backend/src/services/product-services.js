@@ -48,8 +48,22 @@ const GetAllProducts = async(req,res)=>{
      }
 }
 
+
+const AddCategory = async(req,res)=>{
+     try {
+          const {name,slug,color,icon}=req.body;
+          if(!name || !slug || !color || !icon) return res.status(400).send({message:"erreur les champs sont obligatoires"});
+          let categorie = await categoryBySlug(slug);
+          if(categorie.message) return res.status(500).send(categorie.message);
+          let newCategory = await addCategory(name,slug,color,icon);
+          return res.status(200).send(newCategory);
+     } catch (error) {
+          return res.status(500).send({message:"erreur "+error});
+     }
+}
 module.exports = {
      ProductByCategoryId,
      ProductByCategorySlug,GetAllCategories,
-     GetAllProducts
+     GetAllProducts,
+     AddCategory
 }

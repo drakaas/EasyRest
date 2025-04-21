@@ -22,18 +22,15 @@ export function useCategories() {
     setError(null);
     
     try {
-      // In a real app, fetch from API
-      // const response = await fetch('/api/categories');
-      // const data = await response.json();
-      
-      // Using mock data for demonstration
-      setTimeout(() => {
-        setCategories(initialCategories);
-        setLoading(false);
-      }, 500);
+      const response = await fetch('/api/categories');
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+      const data = await response.json();
+      setCategories(data);
     } catch (err) {
-      console.error('Error fetching categories:', err);
-      setError('Failed to load categories');
+      setError(err.message);
+    } finally {
       setLoading(false);
     }
   }, []);
@@ -69,22 +66,26 @@ export function useCategories() {
 
   const updateCategory = useCallback(async (id, categoryData) => {
     try {
-      // In a real app, put to API
-      // const response = await fetch(`/api/categories/${id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(categoryData)
-      // });
-      // const updatedCategory = await response.json();
-      
-      // Using mock for demonstration
+      const response = await fetch(`/api/categories/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(categoryData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update category');
+      }
+
+      const updatedCategory = await response.json();
       setCategories(prev => 
         prev.map(category => 
-          category.id === id ? { ...category, ...categoryData } : category
+          category.id === id ? updatedCategory : category
         )
       );
       
-      return categoryData;
+      return updatedCategory;
     } catch (err) {
       console.error('Error updating category:', err);
       throw new Error('Failed to update category');
@@ -93,12 +94,14 @@ export function useCategories() {
 
   const deleteCategory = useCallback(async (id) => {
     try {
-      // In a real app, delete from API
-      // await fetch(`/api/categories/${id}`, {
-      //   method: 'DELETE'
-      // });
-      
-      // Using mock for demonstration
+      const response = await fetch(`/api/categories/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete category');
+      }
+
       setCategories(prev => prev.filter(category => category.id !== id));
     } catch (err) {
       console.error('Error deleting category:', err);
@@ -108,32 +111,31 @@ export function useCategories() {
 
   const reorderCategories = useCallback(async (orderedIds) => {
     try {
-      // In a real app, put to API
-      // await fetch('/api/categories/reorder', {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ orderedIds })
-      // });
-      
-      // Using mock for demonstration
-      const categoryMap = {};
-      categories.forEach(category => {
-        categoryMap[category.id] = category;
+      const response = await fetch('/api/categories/reorder', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ order: orderedIds }),
       });
-      
-      const reordered = orderedIds.map(id => categoryMap[id]);
-      
+
+      if (!response.ok) {
+        throw new Error('Failed to reorder categories');
+      }
+
+      const reordered = await response.json();
       setCategories(reordered);
     } catch (err) {
       console.error('Error reordering categories:', err);
       throw new Error('Failed to reorder categories');
     }
-  }, [categories]);
+  }, []);
 
   return {
     categories,
     loading,
     error,
+    setCategories,
     fetchCategories,
     addCategory,
     updateCategory,

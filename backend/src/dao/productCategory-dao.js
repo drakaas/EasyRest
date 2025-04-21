@@ -43,9 +43,17 @@ const allCategories = async()=>{
 
 
 
-
+const addCategory = async(name,slug,color,icon)=>{
+     try {
+          let newCategory = await productCategories.create({name,slug,color,icon});
+          return newCategory;
+     } catch (error) {
+          return {message:"erreur "+error.message};
+     }
+}
 module.exports={
      categoryBySlug,
      categoryById,
-     allCategories
+     allCategories,
+     addCategory
 }
