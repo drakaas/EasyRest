@@ -98,7 +98,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
       <div className="divide-y">
         {products.map((product) => {
           const categoryId = product.categoryId || product.category_id || product.categoryId;
-          const categorySlug = product.category || product.category_slug;
+          const categorySlug = product.category || product.slug;
           
           // Just use the slug as the category name
           const categoryName = categorySlug || 'Uncategorized';
