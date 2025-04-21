@@ -21,6 +21,12 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
     }
   };
 
+  // Truncate description to a reasonable length
+  const truncateDescription = (text, maxLength = 80) => {
+    if (!text) return '';
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+  };
+
   if (loading) {
     return (
       <div className="border border-gray-200 rounded-lg">
@@ -78,10 +84,10 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
 
   return (
     <div className="border border-gray-200 rounded-lg">
-      <div className="grid grid-cols-12 gap-4 p-4 border-b text-gray-600 font-medium bg-gray-50">
+      <div className="grid grid-cols-12 gap-2 p-4 border-b text-gray-600 font-medium bg-gray-50">
         <div className="col-span-1"></div>
         <div className="col-span-5">Product</div>
-        <div className="col-span-2 text-center">Price</div>
+        <div className="col-span-2 text-right pr-4">Price</div>
         <div className="col-span-2 text-center">Category</div>
         <div className="col-span-2 text-center">Actions</div>
       </div>
@@ -91,51 +97,61 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
           const category = getCategoryById(product.categoryId);
           
           return (
-            <div key={product.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-gray-50 transition-colors">
+            <div key={product.id} className="grid grid-cols-12 gap-2 p-4 items-center hover:bg-gray-50 transition-colors">
               <div className="col-span-1 flex justify-center">
                 <span className="material-symbols-outlined text-gray-400 cursor-move">drag_indicator</span>
               </div>
-              <div className="col-span-5 flex gap-3 items-center">
-                <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden">
+              <div className="col-span-5 flex gap-3 items-center overflow-hidden">
+                <div className="w-14 h-14 min-w-[56px] bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
                   {product.image ? (
-                    <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                    <img 
+                      src={product.image} 
+                      alt={product.name} 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://via.placeholder.com/56x56?text=No+Image";
+                      }}
+                    />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50">
                       <span className="material-symbols-outlined">image_not_supported</span>
                     </div>
                   )}
                 </div>
-                <div>
-                  <h4 className="font-medium">{product.name}</h4>
-                  <p className="text-sm text-gray-500 truncate max-w-xs">{product.description}</p>
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-medium text-gray-800 truncate">{product.name}</h4>
+                  <p className="text-sm text-gray-500 line-clamp-2 break-words">{truncateDescription(product.description)}</p>
                 </div>
               </div>
-              <div className="col-span-2 text-center">
+              <div className="col-span-2 text-right pr-4">
                 {product.discount ? (
-                  <div>
-                    <span className="line-through text-gray-400 text-sm mr-1">${product.price.toFixed(2)}</span>
-                    <span className="font-medium">${(product.price * (1 - product.discount / 100)).toFixed(2)}</span>
+                  <div className="flex flex-col items-end">
+                    <span className="line-through text-gray-400 text-xs">${product.price.toFixed(2)}</span>
+                    <span className="font-medium text-primary-600">${(product.price * (1 - product.discount / 100)).toFixed(2)}</span>
                   </div>
                 ) : (
-                  <span>${product.price.toFixed(2)}</span>
+                  <span className="font-medium">${product.price.toFixed(2)}</span>
                 )}
               </div>
-              <div className="col-span-2 text-center">
-                <span className={`bg-${category.color}-100 text-${category.color}-800 px-2 py-1 rounded-full text-xs`}>
+              <div className="col-span-2 flex justify-center">
+                <span className={`bg-${category.color}-100 text-${category.color}-800 px-2 py-1 rounded-full text-xs whitespace-nowrap`}>
                   {category.name}
                 </span>
               </div>
-              <div className="col-span-2 flex justify-center gap-2">
+              <div className="col-span-2 flex justify-center space-x-1">
                 <button 
-                  className="p-1 hover:bg-gray-200 rounded transition-colors"
+                  className="p-1.5 hover:bg-gray-200 rounded transition-colors"
                   onClick={() => onEdit(product)}
+                  title="Edit"
                 >
-                  <span className="material-symbols-outlined">edit</span>
+                  <span className="material-symbols-outlined text-primary-600">edit</span>
                 </button>
                 <button 
-                  className={`p-1 rounded transition-colors ${deletingId === product.id ? 'text-gray-400' : 'hover:bg-gray-200 hover:text-red-500'}`}
+                  className={`p-1.5 rounded transition-colors ${deletingId === product.id ? 'text-gray-400' : 'hover:bg-gray-200 hover:text-red-500'}`}
                   onClick={() => handleDelete(product.id)}
                   disabled={deletingId === product.id}
+                  title="Delete"
                 >
                   {deletingId === product.id ? (
                     <span className="material-symbols-outlined animate-spin">sync</span>
