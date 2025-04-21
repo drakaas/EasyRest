@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 
 export default function ProductList({ products, categories, onEdit, onAddNew, loading }) {
-  const { deleteProduct, duplicateProduct } = useProducts();
+  const { deleteProduct } = useProducts();
   const [deletingId, setDeletingId] = useState(null);
   
   const getCategoryById = (categoryId) => {
@@ -18,14 +18,6 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
       console.error('Error deleting product:', error);
     } finally {
       setDeletingId(null);
-    }
-  };
-  
-  const handleDuplicate = async (product) => {
-    try {
-      await duplicateProduct(product.id);
-    } catch (error) {
-      console.error('Error duplicating product:', error);
     }
   };
 
@@ -139,12 +131,6 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
                   onClick={() => onEdit(product)}
                 >
                   <span className="material-symbols-outlined">edit</span>
-                </button>
-                <button 
-                  className="p-1 hover:bg-gray-200 rounded transition-colors"
-                  onClick={() => handleDuplicate(product)}
-                >
-                  <span className="material-symbols-outlined">content_copy</span>
                 </button>
                 <button 
                   className={`p-1 rounded transition-colors ${deletingId === product.id ? 'text-gray-400' : 'hover:bg-gray-200 hover:text-red-500'}`}
