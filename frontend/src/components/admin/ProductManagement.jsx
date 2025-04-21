@@ -41,7 +41,7 @@ export default function ProductManagement({ initialShowEditor = false }) {
       (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesCategory = selectedCategory === 'all' || 
-      product.slug === selectedCategory;
+      product.slug?.toLowerCase() === selectedCategory.toLowerCase();
     
     return matchesSearch && matchesCategory;
   });
