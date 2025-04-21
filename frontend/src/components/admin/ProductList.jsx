@@ -102,10 +102,18 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
           let categoryName = 'Uncategorized';
           let categoryColor = 'gray';
           
-          if (product.category_name) {
+          // First check if we have category details directly on the product
+          if (product.categoryDetails) {
+            categoryName = product.categoryDetails.name;
+            categoryColor = product.categoryDetails.color || 'gray';
+          } 
+          // Then check if we have category name directly
+          else if (product.category_name) {
             categoryName = product.category_name;
             categoryColor = product.category_color || 'gray';
-          } else {
+          } 
+          // Finally try to look up by ID
+          else if (categoryId) {
             const category = getCategoryById(categoryId);
             categoryName = category.name;
             categoryColor = category.color || 'gray';
@@ -113,11 +121,9 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
           
           const price = parseFloat(product.price || 0);
           
-          // Construct image URL
-          const imageUrl = product.image 
-            ? product.image.startsWith('http') 
-              ? product.image 
-              : `${process.env.REACT_APP_API_URL || ''}${product.image}`
+          // Construct image URL - using the same logic as FoodItemCard
+          const imageUrl = product.images?.[0] 
+            ? `http://localhost:5000${product.images[0]}`
             : null;
           
           return (
