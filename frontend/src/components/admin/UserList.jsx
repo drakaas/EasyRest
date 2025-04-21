@@ -11,8 +11,25 @@ export default function UserList({
   currentPage,
   onPageChange
 }) {
+  console.log('UserList rendering with props:', { 
+    usersLength: users?.length, 
+    selectedUsers, 
+    totalUsers, 
+    currentPage 
+  });
+
   // Helper function to get the correct status color classes
   const getStatusClasses = (color) => {
+    console.log('Getting status classes for color:', color);
+    if (!color) {
+      console.warn('Color is undefined or null');
+      return { 
+        bgClass: 'bg-gray-100', 
+        textClass: 'text-gray-800', 
+        dotClass: 'bg-gray-500' 
+      };
+    }
+    
     const bgClass = `bg-${color}-100`;
     const textClass = `text-${color}-800`;
     const dotClass = `bg-${color}-${color === 'gray' ? '500' : '600'}`;
@@ -27,6 +44,11 @@ export default function UserList({
       : "w-9 h-9 border border-gray-300 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors";
   };
 
+  if (!users) {
+    console.error('Users array is undefined');
+    return <div>No users data available</div>;
+  }
+
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
       <div className="grid grid-cols-12 gap-4 p-5 border-b text-gray-600 font-medium bg-gray-50">
@@ -39,6 +61,13 @@ export default function UserList({
       
       <div className="divide-y">
         {users.map(user => {
+          console.log('Rendering user:', user);
+          
+          if (!user.status || !user.status.color) {
+            console.error('User status or color is missing:', user);
+            user.status = user.status || { text: 'Unknown', color: 'gray' };
+          }
+          
           const { bgClass, textClass, dotClass } = getStatusClasses(user.status.color);
           
           return (
@@ -95,7 +124,7 @@ export default function UserList({
       </div>
       
       <div className="p-5 flex justify-between items-center border-t bg-gray-50">
-        <div className="text-sm text-gray-500 font-medium">Showing {users.length} of {totalUsers} users</div>
+        <div className="text-sm text-gray-500 font-medium">Showing {users.length} of {totalUsers || 0} users</div>
         <div className="flex items-center gap-2">
           <button 
             className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
