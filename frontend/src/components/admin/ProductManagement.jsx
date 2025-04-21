@@ -41,7 +41,7 @@ export default function ProductManagement({ initialShowEditor = false }) {
       (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesCategory = selectedCategory === 'all' || 
-      product.categoryId === selectedCategory;
+      product.slug === selectedCategory;
     
     return matchesSearch && matchesCategory;
   });
@@ -141,7 +141,7 @@ export default function ProductManagement({ initialShowEditor = false }) {
           >
             <option value="all">All Categories</option>
             {categories.map(category => (
-              <option key={category.id} value={category.id}>{category.name}</option>
+              <option key={category.slug} value={category.slug}>{category.name}</option>
             ))}
           </select>
           <div className="flex-1"></div>
