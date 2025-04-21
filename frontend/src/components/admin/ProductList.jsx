@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 
-export default function ProductList({ products, categories, onEdit, onAddNew, loading }) {
+export default function ProductList({ products, categories, onEdit, onAddNew, onDelete, loading }) {
   const { deleteProduct } = useProducts();
   const [deletingId, setDeletingId] = useState(null);
   
@@ -14,6 +14,9 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
     try {
       setDeletingId(productId);
       await deleteProduct(productId);
+      if (onDelete) {
+        onDelete(productId);
+      }
     } catch (error) {
       console.error('Error deleting product:', error);
     } finally {
@@ -30,17 +33,17 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
   if (loading) {
     return (
       <div className="border border-gray-200 rounded-lg">
-        <div className="grid grid-cols-12 gap-4 p-4 border-b text-gray-600 font-medium bg-gray-50">
+        <div className="grid grid-cols-12 gap-2 p-4 border-b text-gray-600 font-medium bg-gray-50">
           <div className="col-span-1"></div>
           <div className="col-span-5">Product</div>
-          <div className="col-span-2 text-center">Price</div>
+          <div className="col-span-2 text-right pr-4">Price</div>
           <div className="col-span-2 text-center">Category</div>
           <div className="col-span-2 text-center">Actions</div>
         </div>
         
         <div className="animate-pulse">
           {[...Array(3)].map((_, index) => (
-            <div key={index} className="grid grid-cols-12 gap-4 p-4 items-center border-b">
+            <div key={index} className="grid grid-cols-12 gap-2 p-4 items-center border-b">
               <div className="col-span-1"></div>
               <div className="col-span-5 flex gap-3 items-center">
                 <div className="bg-gray-200 h-12 w-12 rounded-md"></div>
@@ -63,7 +66,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
     );
   }
 
-  if (products.length === 0) {
+  if (!products || products.length === 0) {
     return (
       <div className="border border-gray-200 rounded-lg p-8 text-center">
         <div className="mb-4">
@@ -94,10 +97,23 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
       
       <div className="divide-y">
         {products.map((product) => {
-          const category = getCategoryById(product.categoryId);
+          const categoryId = product.categoryId || product.category_id || product.categoryId;
+          
+          let categoryName = 'Uncategorized';
+          let categoryColor = 'gray';
+          
+          if (product.category_name) {
+            categoryName = product.category_name;
+          } else {
+            const category = getCategoryById(categoryId);
+            categoryName = category.name;
+            categoryColor = category.color || 'gray';
+          }
+          
+          const price = parseFloat(product.price || 0);
           
           return (
-            <div key={product.id} className="grid grid-cols-12 gap-2 p-4 items-center hover:bg-gray-50 transition-colors">
+            <div key={product.id || product._id} className="grid grid-cols-12 gap-2 p-4 items-center hover:bg-gray-50 transition-colors">
               <div className="col-span-1 flex justify-center">
                 <span className="material-symbols-outlined text-gray-400 cursor-move">drag_indicator</span>
               </div>
@@ -127,16 +143,16 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
               <div className="col-span-2 text-right pr-4">
                 {product.discount ? (
                   <div className="flex flex-col items-end">
-                    <span className="line-through text-gray-400 text-xs">${product.price.toFixed(2)}</span>
-                    <span className="font-medium text-primary-600">${(product.price * (1 - product.discount / 100)).toFixed(2)}</span>
+                    <span className="line-through text-gray-400 text-xs">${price.toFixed(2)}</span>
+                    <span className="font-medium text-primary-600">${(price * (1 - product.discount / 100)).toFixed(2)}</span>
                   </div>
                 ) : (
-                  <span className="font-medium">${product.price.toFixed(2)}</span>
+                  <span className="font-medium">${price.toFixed(2)}</span>
                 )}
               </div>
               <div className="col-span-2 flex justify-center">
-                <span className={`bg-${category.color}-100 text-${category.color}-800 px-2 py-1 rounded-full text-xs whitespace-nowrap`}>
-                  {category.name}
+                <span className={`bg-${categoryColor}-100 text-${categoryColor}-800 px-2 py-1 rounded-full text-xs whitespace-nowrap`}>
+                  {categoryName}
                 </span>
               </div>
               <div className="col-span-2 flex justify-center space-x-1">
@@ -149,7 +165,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
                 </button>
                 <button 
                   className={`p-1.5 rounded transition-colors ${deletingId === product.id ? 'text-gray-400' : 'hover:bg-gray-200 hover:text-red-500'}`}
-                  onClick={() => handleDelete(product.id)}
+                  onClick={() => handleDelete(product.id || product._id)}
                   disabled={deletingId === product.id}
                   title="Delete"
                 >

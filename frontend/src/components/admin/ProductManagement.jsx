@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import { useCategories } from '../../hooks/useCategories';
+import { useFetch } from '../../hooks/useFetch';
 import ProductEditor from './ProductEditor';
 import ProductList from './ProductList';
 
 export default function ProductManagement({ initialShowEditor = false }) {
-  const { products, loading, error, fetchProducts } = useProducts();
+  const { loading: productsLoading, error, deleteProduct, updateProduct, addProduct, duplicateProduct } = useProducts();
   const { categories } = useCategories();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -14,11 +15,19 @@ export default function ProductManagement({ initialShowEditor = false }) {
   const [itemsPerPage] = useState(5);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showEditor, setShowEditor] = useState(initialShowEditor);
+  
+  // Fetch products from backend using the same endpoint as the Home page
+  const { data: backendProducts, loading: fetchLoading, error: fetchError } = useFetch('/product/allProducts');
+  
+  // Local state to manage products after editing
+  const [products, setProducts] = useState([]);
 
-  // Initial data fetch
+  // Update local products when backend data is loaded
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    if (backendProducts) {
+      setProducts(backendProducts);
+    }
+  }, [backendProducts]);
 
   // Handle initialShowEditor prop changes
   useEffect(() => {
@@ -82,11 +91,32 @@ export default function ProductManagement({ initialShowEditor = false }) {
   };
 
   // Handle product saved (created/updated)
-  const handleProductSaved = () => {
+  const handleProductSaved = (savedProduct) => {
     setShowEditor(false);
     setSelectedProduct(null);
-    fetchProducts(); // Refresh the product list
+    
+    // Update local state
+    if (savedProduct) {
+      // If updating an existing product
+      if (savedProduct.id) {
+        setProducts(prevProducts => 
+          prevProducts.map(product => 
+            product.id === savedProduct.id ? savedProduct : product
+          )
+        );
+      } else {
+        // If adding a new product
+        setProducts(prevProducts => [...prevProducts, savedProduct]);
+      }
+    }
   };
+
+  // Handle product deletion
+  const handleProductDeleted = (productId) => {
+    setProducts(prevProducts => prevProducts.filter(product => product.id !== productId));
+  };
+
+  const loading = fetchLoading || productsLoading;
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -131,6 +161,13 @@ export default function ProductManagement({ initialShowEditor = false }) {
         </div>
       </div>
       
+      {/* Display fetch errors */}
+      {fetchError && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
+          Error loading products: {fetchError}
+        </div>
+      )}
+      
       {/* Product Editor */}
       {showEditor && (
         <ProductEditor 
@@ -147,6 +184,7 @@ export default function ProductManagement({ initialShowEditor = false }) {
         categories={categories}
         onEdit={handleEditProduct}
         onAddNew={handleNewProduct}
+        onDelete={handleProductDeleted}
         loading={loading}
       />
       
