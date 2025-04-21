@@ -29,6 +29,9 @@ const mockUsers = [
     location: 'New York, NY, United States',
     totalSpent: 458,
     rating: 4.8,
+    phone: '+1 (555) 123-4567',
+    joinDate: 'January 15, 2023',
+    lastActive: 'Today, 10:45 AM',
     recentActivity: [
       {
         date: 'Today, 10:45 AM',
@@ -68,7 +71,76 @@ const mockUsers = [
       }
     ]
   },
-  // Other users...
+  {
+    id: 2,
+    name: 'Michael Rodriguez',
+    email: 'michael.r@example.com',
+    avatar: 'https://randomuser.me/api/portraits/men/45.jpg',
+    status: { text: 'Away', color: 'yellow' },
+    orders: 15,
+    type: 'Regular User',
+    location: 'Los Angeles, CA, United States',
+    totalSpent: 287,
+    rating: 4.2,
+    phone: '+1 (555) 987-6543',
+    joinDate: 'March 22, 2023',
+    lastActive: 'Yesterday, 3:20 PM',
+    recentActivity: [
+      {
+        date: 'Yesterday, 3:20 PM',
+        action: 'Logged in',
+        icon: 'login',
+        color: 'blue',
+        details: 'Web Browser (Chrome)',
+        status: 'Completed',
+        statusColor: 'green'
+      },
+      {
+        date: 'May 15, 2023',
+        action: 'Placed order',
+        icon: 'shopping_cart',
+        color: 'green',
+        details: 'Order #45890 - $21.75',
+        status: 'Delivered',
+        statusColor: 'green'
+      }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Emma Wilson',
+    email: 'emma.w@example.com',
+    avatar: 'https://randomuser.me/api/portraits/women/17.jpg',
+    status: { text: 'Inactive', color: 'gray' },
+    orders: 7,
+    type: 'Regular User',
+    location: 'Chicago, IL, United States',
+    totalSpent: 142,
+    rating: 3.9,
+    phone: '+1 (555) 234-5678',
+    joinDate: 'February 8, 2023',
+    lastActive: '2 weeks ago',
+    recentActivity: [
+      {
+        date: '2 weeks ago',
+        action: 'Logged in',
+        icon: 'login',
+        color: 'blue',
+        details: 'Mobile App (Android)',
+        status: 'Completed',
+        statusColor: 'green'
+      },
+      {
+        date: 'April 30, 2023',
+        action: 'Updated profile',
+        icon: 'edit',
+        color: 'purple',
+        details: 'Changed delivery address',
+        status: 'Completed',
+        statusColor: 'green'
+      }
+    ]
+  }
 ];
 
 export default function Users() {
@@ -143,16 +215,16 @@ export default function Users() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 mb-10">
-        {/* User Statistics - Now on the left side */}
+        {/* User Statistics - Left side */}
         <div className="lg:col-span-4 bg-white rounded-lg shadow-md p-6">
           <UserStats stats={mockStats} />
         </div>
         
-        {/* User Management - Now on the right side */}
+        {/* User Management - Right side */}
         <div className="lg:col-span-8 bg-white rounded-lg shadow-md p-6">
           <h3 className="text-xl font-medium mb-4">User List</h3>
           
-          <div className="mb-8">
+          <div className="mb-6">
             <div className="flex items-center gap-3 mb-4 flex-wrap sm:flex-nowrap">
               <div className="relative w-full sm:w-auto">
                 <input 
