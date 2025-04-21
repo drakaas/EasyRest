@@ -13,7 +13,7 @@ import Cart from './pages/Cart/CartPage'
 import AdminPage from './pages/Admin/AdminPage'
 import AuthSuccess from './components/auth/AuthSuccess'
 import { CategoryProvider } from './context/CategoryContext'
-import Users from './pages/admin/Users'
+import Users from './pages/Admin/Users'
 import AdminLayout from './components/admin/AdminLayout'
 
 // Protected Route component
