@@ -38,7 +38,7 @@ export function useCategories() {
 
   const addCategory = useCallback(async (categoryData) => {
     try {
-      const response = await fetch('/api/addCategory', {
+      const response = await fetch('http://127.0.0.1:5000/product/addCategory', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export function useCategories() {
 
   const updateCategory = useCallback(async (id, categoryData) => {
     try {
-      const response = await fetch(`/api/categories/${id}`, {
+      const response = await fetch(`http://127.0.0.1:5000/product/categories/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export function useCategories() {
 
   const deleteCategory = useCallback(async (id) => {
     try {
-      const response = await fetch(`/api/categories/${id}`, {
+      const response = await fetch(`http://127.0.0.1:5000/product/categories/${id}`, {
         method: 'DELETE',
       });
 
@@ -106,7 +106,7 @@ export function useCategories() {
 
   const reorderCategories = useCallback(async (orderedIds) => {
     try {
-      const response = await fetch('/api/categories/reorder', {
+      const response = await fetch('http://127.0.0.1:5000/product/categories/reorder', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
