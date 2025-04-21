@@ -116,8 +116,11 @@ export default function CategoryManagement() {
   };
 
   const handleDeleteCategory = async (categoryId) => {
+    const url = `http://127.0.0.1:5000/product/deleteCategory/${categoryId}`;
+    console.log('Delete category URL:', url);
+    
     try {
-      const response = await fetch(`http://127.0.0.1:5000/product/deleteCategory/${categoryId}`, {
+      const response = await fetch(url, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -128,7 +131,6 @@ export default function CategoryManagement() {
         throw new Error('Failed to delete category');
       }
 
-      // Remove the category from the local state
       setCategories(prevCategories => prevCategories.filter(c => c.id !== categoryId));
     } catch (error) {
       console.error('Error deleting category:', error);
