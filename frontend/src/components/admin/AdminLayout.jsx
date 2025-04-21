@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
-export default function AdminLayout({ children }) {
+export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Admin Header */}
@@ -41,7 +41,7 @@ export default function AdminLayout({ children }) {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {children}
+        <Outlet />
       </main>
     </div>
   );
