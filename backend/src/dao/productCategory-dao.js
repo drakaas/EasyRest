@@ -17,10 +17,15 @@ const categoryBySlug =async(slug)=>{
           return {message :"erreur "+error};
      }
 } 
-const categoryById =async(id)=>{
+const categoryById =async(identifier)=>{
      try {
+          // Try to find by _id first
+          let category = await productCategories.findOne({ _id: identifier });
           
-          let category = await productCategories.findOne({ id });
+          // If not found by _id, try by slug
+          if (!category) {
+               category = await productCategories.findOne({ slug: identifier });
+          }
           
           if (!category) {
                return { message: 'Category not found' };
@@ -51,9 +56,16 @@ const addCategory = async(name,slug,color,icon)=>{
           return {message:"erreur "+error.message};
      }
 }
-const deleteCategory = async(id)=>{
+const deleteCategory = async(identifier)=>{
      try {
-          let deletedCategory = await productCategories.findByIdAndDelete(id);
+          // Try to find by _id first
+          let deletedCategory = await productCategories.findByIdAndDelete(identifier);
+          
+          // If not found by _id, try by slug
+          if (!deletedCategory) {
+               deletedCategory = await productCategories.findOneAndDelete({ slug: identifier });
+          }
+          
           if(!deletedCategory) return {message:"erreur aucune categorie n'a été trouvée"};
           return deletedCategory;
      } catch (error) {
@@ -64,5 +76,6 @@ module.exports={
      categoryBySlug,
      categoryById,
      allCategories,
-     addCategory
+     addCategory,
+     deleteCategory
 }
