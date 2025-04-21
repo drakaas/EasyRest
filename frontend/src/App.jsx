@@ -40,15 +40,13 @@ export default function App() {
                 {/* Admin Routes */}
                 <Route path="/admin" element={
                   <ProtectedRoute isAdmin>
-                    <AdminLayout>
-                      <Routes>
-                        <Route index element={<AdminPage />} />
-                        <Route path="users" element={<Users />} />
-                        {/* Add more admin routes here */}
-                      </Routes>
-                    </AdminLayout>
+                    <AdminLayout />
                   </ProtectedRoute>
-                } />
+                }>
+                  <Route index element={<AdminPage />} />
+                  <Route path="users" element={<Users />} />
+                  {/* Add more admin routes here */}
+                </Route>
               </Routes>
             </Layout>
             <LoginModal />
