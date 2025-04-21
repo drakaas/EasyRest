@@ -20,7 +20,7 @@ const categoryBySlug =async(slug)=>{
 const categoryById =async(id)=>{
      try {
           
-          let category = await productCategories.findOne({ category:id });
+          let category = await productCategories.findOne({ id });
           
           if (!category) {
                return { message: 'Category not found' };
