@@ -115,16 +115,17 @@ export default function CategoryManagement() {
     setEditingCategory(null);
   };
 
-  const handleDeleteCategory = async (categoryId) => {
-    console.log('Category to delete:', categoryId);
-    console.log('Current categories:', categories);
+  const handleDeleteCategory = async (category) => {
+    console.log('Category to delete:', category);
     
-    if (!categoryId) {
-      console.error('No category ID provided for deletion');
+    // Use _id if available, otherwise use slug
+    const identifier = category._id || category.slug;
+    if (!identifier) {
+      console.error('No valid identifier found for category');
       return;
     }
 
-    const url = `http://127.0.0.1:5000/product/deleteCategory/${categoryId}`;
+    const url = `http://127.0.0.1:5000/product/deleteCategory/${identifier}`;
     console.log('Delete category URL:', url);
     
     try {
@@ -139,7 +140,9 @@ export default function CategoryManagement() {
         throw new Error('Failed to delete category');
       }
 
-      setCategories(prevCategories => prevCategories.filter(c => c.id !== categoryId));
+      setCategories(prevCategories => prevCategories.filter(c => 
+        (c._id && c._id !== category._id) || (c.slug && c.slug !== category.slug)
+      ));
     } catch (error) {
       console.error('Error deleting category:', error);
     }
@@ -247,7 +250,7 @@ export default function CategoryManagement() {
               </button>
               <button 
                 className="text-gray-500 hover:text-red-500 transition-colors"
-                onClick={() => handleDeleteCategory(category.id)}
+                onClick={() => handleDeleteCategory(category)}
               >
                 <span className="material-symbols-outlined">delete</span>
               </button>
