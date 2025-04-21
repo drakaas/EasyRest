@@ -6,12 +6,16 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
   const [deletingId, setDeletingId] = useState(null);
   
   const getCategoryById = (categoryId, categorySlug) => {
-    const category = categories.find(c => 
-      c.id === categoryId || 
-      c.slug === categorySlug || 
-      c.slug === categoryId
-    );
-    return category || { name: 'Uncategorized', color: 'gray' };
+    // First try to find by ID
+    const categoryById = categories.find(c => c._id === categoryId || c.id === categoryId);
+    if (categoryById) return categoryById;
+
+    // Then try to find by slug
+    const categoryBySlug = categories.find(c => c.slug === categorySlug);
+    if (categoryBySlug) return categoryBySlug;
+
+    // If no match found, return default
+    return { name: 'Uncategorized', color: 'gray' };
   };
   
   const handleDelete = async (productId) => {
