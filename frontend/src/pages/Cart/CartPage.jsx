@@ -3,10 +3,11 @@
 import  CartItems  from "../../components/cart/CartItems";
 import  OrderSummary  from "../../components/cart/OrderSummary";
 import  DeliveryInfo  from "../../components/cart/DeliveryInfo";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 import  Footer  from "../../components/layout/Footer";
 import  Header  from "../../components/layout/Header";
-import { useAuth } from "../../context/AuthContext";
 
 // components/CartPage.tsx
 import { useEffect } from 'react';
@@ -35,9 +36,20 @@ export default function CartPage () {
       <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl font-bold text-gray-800">Shopping Cart</h2>
-          <div className="flex items-center gap-2 text-gray-600">
-            <span className="material-symbols-outlined">shopping_cart</span>
-            <span>{cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'}</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-gray-600">
+              <span className="material-symbols-outlined">shopping_cart</span>
+              <span>{cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'}</span>
+            </div>
+            {user.isAdmin && (
+              <Link 
+                to="/admin" 
+                className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-800 transition-colors"
+              >
+                <span className="material-symbols-outlined">admin_panel_settings</span>
+                <span>Admin Panel</span>
+              </Link>
+            )}
           </div>
         </div>
 

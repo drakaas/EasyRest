@@ -10,25 +10,28 @@ import { AuthProvider } from './context/AuthContext'
 import LoginModal from './components/auth/LoginModal'
 import Auth from './components/auth/AuthSuccess'
 import Cart from './pages/Cart/CartPage'
+import AdminPage from './pages/Admin/AdminPage'
 import AuthSuccess from './components/auth/AuthSuccess'
 import { CategoryProvider } from './context/CategoryContext'
+
 export default function App() {
   return (
-<AuthProvider>
-        <CategoryProvider> {/* Add CategoryProvider here */}
-      <CartProvider>
+    <AuthProvider>
+      <CategoryProvider> {/* Add CategoryProvider here */}
+        <CartProvider>
           <Router>
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path="/auth-success" element={<AuthSuccess />} />
               </Routes>
             </Layout>
             <LoginModal />
           </Router>
-      </CartProvider>
-        </CategoryProvider>
+        </CartProvider>
+      </CategoryProvider>
     </AuthProvider>
   )
 }

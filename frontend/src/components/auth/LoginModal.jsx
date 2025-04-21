@@ -14,7 +14,24 @@ export default function LoginModal() {
     window.location.href = 'http://localhost:5000/auth/google'; // Change URL as per your backend URL
   };
 
-  
+  const handleDemoAdminLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      // Use the login function from AuthContext
+      await login({
+        email: 'admin@example.com',
+        password: 'password123'
+      });
+      
+      setShowLoginModal(false);
+    } catch (err) {
+      setError('Demo login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,26 +51,18 @@ export default function LoginModal() {
       });
   
       const data = await response.json();
-      console.log("before data")
+      
       if (!response.ok) {
         // You can adjust this depending on your backend error format
         setError(data.message|| 'Invalid credentials');
       }
-        console.log(data)
-        console.log("after data")
-        console.log(data.user)
-        console.log(data.token)
-    
+        
         // Save the user data from your backend (you can adjust based on actual response)
         login(
           data.user , // or whatever your backend returns
           data.token, // assuming token is returned,
           rememberMe
         );
-
-      
-  
-
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
       console.log(err)
@@ -80,32 +89,42 @@ export default function LoginModal() {
             <p className="text-gray-500">Sign in to continue to your account</p>
           </div>
           <button
-  type="button"
-  className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors text-xl focus:outline-none"
-  onClick={() => setShowLoginModal(false)}
-  aria-label="Close"
->
-  &times;
-</button>
+            type="button"
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors text-xl focus:outline-none"
+            onClick={() => setShowLoginModal(false)}
+            aria-label="Close"
+          >
+            &times;
+          </button>
           <div className="space-y-6">
-            <button 
-              className="w-full flex items-center justify-center py-3 px-4 bg-white border-2 border-gray-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 group mb-4"
-              disabled={isLoading}
-              onClick={handleGoogleLogin}
-            >
-              <span className="mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
-                  <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
-                  <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
-                  <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
-                  <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
-                </svg>
-              </span>
-              <span className="text-gray-800 font-medium">Continue with Google</span>
-              <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="material-symbols-outlined text-gray-500 transform group-hover:translate-x-1 transition-transform">arrow_forward</span>
-              </span>
-            </button>
+            <div className="flex gap-2">
+              <button 
+                className="flex-1 flex items-center justify-center py-3 px-4 bg-white border-2 border-gray-200 rounded-full shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 group"
+                disabled={isLoading}
+                onClick={handleGoogleLogin}
+              >
+                <span className="mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="20px" height="20px">
+                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
+                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
+                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
+                  </svg>
+                </span>
+                <span className="text-gray-800 text-sm font-medium">Google</span>
+              </button>
+              
+              <button 
+                className="flex-1 flex items-center justify-center py-3 px-4 bg-primary-600 text-white border-2 border-primary-600 rounded-full shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 group"
+                disabled={isLoading}
+                onClick={handleDemoAdminLogin}
+              >
+                <span className="mr-2">
+                  <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                </span>
+                <span className="text-sm font-medium">Demo Admin</span>
+              </button>
+            </div>
             
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -172,9 +191,8 @@ export default function LoginModal() {
               
               <button 
                 type="submit" 
-                className="w-full py-3 px-4 bg-primary-500 text-black rounded-lg font-medium shadow-md hover:bg-primary-600 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full py-3 px-4 bg-primary-500 text-white rounded-lg font-medium shadow-md hover:bg-primary-600 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
                 disabled={isLoading}
-
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center">
