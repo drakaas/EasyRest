@@ -171,39 +171,6 @@ export function useProducts() {
     }
   }, [products]);
 
-  const reorderProducts = useCallback(async (orderedIds) => {
-    try {
-      // In a real app, post to API
-      // const response = await fetch('/api/products/reorder', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ orderedIds })
-      // });
-      // const result = await response.json();
-      
-      // For frontend-only implementation
-      const productMap = {};
-      products.forEach(product => {
-        productMap[product.id] = product;
-      });
-      
-      // Create new array with ordered products
-      const reorderedProducts = orderedIds
-        .map(id => productMap[id])
-        .filter(Boolean);
-      
-      // Add any products that weren't in the orderedIds array
-      const includedIds = new Set(orderedIds);
-      const remainingProducts = products.filter(p => !includedIds.has(p.id));
-      
-      setProducts([...reorderedProducts, ...remainingProducts]);
-      return true;
-    } catch (err) {
-      console.error('Error reordering products:', err);
-      throw new Error('Failed to reorder products');
-    }
-  }, [products]);
-
   return {
     products,
     loading,
@@ -212,7 +179,6 @@ export function useProducts() {
     addProduct,
     updateProduct,
     deleteProduct,
-    duplicateProduct,
-    reorderProducts
+    duplicateProduct
   };
 } 

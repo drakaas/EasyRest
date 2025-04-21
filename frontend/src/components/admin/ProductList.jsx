@@ -1,14 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 
 export default function ProductList({ products, categories, onEdit, onAddNew, loading }) {
-  const { deleteProduct, reorderProducts } = useProducts();
+  const { deleteProduct, duplicateProduct } = useProducts();
   const [deletingId, setDeletingId] = useState(null);
-  const [draggedIndex, setDraggedIndex] = useState(null);
-  
-  // Ref for the dragging element
-  const dragItem = useRef();
-  const dragOverItem = useRef();
   
   const getCategoryById = (categoryId) => {
     const category = categories.find(c => c.id === categoryId);
@@ -26,47 +21,11 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
     }
   };
   
-  // Handle drag start
-  const handleDragStart = (e, index) => {
-    dragItem.current = index;
-    setDraggedIndex(index);
-    // Add styling to indicate dragging
-    e.currentTarget.classList.add('bg-gray-100');
-  };
-  
-  // Handle drag end
-  const handleDragEnd = (e) => {
-    setDraggedIndex(null);
-    e.currentTarget.classList.remove('bg-gray-100');
-    dragItem.current = null;
-    dragOverItem.current = null;
-  };
-  
-  // Handle drag over
-  const handleDragOver = (e, index) => {
-    e.preventDefault();
-    dragOverItem.current = index;
-  };
-  
-  // Handle drop - reorder products
-  const handleDrop = (e) => {
-    e.preventDefault();
-    
-    if (dragItem.current !== null && dragOverItem.current !== null && dragItem.current !== dragOverItem.current) {
-      const newOrder = [...products];
-      const draggedItem = newOrder[dragItem.current];
-      
-      // Remove the item from the original position
-      newOrder.splice(dragItem.current, 1);
-      
-      // Insert the item at the new position
-      newOrder.splice(dragOverItem.current, 0, draggedItem);
-      
-      // Update the order in state and backend
-      const orderedIds = newOrder.map(product => product.id);
-      if (reorderProducts) {
-        reorderProducts(orderedIds);
-      }
+  const handleDuplicate = async (product) => {
+    try {
+      await duplicateProduct(product.id);
+    } catch (error) {
+      console.error('Error duplicating product:', error);
     }
   };
 
@@ -136,19 +95,11 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
       </div>
       
       <div className="divide-y">
-        {products.map((product, index) => {
+        {products.map((product) => {
           const category = getCategoryById(product.categoryId);
           
           return (
-            <div 
-              key={product.id} 
-              className={`grid grid-cols-12 gap-4 p-4 items-center hover:bg-gray-50 transition-colors ${draggedIndex === index ? 'border border-primary-500 bg-gray-100' : ''}`}
-              draggable={true}
-              onDragStart={(e) => handleDragStart(e, index)}
-              onDragEnd={handleDragEnd}
-              onDragOver={(e) => handleDragOver(e, index)}
-              onDrop={handleDrop}
-            >
+            <div key={product.id} className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-gray-50 transition-colors">
               <div className="col-span-1 flex justify-center">
                 <span className="material-symbols-outlined text-gray-400 cursor-move">drag_indicator</span>
               </div>
@@ -178,10 +129,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
                 )}
               </div>
               <div className="col-span-2 text-center">
-                <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs" style={{ 
-                  backgroundColor: `rgba(var(--tw-color-${category.color || 'gray'}-500-rgb, 107, 114, 128), 0.1)`,
-                  color: `var(--tw-color-${category.color || 'gray'}-500, #6b7280)`
-                }}>
+                <span className={`bg-${category.color}-100 text-${category.color}-800 px-2 py-1 rounded-full text-xs`}>
                   {category.name}
                 </span>
               </div>
@@ -191,6 +139,12 @@ export default function ProductList({ products, categories, onEdit, onAddNew, lo
                   onClick={() => onEdit(product)}
                 >
                   <span className="material-symbols-outlined">edit</span>
+                </button>
+                <button 
+                  className="p-1 hover:bg-gray-200 rounded transition-colors"
+                  onClick={() => handleDuplicate(product)}
+                >
+                  <span className="material-symbols-outlined">content_copy</span>
                 </button>
                 <button 
                   className={`p-1 rounded transition-colors ${deletingId === product.id ? 'text-gray-400' : 'hover:bg-gray-200 hover:text-red-500'}`}
