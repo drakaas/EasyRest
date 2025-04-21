@@ -8,6 +8,6 @@ router.get('/getCategorySlug/:slug',ProductByCategorySlug);
 
 router.get('/categories',GetAllCategories)
 router.get('/allProducts',GetAllProducts);
-router.delete('/deleteCategory/:id',DeleteCategory);
+router.delete('/deleteCategory/:slug',DeleteCategory);
 
 module.exports = router;

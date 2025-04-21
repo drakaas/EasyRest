@@ -63,11 +63,8 @@ const AddCategory = async(req,res)=>{
 }
 const DeleteCategory = async(req,res)=>{
      try {
-          const id = req.params.id;
-          if(!id) return res.status(400).send({message:"erreur id introuvable"});
-          let categorie = await categoryById(id);
-          if(categorie.message) return res.status(500).send(categorie.message);
-          let deletedCategory = await deleteCategory(id);
+          const slug = req.params.slug;
+          let deletedCategory = await deleteCategory(slug);
           return res.status(200).send(deletedCategory);
      } catch (error) {
           return res.status(500).send({message:"erreur "+error});
