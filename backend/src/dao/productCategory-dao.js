@@ -56,15 +56,9 @@ const addCategory = async(name,slug,color,icon)=>{
           return {message:"erreur "+error.message};
      }
 }
-const deleteCategory = async(identifier)=>{
+const deleteCategory = async(slug)=>{
      try {
-          // Try to find by _id first
-          let deletedCategory = await productCategories.findByIdAndDelete(identifier);
-          
-          // If not found by _id, try by slug
-          if (!deletedCategory) {
-               deletedCategory = await productCategories.findOneAndDelete({ slug: identifier });
-          }
+          let deletedCategory = await productCategories.findOneAndDelete({ slug });
           
           if(!deletedCategory) return {message:"erreur aucune categorie n'a été trouvée"};
           return deletedCategory;

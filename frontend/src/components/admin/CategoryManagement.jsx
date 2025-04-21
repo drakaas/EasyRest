@@ -118,14 +118,14 @@ export default function CategoryManagement() {
   const handleDeleteCategory = async (category) => {
     console.log('Category to delete:', category);
     
-    // For categories with _id, use that. For others, use slug
-    const identifier = category._id || category.slug;
-    if (!identifier) {
-      console.error('No valid identifier found for category');
+    // Always use slug for deletion
+    const slug = category.slug;
+    if (!slug) {
+      console.error('No slug found for category');
       return;
     }
 
-    const url = `http://127.0.0.1:5000/product/deleteCategory/${identifier}`;
+    const url = `http://127.0.0.1:5000/product/deleteCategory/${slug}`;
     console.log('Delete category URL:', url);
     
     try {
@@ -140,14 +140,8 @@ export default function CategoryManagement() {
         throw new Error('Failed to delete category');
       }
 
-      // Update local state based on what identifier we used
-      setCategories(prevCategories => prevCategories.filter(c => {
-        if (category._id) {
-          return c._id !== category._id;
-        } else {
-          return c.slug !== category.slug;
-        }
-      }));
+      // Update local state using slug
+      setCategories(prevCategories => prevCategories.filter(c => c.slug !== slug));
     } catch (error) {
       console.error('Error deleting category:', error);
     }
