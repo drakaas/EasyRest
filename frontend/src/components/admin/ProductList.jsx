@@ -100,33 +100,9 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
           const categoryId = product.categoryId || product.category_id || product.categoryId;
           const categorySlug = product.category || product.category_slug;
           
-          let categoryName = 'Uncategorized';
-          let categoryColor = 'gray';
-          
-          // First check if we have category details directly on the product
-          if (product.categoryDetails) {
-            categoryName = product.categoryDetails.name;
-            categoryColor = product.categoryDetails.color || 'gray';
-          } 
-          // Then check if we have category name directly
-          else if (product.category_name) {
-            categoryName = product.category_name;
-            categoryColor = product.category_color || 'gray';
-          } 
-          // Try to find category by slug
-          else if (categorySlug && categories) {
-            const category = categories.find(c => c.slug === categorySlug);
-            if (category) {
-              categoryName = category.name;
-              categoryColor = category.color || 'gray';
-            }
-          }
-          // Finally try to look up by ID
-          else if (categoryId) {
-            const category = getCategoryById(categoryId);
-            categoryName = category.name;
-            categoryColor = category.color || 'gray';
-          }
+          // Just use the slug as the category name
+          const categoryName = categorySlug || 'Uncategorized';
+          const categoryColor = 'blue'; // Default color for all categories
           
           const price = parseFloat(product.price || 0);
           
