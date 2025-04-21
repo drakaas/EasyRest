@@ -98,6 +98,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
       <div className="divide-y">
         {products.map((product) => {
           const categoryId = product.categoryId || product.category_id || product.categoryId;
+          const categorySlug = product.category || product.category_slug;
           
           let categoryName = 'Uncategorized';
           let categoryColor = 'gray';
@@ -112,6 +113,14 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
             categoryName = product.category_name;
             categoryColor = product.category_color || 'gray';
           } 
+          // Try to find category by slug
+          else if (categorySlug && categories) {
+            const category = categories.find(c => c.slug === categorySlug);
+            if (category) {
+              categoryName = category.name;
+              categoryColor = category.color || 'gray';
+            }
+          }
           // Finally try to look up by ID
           else if (categoryId) {
             const category = getCategoryById(categoryId);
