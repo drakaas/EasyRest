@@ -1,18 +1,43 @@
 import { useState } from 'react';
 import { useCategories } from '../../hooks/useCategories';
 
-const CATEGORY_ICONS = {
-  Pizza: { icon: "local_pizza", color: "red" },
-  Burgers: { icon: "lunch_dining", color: "yellow" },
-  Sides: { icon: "restaurant", color: "green" },
-  Drinks: { icon: "local_bar", color: "blue" },
-  Desserts: { icon: "cake", color: "purple" },
-  Specials: { icon: "star", color: "pink" }
-};
+// Common food-related Material Icons
+const AVAILABLE_ICONS = [
+  { name: "Pizza", icon: "local_pizza" },
+  { name: "Burger", icon: "lunch_dining" },
+  { name: "Restaurant", icon: "restaurant" },
+  { name: "Drinks", icon: "local_bar" },
+  { name: "Dessert", icon: "cake" },
+  { name: "Special", icon: "star" },
+  { name: "Fast Food", icon: "fastfood" },
+  { name: "Ice Cream", icon: "icecream" },
+  { name: "Coffee", icon: "coffee" },
+  { name: "Bakery", icon: "bakery_dining" },
+  { name: "Sushi", icon: "set_meal" },
+  { name: "Salad", icon: "nutrition" },
+  { name: "Wine", icon: "wine_bar" },
+  { name: "Pasta", icon: "dinner_dining" },
+  { name: "Breakfast", icon: "breakfast_dining" }
+];
+
+const AVAILABLE_COLORS = [
+  { name: "Red", value: "red" },
+  { name: "Yellow", value: "yellow" },
+  { name: "Green", value: "green" },
+  { name: "Blue", value: "blue" },
+  { name: "Purple", value: "purple" },
+  { name: "Pink", value: "pink" },
+  { name: "Orange", value: "orange" },
+  { name: "Teal", value: "teal" },
+  { name: "Indigo", value: "indigo" },
+  { name: "Gray", value: "gray" }
+];
 
 export default function CategoryManagement() {
   const { categories, addCategory, updateCategory, deleteCategory, reorderCategories } = useCategories();
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryIcon, setNewCategoryIcon] = useState('local_pizza');
+  const [newCategoryColor, setNewCategoryColor] = useState('red');
   const [editingCategory, setEditingCategory] = useState(null);
 
   const handleAddCategory = () => {
@@ -20,11 +45,13 @@ export default function CategoryManagement() {
     
     addCategory({
       name: newCategoryName,
-      icon: "category", // Default icon
-      color: "gray" // Default color
+      icon: newCategoryIcon,
+      color: newCategoryColor
     });
     
     setNewCategoryName('');
+    setNewCategoryIcon('local_pizza');
+    setNewCategoryColor('red');
   };
 
   const handleEditCategory = (category) => {
@@ -45,36 +72,91 @@ export default function CategoryManagement() {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h3 className="text-xl font-medium mb-4">Product Categories</h3>
-      <div className="mb-4">
-        <div className="flex items-center gap-2 mb-3">
-          <input 
-            type="text" 
-            placeholder="Add new category" 
-            className="flex-1 border border-gray-300 rounded-l-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleAddCategory()}
-          />
-          <button 
-            className="bg-primary-600 text-white px-4 py-2 rounded-r-md hover:bg-primary-700 transition-colors"
-            onClick={handleAddCategory}
-          >
-            Add
-          </button>
+      
+      {/* Add New Category Form */}
+      <div className="mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Category Name</label>
+            <input 
+              type="text" 
+              placeholder="Enter category name" 
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleAddCategory()}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Icon</label>
+            <div className="relative">
+              <select 
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
+                value={newCategoryIcon}
+                onChange={(e) => setNewCategoryIcon(e.target.value)}
+              >
+                {AVAILABLE_ICONS.map(({ name, icon }) => (
+                  <option key={icon} value={icon}>{name}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-2.5 pointer-events-none">
+                <span className="material-symbols-outlined text-gray-400">expand_more</span>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm text-gray-600 mb-1">Color</label>
+            <div className="relative">
+              <select 
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
+                value={newCategoryColor}
+                onChange={(e) => setNewCategoryColor(e.target.value)}
+              >
+                {AVAILABLE_COLORS.map(({ name, value }) => (
+                  <option key={value} value={value}>{name}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-2.5 pointer-events-none">
+                <span className="material-symbols-outlined text-gray-400">expand_more</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex items-end">
+            <button 
+              className="w-full bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
+              onClick={handleAddCategory}
+            >
+              Add Category
+            </button>
+          </div>
         </div>
-        <div className="text-sm text-gray-500 mb-4">Drag and drop to reorder categories</div>
+        
+        {/* Preview */}
+        <div className="flex items-center gap-2 p-3 border border-gray-200 rounded-md bg-gray-50">
+          <div className={`bg-${newCategoryColor}-100 p-2 rounded-full`}>
+            <span className={`material-symbols-outlined text-${newCategoryColor}-600`}>
+              {newCategoryIcon}
+            </span>
+          </div>
+          <span className="font-medium">{newCategoryName || 'New Category'}</span>
+        </div>
       </div>
       
+      {/* Categories List */}
       <div className="space-y-2">
-        {/* Category items */}
         {categories.map((category) => (
           <div key={category.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors group">
             <div className="flex items-center gap-3">
               <span className="material-symbols-outlined text-gray-400 cursor-move">drag_indicator</span>
               <div className="flex items-center gap-2">
-                <span className={`material-symbols-outlined text-${category.color || 'gray'}-500`}>
-                  {category.icon || 'category'}
-                </span>
+                <div className={`bg-${category.color}-100 p-2 rounded-full`}>
+                  <span className={`material-symbols-outlined text-${category.color}-600`}>
+                    {category.icon}
+                  </span>
+                </div>
                 <span>{category.name}</span>
               </div>
             </div>
@@ -96,7 +178,7 @@ export default function CategoryManagement() {
         ))}
       </div>
 
-      {/* Edit Category Modal - We'd implement this with a proper modal component */}
+      {/* Edit Category Modal */}
       {editingCategory && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-96">
@@ -111,38 +193,45 @@ export default function CategoryManagement() {
                   onChange={(e) => setEditingCategory({...editingCategory, name: e.target.value})}
                 />
               </div>
+              
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Icon</label>
-                <select 
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  value={editingCategory.icon}
-                  onChange={(e) => setEditingCategory({...editingCategory, icon: e.target.value})}
-                >
-                  <option value="local_pizza">Pizza</option>
-                  <option value="lunch_dining">Burger</option>
-                  <option value="restaurant">Sides</option>
-                  <option value="local_bar">Drinks</option>
-                  <option value="cake">Dessert</option>
-                  <option value="star">Special</option>
-                  <option value="category">Other</option>
-                </select>
+                <div className="grid grid-cols-5 gap-2">
+                  {AVAILABLE_ICONS.map(({ name, icon }) => (
+                    <button
+                      key={icon}
+                      className={`p-2 rounded-md border ${
+                        editingCategory.icon === icon 
+                          ? 'border-primary-500 bg-primary-50' 
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                      onClick={() => setEditingCategory({...editingCategory, icon})}
+                    >
+                      <span className="material-symbols-outlined">{icon}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
+              
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Color</label>
-                <select 
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  value={editingCategory.color}
-                  onChange={(e) => setEditingCategory({...editingCategory, color: e.target.value})}
-                >
-                  <option value="red">Red</option>
-                  <option value="yellow">Yellow</option>
-                  <option value="green">Green</option>
-                  <option value="blue">Blue</option>
-                  <option value="purple">Purple</option>
-                  <option value="pink">Pink</option>
-                  <option value="gray">Gray</option>
-                </select>
+                <div className="grid grid-cols-5 gap-2">
+                  {AVAILABLE_COLORS.map(({ name, value }) => (
+                    <button
+                      key={value}
+                      className={`p-2 rounded-md border ${
+                        editingCategory.color === value 
+                          ? 'border-primary-500 bg-primary-50' 
+                          : 'border-gray-200 hover:bg-gray-50'
+                      }`}
+                      onClick={() => setEditingCategory({...editingCategory, color: value})}
+                    >
+                      <div className={`w-6 h-6 rounded-full bg-${value}-500`}></div>
+                    </button>
+                  ))}
+                </div>
               </div>
+              
               <div className="flex justify-end gap-3 mt-4">
                 <button 
                   className="border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors"
