@@ -104,6 +104,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
           
           if (product.category_name) {
             categoryName = product.category_name;
+            categoryColor = product.category_color || 'gray';
           } else {
             const category = getCategoryById(categoryId);
             categoryName = category.name;
@@ -112,6 +113,13 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
           
           const price = parseFloat(product.price || 0);
           
+          // Construct image URL
+          const imageUrl = product.image 
+            ? product.image.startsWith('http') 
+              ? product.image 
+              : `${process.env.REACT_APP_API_URL || ''}${product.image}`
+            : null;
+          
           return (
             <div key={product.id || product._id} className="grid grid-cols-12 gap-2 p-4 items-center hover:bg-gray-50 transition-colors">
               <div className="col-span-1 flex justify-center">
@@ -119,9 +127,9 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
               </div>
               <div className="col-span-5 flex gap-3 items-center overflow-hidden">
                 <div className="w-14 h-14 min-w-[56px] bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-gray-200">
-                  {product.image ? (
+                  {imageUrl ? (
                     <img 
-                      src={product.image} 
+                      src={imageUrl} 
                       alt={product.name} 
                       className="w-full h-full object-cover" 
                       onError={(e) => {
@@ -151,7 +159,15 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
                 )}
               </div>
               <div className="col-span-2 flex justify-center">
-                <span className={`bg-${categoryColor}-100 text-${categoryColor}-800 px-2 py-1 rounded-full text-xs whitespace-nowrap`}>
+                <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${
+                  categoryColor === 'gray' ? 'bg-gray-100 text-gray-800' :
+                  categoryColor === 'red' ? 'bg-red-100 text-red-800' :
+                  categoryColor === 'blue' ? 'bg-blue-100 text-blue-800' :
+                  categoryColor === 'green' ? 'bg-green-100 text-green-800' :
+                  categoryColor === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
+                  categoryColor === 'purple' ? 'bg-purple-100 text-purple-800' :
+                  'bg-gray-100 text-gray-800'
+                }`}>
                   {categoryName}
                 </span>
               </div>
