@@ -62,7 +62,8 @@ export default function CategoryManagement() {
         name: newCategoryName,
         icon: newCategoryIcon,
         color: newCategoryColor,
-        slug: newCategoryName.toLowerCase().replace(/\s+/g, '-')
+        slug: newCategoryName.toLowerCase().replace(/\s+/g, '-'),
+        id: Date.now().toString() // Add a temporary ID
       };
 
       const response = await fetch('http://127.0.0.1:5000/product/addCategory', {
@@ -78,6 +79,7 @@ export default function CategoryManagement() {
       }
 
       const addedCategory = await response.json();
+      console.log('Added category:', addedCategory); // Debug log
       setCategories(prevCategories => [...prevCategories, addedCategory]);
       
       // Reset form
@@ -189,8 +191,8 @@ export default function CategoryManagement() {
             <div className="flex items-center gap-3">
               <span className="material-symbols-outlined text-gray-400 cursor-move">drag_indicator</span>
               <div className="flex items-center gap-2">
-                <div className={`bg-${category.color}-100 p-2 rounded-full`}>
-                  <span className={`material-symbols-outlined text-${category.color}-600`}>
+                <div className={`bg-${COLOR_MAP[category.color]}-100 p-2 rounded-full`}>
+                  <span className={`material-symbols-outlined text-${COLOR_MAP[category.color]}-600`}>
                     {category.icon}
                   </span>
                 </div>

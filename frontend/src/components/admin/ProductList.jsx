@@ -5,8 +5,12 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
   const { deleteProduct } = useProducts();
   const [deletingId, setDeletingId] = useState(null);
   
-  const getCategoryById = (categoryId) => {
-    const category = categories.find(c => c.id === categoryId);
+  const getCategoryById = (categoryId, categorySlug) => {
+    const category = categories.find(c => 
+      c.id === categoryId || 
+      c.slug === categorySlug || 
+      c.slug === categoryId
+    );
     return category || { name: 'Uncategorized', color: 'gray' };
   };
   
@@ -97,13 +101,11 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
       
       <div className="divide-y">
         {products.map((product) => {
-          const categoryId = product.categoryId || product.category_id || product.categoryId;
+          const categoryId = product.categoryId || product.category_id;
           const categorySlug = product.category || product.slug;
-          
-          // Get category from categories array
-          const category = categories.find(c => c.id === categoryId || c.slug === categorySlug);
-          const categoryName = category?.name || 'Uncategorized';
-          const categoryColor = category?.color || 'gray';
+          const category = getCategoryById(categoryId, categorySlug);
+          const categoryName = category.name;
+          const categoryColor = category.color;
           
           const price = parseFloat(product.price || 0);
           
@@ -151,7 +153,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
                 )}
               </div>
               <div className="col-span-2 flex justify-center">
-                <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap bg-${categoryColor}-100 text-${categoryColor}-800`}>
+                <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap bg-${categoryColor}-100 text-${categoryColor}-600`}>
                   {categoryName}
                 </span>
               </div>
