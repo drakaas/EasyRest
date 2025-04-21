@@ -63,8 +63,10 @@ export default function CategoryManagement() {
         icon: newCategoryIcon,
         color: newCategoryColor,
         slug: newCategoryName.toLowerCase().replace(/\s+/g, '-'),
-        id: Date.now().toString() // Add a temporary ID
+        id: Date.now().toString()
       };
+
+      console.log('Saving category with data:', categoryData); // Debug log
 
       const response = await fetch('http://127.0.0.1:5000/product/addCategory', {
         method: 'POST',
@@ -79,8 +81,15 @@ export default function CategoryManagement() {
       }
 
       const addedCategory = await response.json();
-      console.log('Added category:', addedCategory); // Debug log
-      setCategories(prevCategories => [...prevCategories, addedCategory]);
+      console.log('Server response:', addedCategory); // Debug log
+      
+      // Ensure the icon is included in the added category
+      const categoryWithIcon = {
+        ...addedCategory,
+        icon: addedCategory.icon || newCategoryIcon
+      };
+      
+      setCategories(prevCategories => [...prevCategories, categoryWithIcon]);
       
       // Reset form
       setNewCategoryName('');
@@ -193,7 +202,7 @@ export default function CategoryManagement() {
               <div className="flex items-center gap-2">
                 <div className={`bg-${COLOR_MAP[category.color]}-100 p-2 rounded-full`}>
                   <span className={`material-symbols-outlined text-${COLOR_MAP[category.color]}-600`}>
-                    {category.icon}
+                    {category.icon || 'restaurant'}
                   </span>
                 </div>
                 <span>{category.name}</span>
