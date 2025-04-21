@@ -58,16 +58,19 @@ export default function CategoryManagement() {
     if (!newCategoryName.trim()) return;
 
     try {
-      const response = await fetch('/api/addCategory', {
+      const categoryData = {
+        name: newCategoryName,
+        icon: newCategoryIcon,
+        color: newCategoryColor,
+        slug: newCategoryName.toLowerCase().replace(/\s+/g, '-')
+      };
+
+      const response = await fetch('http://127.0.0.1:5000/product/addCategory', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          name: newCategoryName,
-          icon: newCategoryIcon,
-          color: newCategoryColor,
-        }),
+        body: JSON.stringify(categoryData),
       });
 
       if (!response.ok) {
@@ -75,8 +78,6 @@ export default function CategoryManagement() {
       }
 
       const addedCategory = await response.json();
-      
-      // Update the categories state with the new category
       setCategories(prevCategories => [...prevCategories, addedCategory]);
       
       // Reset form
@@ -85,7 +86,6 @@ export default function CategoryManagement() {
       setNewCategoryColor('red');
     } catch (error) {
       console.error('Error adding category:', error);
-      // You might want to show an error message to the user here
     }
   };
 

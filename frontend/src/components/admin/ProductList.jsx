@@ -100,9 +100,10 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
           const categoryId = product.categoryId || product.category_id || product.categoryId;
           const categorySlug = product.category || product.slug;
           
-          // Just use the slug as the category name
-          const categoryName = categorySlug || 'Uncategorized';
-          const categoryColor = 'blue'; // Default color for all categories
+          // Get category from categories array
+          const category = categories.find(c => c.id === categoryId || c.slug === categorySlug);
+          const categoryName = category?.name || 'Uncategorized';
+          const categoryColor = category?.color || 'gray';
           
           const price = parseFloat(product.price || 0);
           
@@ -150,15 +151,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
                 )}
               </div>
               <div className="col-span-2 flex justify-center">
-                <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap ${
-                  categoryColor === 'gray' ? 'bg-gray-100 text-gray-800' :
-                  categoryColor === 'red' ? 'bg-red-100 text-red-800' :
-                  categoryColor === 'blue' ? 'bg-blue-100 text-blue-800' :
-                  categoryColor === 'green' ? 'bg-green-100 text-green-800' :
-                  categoryColor === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
-                  categoryColor === 'purple' ? 'bg-purple-100 text-purple-800' :
-                  'bg-gray-100 text-gray-800'
-                }`}>
+                <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap bg-${categoryColor}-100 text-${categoryColor}-800`}>
                   {categoryName}
                 </span>
               </div>
