@@ -4,7 +4,7 @@ import { useCategories } from '../../hooks/useCategories';
 import ProductEditor from './ProductEditor';
 import ProductList from './ProductList';
 
-export default function ProductManagement() {
+export default function ProductManagement({ initialShowEditor = false }) {
   const { products, loading, error, fetchProducts } = useProducts();
   const { categories } = useCategories();
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,18 +13,23 @@ export default function ProductManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [showEditor, setShowEditor] = useState(false);
+  const [showEditor, setShowEditor] = useState(initialShowEditor);
 
   // Initial data fetch
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
+  // Handle initialShowEditor prop changes
+  useEffect(() => {
+    setShowEditor(initialShowEditor);
+  }, [initialShowEditor]);
+
   // Filter products based on search term and category
   const filteredProducts = products.filter(product => {
     const matchesSearch = searchTerm === '' || 
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase());
+      (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
     
     const matchesCategory = selectedCategory === 'all' || 
       product.categoryId === selectedCategory;
@@ -43,7 +48,7 @@ export default function ProductManagement() {
         return a.name.localeCompare(b.name);
       case 'newest':
       default:
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
     }
   });
 

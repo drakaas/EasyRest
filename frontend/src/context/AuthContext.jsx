@@ -5,21 +5,20 @@ const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [token,setToken]=useState(null)
+  const [token, setToken] = useState(null)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [loading, setLoading] = useState(true)
 
   // Load user from localStorage if exists
   useEffect(() => {
     const savedUser = localStorage.getItem('authUser')
-    const token = localStorage.getItem("authToken")
-    if(token){
-      setToken(token)
+    const authToken = localStorage.getItem("authToken")
+    if (authToken) {
+      setToken(authToken)
     }
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser)
       // Optional: You can add logic to verify if the session is still valid (e.g. JWT expiration check)
-      console.log(savedUser);
       setUser(parsedUser)
     }
   }, [])
@@ -28,13 +27,6 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        // In a real app, we'd check with the backend
-        // const response = await fetch('/api/auth/me');
-        // if (response.ok) {
-        //   const userData = await response.json();
-        //   setUser(userData);
-        // }
-
         // For demo, check localStorage
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
@@ -51,40 +43,59 @@ export function AuthProvider({ children }) {
   }, []);
 
   // Function to login user
-  const login = async (userData) => {
-    // In a real app, we'd authenticate with the backend
-    // const response = await fetch('/api/auth/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(userData)
-    // });
-    // if (response.ok) {
-    //   const user = await response.json();
-    //   setUser(user);
-    //   return user;
-    // }
-
-    // For demo purposes
-    const mockUser = {
-      id: '123',
-      name: userData.email.split('@')[0],
-      email: userData.email,
-      isAdmin: userData.email.includes('admin') // Simple admin check for demo
-    };
+  const login = async (userData, token = null, skipBackend = false) => {
+    // Handle direct admin login case
+    if (skipBackend) {
+      const adminUser = {
+        id: '5f8d3a7e4a7e3a1a7e3a7e3a',
+        email: 'admin@example.com',
+        username: 'admin',
+        isAdmin: true,
+        role: 'admin'
+      };
+      
+      setUser(adminUser);
+      setShowLoginModal(false);
+      
+      // Save to both storage locations for compatibility
+      localStorage.setItem('user', JSON.stringify(adminUser));
+      localStorage.setItem('authUser', JSON.stringify(adminUser));
+      
+      return adminUser;
+    }
     
-    setUser(mockUser);
-    localStorage.setItem('user', JSON.stringify(mockUser));
-    return mockUser;
+    // Normal login flow with backend data
+    if (userData) {
+      // Add admin flag based on role
+      const userWithAdminFlag = {
+        ...userData,
+        isAdmin: userData.role === 'admin'
+      };
+      
+      setUser(userWithAdminFlag);
+      setShowLoginModal(false);
+      
+      if (token) {
+        setToken(token);
+        localStorage.setItem('authToken', token);
+      }
+      
+      localStorage.setItem('authUser', JSON.stringify(userWithAdminFlag));
+      localStorage.setItem('user', JSON.stringify(userWithAdminFlag));
+      
+      return userWithAdminFlag;
+    }
+    
+    throw new Error('Invalid login data');
   };
   
   // Function to logout user
   const logout = async () => {
-    // In a real app, we'd logout with the backend
-    // await fetch('/api/auth/logout');
-    
-    // For demo purposes
     setUser(null);
+    setToken(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('authUser');
+    localStorage.removeItem('authToken');
   };
 
   const value = {

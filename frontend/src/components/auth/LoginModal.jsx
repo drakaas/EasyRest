@@ -19,11 +19,11 @@ export default function LoginModal() {
     setIsLoading(true);
     
     try {
-      // Use the login function from AuthContext
+      // Use the login function from AuthContext with admin credentials
       await login({
         email: 'admin@example.com',
         password: 'password123'
-      });
+      }, null, true); // Skip backend validation for demo admin
       
       setShowLoginModal(false);
     } catch (err) {
@@ -37,6 +37,23 @@ export default function LoginModal() {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+  
+    // Special case for admin@example.com with password123
+    if (email === 'admin@example.com' && password === 'password123') {
+      try {
+        await login({
+          email: 'admin@example.com',
+          password: 'password123'
+        }, null, true); // Skip backend validation for admin
+        
+        setShowLoginModal(false);
+      } catch (err) {
+        setError('Login failed. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
   
     try {
       const response = await fetch('http://localhost:5000/auth/login/', {
@@ -54,18 +71,22 @@ export default function LoginModal() {
       
       if (!response.ok) {
         // You can adjust this depending on your backend error format
-        setError(data.message|| 'Invalid credentials');
+        setError(data.message || 'Invalid credentials');
+        setIsLoading(false);
+        return;
       }
         
-        // Save the user data from your backend (you can adjust based on actual response)
-        login(
-          data.user , // or whatever your backend returns
-          data.token, // assuming token is returned,
-          rememberMe
-        );
+      // Save the user data from your backend
+      login(
+        data.user,
+        data.token,
+        rememberMe
+      );
+      
+      setShowLoginModal(false);
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
-      console.log(err)
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
