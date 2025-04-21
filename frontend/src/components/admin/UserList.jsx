@@ -1,6 +1,16 @@
 import React from 'react';
 
-export default function UserList({ users, onView, onEdit, onDelete }) {
+export default function UserList({ 
+  users, 
+  selectedUsers, 
+  onCheckboxChange, 
+  onView, 
+  onEdit, 
+  onDelete, 
+  totalUsers,
+  currentPage,
+  onPageChange
+}) {
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
       <div className="grid grid-cols-12 gap-4 p-5 border-b text-gray-600 font-medium bg-gray-50">
@@ -12,10 +22,15 @@ export default function UserList({ users, onView, onEdit, onDelete }) {
       </div>
       
       <div className="divide-y">
-        {users.map((user) => (
+        {users.map(user => (
           <div key={user.id} className="grid grid-cols-12 gap-4 p-6 items-center hover:bg-gray-50 transition-colors">
             <div className="col-span-1 flex justify-center">
-              <input type="checkbox" className="w-4 h-4 accent-purple-600 cursor-pointer" />
+              <input 
+                type="checkbox" 
+                className="w-4 h-4 accent-purple-600 cursor-pointer" 
+                checked={selectedUsers.includes(user.id)}
+                onChange={() => onCheckboxChange(user.id)}
+              />
             </div>
             <div className="col-span-5 flex gap-4 items-center">
               <img 
@@ -25,12 +40,12 @@ export default function UserList({ users, onView, onEdit, onDelete }) {
               />
               <div className="space-y-1">
                 <h4 className="font-medium text-base">{user.name}</h4>
-                <p className="text-sm text-gray-500">{user.email}</p>
+                <p className="text-sm text-gray-500 truncate max-w-[180px]">{user.email}</p>
               </div>
             </div>
             <div className="col-span-2 text-center">
               <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-${user.status.color}-100 text-${user.status.color}-800`}>
-                <span className={`w-1.5 h-1.5 bg-${user.status.color}-600 rounded-full mr-1.5`} />
+                <span className={`w-1.5 h-1.5 bg-${user.status.color}-${user.status.color === 'gray' ? '500' : '600'} rounded-full mr-1.5`}></span>
                 {user.status.text}
               </span>
             </div>
@@ -60,19 +75,40 @@ export default function UserList({ users, onView, onEdit, onDelete }) {
       </div>
       
       <div className="p-5 flex justify-between items-center border-t bg-gray-50">
-        <div className="text-sm text-gray-500 font-medium">Showing {users.length} of {users.length} users</div>
+        <div className="text-sm text-gray-500 font-medium">Showing {users.length} of {totalUsers} users</div>
         <div className="flex items-center gap-2">
-          <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors">
+          <button 
+            className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          >
             <span className="material-symbols-outlined">chevron_left</span>
           </button>
-          <button className="w-9 h-9 bg-purple-600 text-white rounded-md flex items-center justify-center hover:bg-purple-700 transition-colors">1</button>
-          <button className="w-9 h-9 border border-gray-300 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors">2</button>
-          <button className="w-9 h-9 border border-gray-300 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors">3</button>
-          <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors">
+          <button 
+            className={`w-9 h-9 ${currentPage === 1 ? 'bg-purple-600 text-white' : 'border border-gray-300'} rounded-md flex items-center justify-center hover:${currentPage === 1 ? 'bg-purple-700' : 'bg-gray-100'} transition-colors`}
+            onClick={() => onPageChange(1)}
+          >
+            1
+          </button>
+          <button 
+            className={`w-9 h-9 ${currentPage === 2 ? 'bg-purple-600 text-white' : 'border border-gray-300'} rounded-md flex items-center justify-center hover:${currentPage === 2 ? 'bg-purple-700' : 'bg-gray-100'} transition-colors`}
+            onClick={() => onPageChange(2)}
+          >
+            2
+          </button>
+          <button 
+            className={`w-9 h-9 ${currentPage === 3 ? 'bg-purple-600 text-white' : 'border border-gray-300'} rounded-md flex items-center justify-center hover:${currentPage === 3 ? 'bg-purple-700' : 'bg-gray-100'} transition-colors`}
+            onClick={() => onPageChange(3)}
+          >
+            3
+          </button>
+          <button 
+            className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+            onClick={() => onPageChange(Math.min(3, currentPage + 1))}
+          >
             <span className="material-symbols-outlined">chevron_right</span>
           </button>
         </div>
       </div>
     </div>
   );
-} 
+}
