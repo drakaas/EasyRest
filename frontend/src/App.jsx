@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import Home from './pages/Home/Home'
 // import Menu from './pages/Menu/Menu'
@@ -6,26 +6,49 @@ import Home from './pages/Home/Home'
 // import Contact from './pages/Contact/Contact'
 // import Cart from './pages/Cart/Cart'
 import { CartProvider } from './context/CartContext'
-import { AuthProvider } from './context/AuthContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 import LoginModal from './components/auth/LoginModal'
 import Auth from './components/auth/AuthSuccess'
 import Cart from './pages/Cart/CartPage'
 import AdminPage from './pages/Admin/AdminPage'
 import AuthSuccess from './components/auth/AuthSuccess'
 import { CategoryProvider } from './context/CategoryContext'
+import Users from './pages/admin/Users'
+import AdminLayout from './components/admin/AdminLayout'
+
+// Protected Route component
+const ProtectedRoute = ({ children, isAdmin }) => {
+  const { user } = useAuth(); // You'll need to implement this hook
+  if (!user || (isAdmin && !user.isAdmin)) {
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
 export default function App() {
   return (
     <AuthProvider>
-      <CategoryProvider> {/* Add CategoryProvider here */}
+      <CategoryProvider>
         <CartProvider>
           <Router>
             <Layout>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/admin" element={<AdminPage />} />
                 <Route path="/auth-success" element={<AuthSuccess />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin" element={
+                  <ProtectedRoute isAdmin>
+                    <AdminLayout>
+                      <Routes>
+                        <Route index element={<AdminPage />} />
+                        <Route path="users" element={<Users />} />
+                        {/* Add more admin routes here */}
+                      </Routes>
+                    </AdminLayout>
+                  </ProtectedRoute>
+                } />
               </Routes>
             </Layout>
             <LoginModal />
