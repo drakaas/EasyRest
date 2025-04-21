@@ -21,23 +21,23 @@ const AVAILABLE_ICONS = [
 ];
 
 const AVAILABLE_COLORS = [
-  { name: "Red", value: "red" },
-  { name: "Yellow", value: "yellow" },
-  { name: "Green", value: "green" },
-  { name: "Blue", value: "blue" },
-  { name: "Purple", value: "purple" },
-  { name: "Pink", value: "pink" },
-  { name: "Orange", value: "orange" },
-  { name: "Teal", value: "teal" },
-  { name: "Indigo", value: "indigo" },
-  { name: "Gray", value: "gray" }
+  { name: "Red", value: "red-500" },
+  { name: "Yellow", value: "yellow-500" },
+  { name: "Green", value: "green-500" },
+  { name: "Blue", value: "blue-500" },
+  { name: "Purple", value: "purple-500" },
+  { name: "Pink", value: "pink-500" },
+  { name: "Orange", value: "orange-500" },
+  { name: "Teal", value: "teal-500" },
+  { name: "Indigo", value: "indigo-500" },
+  { name: "Gray", value: "gray-500" }
 ];
 
 export default function CategoryManagement() {
   const { categories, addCategory, updateCategory, deleteCategory, reorderCategories } = useCategories();
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategoryIcon, setNewCategoryIcon] = useState('local_pizza');
-  const [newCategoryColor, setNewCategoryColor] = useState('red');
+  const [newCategoryColor, setNewCategoryColor] = useState('red-500');
   const [editingCategory, setEditingCategory] = useState(null);
 
   const handleAddCategory = () => {
@@ -51,7 +51,7 @@ export default function CategoryManagement() {
     
     setNewCategoryName('');
     setNewCategoryIcon('local_pizza');
-    setNewCategoryColor('red');
+    setNewCategoryColor('red-500');
   };
 
   const handleEditCategory = (category) => {
@@ -88,38 +88,40 @@ export default function CategoryManagement() {
             />
           </div>
           
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Icon</label>
-            <div className="relative">
-              <select 
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
-                value={newCategoryIcon}
-                onChange={(e) => setNewCategoryIcon(e.target.value)}
-              >
-                {AVAILABLE_ICONS.map(({ name, icon }) => (
-                  <option key={icon} value={icon}>{name}</option>
-                ))}
-              </select>
-              <div className="absolute right-3 top-2.5 pointer-events-none">
-                <span className="material-symbols-outlined text-gray-400">expand_more</span>
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <label className="block text-sm text-gray-600 mb-1">Icon</label>
+              <div className="relative">
+                <select 
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
+                  value={newCategoryIcon}
+                  onChange={(e) => setNewCategoryIcon(e.target.value)}
+                >
+                  {AVAILABLE_ICONS.map(({ name, icon }) => (
+                    <option key={icon} value={icon}>{name}</option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-2.5 pointer-events-none">
+                  <span className="material-symbols-outlined text-gray-400">expand_more</span>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">Color</label>
-            <div className="relative">
-              <select 
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
-                value={newCategoryColor}
-                onChange={(e) => setNewCategoryColor(e.target.value)}
-              >
-                {AVAILABLE_COLORS.map(({ name, value }) => (
-                  <option key={value} value={value}>{name}</option>
-                ))}
-              </select>
-              <div className="absolute right-3 top-2.5 pointer-events-none">
-                <span className="material-symbols-outlined text-gray-400">expand_more</span>
+            
+            <div className="flex-1">
+              <label className="block text-sm text-gray-600 mb-1">Color</label>
+              <div className="relative">
+                <select 
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
+                  value={newCategoryColor}
+                  onChange={(e) => setNewCategoryColor(e.target.value)}
+                >
+                  {AVAILABLE_COLORS.map(({ name, value }) => (
+                    <option key={value} value={value}>{name}</option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-2.5 pointer-events-none">
+                  <span className="material-symbols-outlined text-gray-400">expand_more</span>
+                </div>
               </div>
             </div>
           </div>
@@ -128,8 +130,8 @@ export default function CategoryManagement() {
         {/* Preview */}
         <div className="flex items-center justify-between p-3 border border-gray-200 rounded-md bg-gray-50">
           <div className="flex items-center gap-2">
-            <div className={`bg-${newCategoryColor}-100 p-2 rounded-full`}>
-              <span className={`material-symbols-outlined text-${newCategoryColor}-600`}>
+            <div className={`bg-${newCategoryColor.split('-')[0]}-100 p-2 rounded-full`}>
+              <span className={`material-symbols-outlined text-${newCategoryColor}`}>
                 {newCategoryIcon}
               </span>
             </div>
@@ -226,7 +228,7 @@ export default function CategoryManagement() {
                       }`}
                       onClick={() => setEditingCategory({...editingCategory, color: value})}
                     >
-                      <div className={`w-6 h-6 rounded-full bg-${value}-500`}></div>
+                      <div className={`w-6 h-6 rounded-full bg-${value.split('-')[0]}-500`}></div>
                     </button>
                   ))}
                 </div>
