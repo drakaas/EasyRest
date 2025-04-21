@@ -1,5 +1,5 @@
 const {getAllProducts,getProductCategory}=require("../dao/product-dao");
-const {categoryBySlug,categoryById,allCategories,addCategory}=require("../dao/productCategory-dao");
+const {categoryBySlug,categoryById,allCategories,addCategory,deleteCategory}=require("../dao/productCategory-dao");
 const ProductByCategorySlug= async(req,res)=>{
      try {
           const slug = req.params.slug;
@@ -61,9 +61,22 @@ const AddCategory = async(req,res)=>{
           return res.status(500).send({message:"erreur "+error});
      }
 }
+const DeleteCategory = async(req,res)=>{
+     try {
+          const id = req.params.id;
+          if(!id) return res.status(400).send({message:"erreur id introuvable"});
+          let categorie = await categoryById(id);
+          if(categorie.message) return res.status(500).send(categorie.message);
+          let deletedCategory = await deleteCategory(id);
+          return res.status(200).send(deletedCategory);
+     } catch (error) {
+          return res.status(500).send({message:"erreur "+error});
+     }
+}
 module.exports = {
      ProductByCategoryId,
      ProductByCategorySlug,GetAllCategories,
      GetAllProducts,
-     AddCategory
+     AddCategory,
+     DeleteCategory
 }

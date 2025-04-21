@@ -115,6 +115,23 @@ export default function CategoryManagement() {
     setEditingCategory(null);
   };
 
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/product/deleteCategory/${categoryId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete category');
+      }
+
+      // Remove the category from the local state
+      setCategories(prevCategories => prevCategories.filter(c => c.id !== categoryId));
+    } catch (error) {
+      console.error('Error deleting category:', error);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h3 className="text-xl font-medium mb-4">Product Categories</h3>
@@ -217,7 +234,7 @@ export default function CategoryManagement() {
               </button>
               <button 
                 className="text-gray-500 hover:text-red-500 transition-colors"
-                onClick={() => deleteCategory(category.id)}
+                onClick={() => handleDeleteCategory(category.id)}
               >
                 <span className="material-symbols-outlined">delete</span>
               </button>

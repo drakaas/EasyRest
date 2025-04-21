@@ -51,6 +51,15 @@ const addCategory = async(name,slug,color,icon)=>{
           return {message:"erreur "+error.message};
      }
 }
+const deleteCategory = async(id)=>{
+     try {
+          let deletedCategory = await productCategories.findByIdAndDelete(id);
+          if(!deletedCategory) return {message:"erreur aucune categorie n'a été trouvée"};
+          return deletedCategory;
+     } catch (error) {
+          return {message:"erreur "+error.message};
+     }
+}
 module.exports={
      categoryBySlug,
      categoryById,
