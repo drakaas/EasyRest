@@ -215,8 +215,8 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
               {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
             </div>
             
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="w-full md:w-2/5">
+            <div className="flex justify-between items-start gap-8">
+              <div className="w-32">
                 <label className="block text-sm text-gray-600 mb-1">Price</label>
                 <div className="flex">
                   <span className="bg-gray-100 border border-r-0 border-gray-300 rounded-l-md px-3 py-2">$</span>
@@ -227,13 +227,13 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
                     onChange={handleChange}
                     step="0.01" 
                     min="0" 
-                    className={`flex-1 border ${errors.price ? 'border-red-500' : 'border-gray-300'} rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all`}
+                    className={`w-full border ${errors.price ? 'border-red-500' : 'border-gray-300'} rounded-r-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all`}
                   />
                 </div>
                 {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price}</p>}
               </div>
               
-              <div className="w-full md:w-3/5">
+              <div className="flex-1">
                 <label className="block text-sm text-gray-600 mb-1">Category</label>
                 <select 
                   name="categoryId"
