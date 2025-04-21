@@ -1,5 +1,5 @@
 const {getAllProducts,getProductCategory}=require("../dao/product-dao");
-const {categoryBySlug,categoryById,allCategories}=require("../dao/productCategory-dao");
+const {categoryBySlug,categoryById,allCategories,addCategory}=require("../dao/productCategory-dao");
 const ProductByCategorySlug= async(req,res)=>{
      try {
           const slug = req.params.slug;
@@ -54,7 +54,7 @@ const AddCategory = async(req,res)=>{
           const {name,slug,color,icon}=req.body;
           if(!name || !slug || !color || !icon) return res.status(400).send({message:"erreur les champs sont obligatoires"});
           let categorie = await categoryBySlug(slug);
-          if(categorie.message) return res.status(500).send(categorie.message);
+          if(!categorie.message) return res.status(500).send({message:"la categorie existe déjà"});
           let newCategory = await addCategory(name,slug,color,icon);
           return res.status(200).send(newCategory);
      } catch (error) {
