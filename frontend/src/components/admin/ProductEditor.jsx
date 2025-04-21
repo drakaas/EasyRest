@@ -8,7 +8,6 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
     description: '',
     price: '',
     categoryId: '',
-    status: 'active',
     image: '',
     hasPromotion: false,
     discount: '',
@@ -28,7 +27,6 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
         description: product.description || '',
         price: product.price || '',
         categoryId: product.categoryId || '',
-        status: product.status || 'active',
         image: product.image || '',
         hasPromotion: !!product.discount,
         discount: product.discount || '',
@@ -217,7 +215,7 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
               {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
             </div>
             
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Price</label>
                 <div className="flex">
@@ -249,20 +247,6 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
                   ))}
                 </select>
                 {errors.categoryId && <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>}
-              </div>
-              
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">Status</label>
-                <select 
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
-                >
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="out_of_stock">Out of Stock</option>
-                </select>
               </div>
             </div>
             
