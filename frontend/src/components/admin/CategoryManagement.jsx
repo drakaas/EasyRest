@@ -22,7 +22,7 @@ const AVAILABLE_ICONS = [
 
 const AVAILABLE_COLORS = [
   { name: "Red", value: "red" },
-  { name: "Yellow", value: "yellow" },
+  { name: "Yellow", value: "amber" },
   { name: "Green", value: "green" },
   { name: "Blue", value: "blue" },
   { name: "Purple", value: "purple" },
@@ -32,6 +32,20 @@ const AVAILABLE_COLORS = [
   { name: "Indigo", value: "indigo" },
   { name: "Gray", value: "gray" }
 ];
+
+// Map color names to their Tailwind equivalents
+const COLOR_MAP = {
+  red: 'red',
+  amber: 'amber',
+  green: 'green',
+  blue: 'blue',
+  purple: 'purple',
+  pink: 'pink',
+  orange: 'orange',
+  teal: 'teal',
+  indigo: 'indigo',
+  gray: 'gray'
+};
 
 export default function CategoryManagement() {
   const { categories, addCategory, updateCategory, deleteCategory, reorderCategories } = useCategories();
@@ -130,8 +144,8 @@ export default function CategoryManagement() {
         {/* Preview */}
         <div className="flex items-center justify-between p-3 border border-gray-200 rounded-md bg-gray-50 mt-4">
           <div className="flex items-center gap-2">
-            <div className={`bg-${newCategoryColor}-100 p-2 rounded-full`}>
-              <span className={`material-symbols-outlined text-${newCategoryColor}-600`}>
+            <div className={`bg-${COLOR_MAP[newCategoryColor]}-100 p-2 rounded-full`}>
+              <span className={`material-symbols-outlined text-${COLOR_MAP[newCategoryColor]}-600`}>
                 {newCategoryIcon}
               </span>
             </div>
