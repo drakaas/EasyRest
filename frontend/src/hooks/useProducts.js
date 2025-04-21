@@ -1,8 +1,51 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 
+// Mock products for demo (would use API in real app)
+const initialProducts = [
+  {
+    id: '1',
+    name: 'Margherita Pizza',
+    description: 'Classic pizza with tomato sauce, mozzarella, and fresh basil',
+    price: 12.99,
+    categoryId: '1',
+    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591',
+    status: 'active',
+    discount: null,
+    promoEndDate: null,
+    tags: ['Italian', 'Vegetarian'],
+    createdAt: '2023-01-15T12:00:00Z'
+  },
+  {
+    id: '2',
+    name: 'Classic Burger',
+    description: 'Beef patty, lettuce, tomato, cheese, and our special sauce',
+    price: 9.99,
+    categoryId: '2',
+    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd',
+    status: 'active',
+    discount: 10,
+    promoEndDate: '2023-12-31',
+    tags: ['American', 'Beef'],
+    createdAt: '2023-02-10T12:00:00Z'
+  },
+  {
+    id: '3',
+    name: 'Iced Tea',
+    description: 'Sweet or unsweetened',
+    price: 3.49,
+    categoryId: '4',
+    image: 'https://images.unsplash.com/photo-1556679343-c1917e0ada6d',
+    status: 'active',
+    discount: null,
+    promoEndDate: null,
+    tags: ['Drinks', 'Cold'],
+    createdAt: '2023-03-05T12:00:00Z'
+  }
+];
+
 export function useProducts() {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,45 +55,21 @@ export function useProducts() {
     setError(null);
     
     try {
-      const response = await fetch('http://localhost:5000/product/allProducts', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          // Include auth token if available
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        credentials: 'include'
-      });
+      // In a real app, fetch from API
+      // const response = await fetch('/api/products');
+      // const data = await response.json();
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      
-      // Transform the data to match our expected format if needed
-      const formattedProducts = data.map(product => ({
-        id: product._id || product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        categoryId: product.categoryId,
-        image: product.image,
-        discount: product.discount || null,
-        promoEndDate: product.promoEndDate || null,
-        tags: product.tags || [],
-        createdAt: product.createdAt || new Date().toISOString(),
-        status: product.status || 'active'
-      }));
-      
-      setProducts(formattedProducts);
+      // Using mock data for demonstration
+      setTimeout(() => {
+        setProducts(initialProducts);
+        setLoading(false);
+      }, 500);
     } catch (err) {
       console.error('Error fetching products:', err);
       setError('Failed to load products');
-    } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, []);
 
   // Fetch products on mount
   useEffect(() => {
@@ -59,124 +78,98 @@ export function useProducts() {
 
   const addProduct = useCallback(async (productData) => {
     try {
-      const response = await fetch('http://localhost:5000/product/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        credentials: 'include',
-        body: JSON.stringify(productData)
-      });
+      // In a real app, post to API
+      // const response = await fetch('/api/products', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(productData)
+      // });
+      // const newProduct = await response.json();
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      // Using mock for demonstration
+      const newProduct = {
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+        ...productData
+      };
       
-      const newProduct = await response.json();
-      
-      // Add the new product to the state
-      setProducts(prev => [...prev, {
-        id: newProduct._id || newProduct.id,
-        name: newProduct.name,
-        description: newProduct.description,
-        price: newProduct.price,
-        categoryId: newProduct.categoryId,
-        image: newProduct.image,
-        discount: newProduct.discount || null,
-        promoEndDate: newProduct.promoEndDate || null,
-        tags: newProduct.tags || [],
-        createdAt: newProduct.createdAt || new Date().toISOString(),
-        status: newProduct.status || 'active'
-      }]);
-      
+      setProducts(prev => [...prev, newProduct]);
       return newProduct;
     } catch (err) {
       console.error('Error adding product:', err);
       throw new Error('Failed to add product');
     }
-  }, [token]);
+  }, []);
 
   const updateProduct = useCallback(async (id, productData) => {
     try {
-      const response = await fetch(`http://localhost:5000/product/update/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        credentials: 'include',
-        body: JSON.stringify(productData)
-      });
+      // In a real app, put to API
+      // const response = await fetch(`/api/products/${id}`, {
+      //   method: 'PUT',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(productData)
+      // });
+      // const updatedProduct = await response.json();
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const updatedProduct = await response.json();
-      
-      // Update the product in the state
+      // Using mock for demonstration
       setProducts(prev => 
         prev.map(product => 
-          product.id === id ? {
-            ...product,
-            ...productData,
-            id: updatedProduct._id || updatedProduct.id || id
-          } : product
+          product.id === id ? { ...product, ...productData } : product
         )
       );
       
-      return updatedProduct;
+      return productData;
     } catch (err) {
       console.error('Error updating product:', err);
       throw new Error('Failed to update product');
     }
-  }, [token]);
+  }, []);
 
   const deleteProduct = useCallback(async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/product/delete/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-        },
-        credentials: 'include'
-      });
+      // In a real app, delete from API
+      // await fetch(`/api/products/${id}`, {
+      //   method: 'DELETE'
+      // });
       
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      // Remove the product from the state
+      // Using mock for demonstration
+      await new Promise(resolve => setTimeout(resolve, 500)); // simulate network delay
       setProducts(prev => prev.filter(product => product.id !== id));
     } catch (err) {
       console.error('Error deleting product:', err);
       throw new Error('Failed to delete product');
     }
-  }, [token]);
+  }, []);
 
   const duplicateProduct = useCallback(async (id) => {
     try {
+      // Find product to duplicate
       const productToDuplicate = products.find(p => p.id === id);
       if (!productToDuplicate) throw new Error('Product not found');
       
-      // Create a copy of the product with a new name
-      const duplicatedData = {
+      // In a real app, post to API
+      // const response = await fetch('/api/products/duplicate', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ id })
+      // });
+      // const duplicatedProduct = await response.json();
+      
+      // Using mock for demonstration
+      const duplicatedProduct = {
         ...productToDuplicate,
+        id: Date.now().toString(),
         name: `${productToDuplicate.name} (Copy)`,
+        createdAt: new Date().toISOString()
       };
       
-      // Remove the id so a new one will be generated
-      delete duplicatedData.id;
-      
-      // Call the add product API
-      return await addProduct(duplicatedData);
+      setProducts(prev => [...prev, duplicatedProduct]);
+      return duplicatedProduct;
     } catch (err) {
       console.error('Error duplicating product:', err);
       throw new Error('Failed to duplicate product');
     }
-  }, [products, addProduct]);
+  }, [products]);
 
   return {
     products,
