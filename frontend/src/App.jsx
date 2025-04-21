@@ -13,25 +13,28 @@ import Cart from './pages/Cart/CartPage'
 import AdminPage from './pages/Admin/AdminPage'
 import AuthSuccess from './components/auth/AuthSuccess'
 import { CategoryProvider } from './context/CategoryContext'
+import { ToastProvider } from './context/ToastContext'
 
 export default function App() {
   return (
     <AuthProvider>
-      <CategoryProvider> {/* Add CategoryProvider here */}
-        <CartProvider>
-          <Router>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path="/auth-success" element={<AuthSuccess />} />
-              </Routes>
-            </Layout>
-            <LoginModal />
-          </Router>
-        </CartProvider>
-      </CategoryProvider>
+      <ToastProvider>
+        <CategoryProvider> {/* Add CategoryProvider here */}
+          <CartProvider>
+            <Router>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/admin" element={<AdminPage />} />
+                  <Route path="/auth-success" element={<AuthSuccess />} />
+                </Routes>
+              </Layout>
+              <LoginModal />
+            </Router>
+          </CartProvider>
+        </CategoryProvider>
+      </ToastProvider>
     </AuthProvider>
   )
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useProducts } from '../../hooks/useProducts';
-import { useToast } from '../../hooks/useToast';
+import { useToast } from '../../context/ToastContext';
 
 export default function ProductEditor({ product, categories, onCancelEdit }) {
   const initialState = {
