@@ -15,6 +15,7 @@ import AuthSuccess from './components/auth/AuthSuccess'
 import { CategoryProvider } from './context/CategoryContext'
 import Users from './pages/Admin/Users'
 import AdminLayout from './components/admin/AdminLayout'
+import Orders from './pages/Admin/Orders'
 
 // Protected Route component
 const ProtectedRoute = ({ children, isAdmin }) => {
@@ -46,7 +47,8 @@ export default function App() {
               }>
                 <Route index element={<AdminPage />} />
                 <Route path="users" element={<Users />} />
-                {/* Add other admin routes here */}
+                // Inside your router configuration
+                <Route path="/admin/orders" element={<Orders />} />
               </Route>
             </Routes>
           </Router>
