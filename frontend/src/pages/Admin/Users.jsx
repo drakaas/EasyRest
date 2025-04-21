@@ -45,20 +45,31 @@ const mockUsers = [
         action: 'Placed order',
         icon: 'shopping_cart',
         color: 'green',
-        details: 'Order #45982 - $32.50',
-        status: 'Delivered',
+        details: 'Order #38291',
+        status: 'Completed',
         statusColor: 'green'
       }
     ]
   },
-  // Add more mock users as needed
+  // Add more mock users here
 ];
 
 export default function Users() {
   const [selectedUser, setSelectedUser] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [userFilter, setUserFilter] = useState('All Users');
-  const [sortBy, setSortBy] = useState('Name');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+
+  // Filter users based on search term and status
+  const filteredUsers = mockUsers.filter(user => {
+    const matchesSearch = searchTerm === '' || 
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = statusFilter === '' || 
+      user.status.text.toLowerCase() === statusFilter.toLowerCase();
+    
+    return matchesSearch && matchesStatus;
+  });
 
   const handleViewUser = (userId) => {
     const user = mockUsers.find(u => u.id === userId);
@@ -75,95 +86,72 @@ export default function Users() {
     console.log('Delete user:', userId);
   };
 
-  const handleAddUser = () => {
-    // Implement add user functionality
-    console.log('Add new user');
-  };
-
   return (
-    <AdminLayout>
-      <div className="px-14 py-6">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl text-gray-700">User Management</h2>
-          <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
-            <button 
-              className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors"
-              onClick={handleAddUser}
-            >
-              <span className="material-symbols-outlined">person_add</span>
-              Add New User
-            </button>
-            <button className="flex items-center gap-2 border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 transition-colors">
-              <span className="material-symbols-outlined">refresh</span>
-              Refresh
-            </button>
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">User Management</h2>
+      
+      {/* User Stats */}
+      <UserStats stats={mockStats} />
+      
+      {/* Filters */}
+      <div className="bg-white p-4 rounded-lg border border-gray-200 flex flex-wrap gap-4">
+        <div className="flex-1 min-w-[200px]">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Search Users</label>
+          <div className="relative">
+            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+            <input
+              type="text"
+              placeholder="Search by name, email..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 mb-10">
-          {/* User Statistics */}
-          <div className="col-span-4">
-            <UserStats stats={mockStats} />
-          </div>
-          
-          {/* User Management */}
-          <div className="col-span-8">
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4 flex-wrap sm:flex-nowrap">
-                <div className="relative w-full sm:w-auto">
-                  <input 
-                    placeholder="Search users..." 
-                    className="pl-10 pr-4 py-2.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all w-full sm:w-72 text-base"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400">search</span>
-                </div>
-                <select 
-                  className="border border-gray-300 rounded-md px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                  value={userFilter}
-                  onChange={(e) => setUserFilter(e.target.value)}
-                >
-                  <option>All Users</option>
-                  <option>Regular Users</option>
-                  <option>Premium Users</option>
-                  <option>Business Users</option>
-                  <option>Inactive Users</option>
-                </select>
-                <div className="flex-1"></div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">Sort by:</span>
-                  <select 
-                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all w-full"
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                  >
-                    <option>Name</option>
-                    <option>Last Active</option>
-                    <option>Total Spent</option>
-                    <option>Join Date</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {selectedUser ? (
-              <UserDetail 
-                user={selectedUser}
-                onEdit={handleEditUser}
-                onDelete={handleDeleteUser}
-              />
-            ) : (
-              <UserList 
-                users={mockUsers}
-                onView={handleViewUser}
-                onEdit={handleEditUser}
-                onDelete={handleDeleteUser}
-              />
-            )}
-          </div>
+        
+        <div className="flex-1 min-w-[200px]">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+        
+        <div className="flex-1 min-w-[200px]">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+          <select
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="name">Name (A-Z)</option>
+            <option value="orders">Most Orders</option>
+          </select>
         </div>
       </div>
-    </AdminLayout>
+      
+      {/* User List */}
+      <UserList 
+        users={filteredUsers} 
+        onView={handleViewUser} 
+        onEdit={handleEditUser} 
+        onDelete={handleDeleteUser} 
+      />
+      
+      {/* Selected User Detail */}
+      {selectedUser && (
+        <UserDetail 
+          user={selectedUser} 
+          onEdit={handleEditUser} 
+          onDelete={handleDeleteUser} 
+        />
+      )}
+    </div>
   );
-} 
+}

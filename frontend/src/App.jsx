@@ -38,7 +38,7 @@ export default function App() {
                 <Route path="/auth-success" element={<AuthSuccess />} />
                 
                 {/* Admin Routes */}
-                <Route path="/admin" element={
+                <Route path="/admin/*" element={
                   <ProtectedRoute isAdmin>
                     <AdminLayout />
                   </ProtectedRoute>
