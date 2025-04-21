@@ -18,11 +18,8 @@ export function useCategories() {
   const [error, setError] = useState(null);
 
   const fetchCategories = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    
     try {
-      const response = await fetch('/api/categories');
+      const response = await fetch('http://127.0.0.1:5000/product/categories');
       if (!response.ok) {
         throw new Error('Failed to fetch categories');
       }
@@ -35,27 +32,25 @@ export function useCategories() {
     }
   }, []);
 
-  // Fetch categories on mount
   useEffect(() => {
     fetchCategories();
   }, [fetchCategories]);
 
   const addCategory = useCallback(async (categoryData) => {
     try {
-      // In a real app, post to API
-      // const response = await fetch('/api/categories', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(categoryData)
-      // });
-      // const newCategory = await response.json();
-      
-      // Using mock for demonstration
-      const newCategory = {
-        id: Date.now().toString(),
-        ...categoryData
-      };
-      
+      const response = await fetch('/api/addCategory', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(categoryData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add category');
+      }
+
+      const newCategory = await response.json();
       setCategories(prev => [...prev, newCategory]);
       return newCategory;
     } catch (err) {
