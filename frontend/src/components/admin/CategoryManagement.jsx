@@ -116,6 +116,14 @@ export default function CategoryManagement() {
   };
 
   const handleDeleteCategory = async (categoryId) => {
+    console.log('Category to delete:', categoryId);
+    console.log('Current categories:', categories);
+    
+    if (!categoryId) {
+      console.error('No category ID provided for deletion');
+      return;
+    }
+
     const url = `http://127.0.0.1:5000/product/deleteCategory/${categoryId}`;
     console.log('Delete category URL:', url);
     
