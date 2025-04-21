@@ -2,14 +2,14 @@ import React from 'react';
 
 export default function UserList({ 
   users, 
-  selectedUsers, 
+  selectedUsers = [], // Provide default value
   onCheckboxChange, 
   onView, 
   onEdit, 
   onDelete, 
-  totalUsers,
-  currentPage,
-  onPageChange
+  totalUsers = 0,  // Provide default value
+  currentPage = 1,  // Provide default value
+  onPageChange = () => {}  // Provide default function
 }) {
   console.log('UserList rendering with props:', { 
     usersLength: users?.length, 
@@ -18,30 +18,54 @@ export default function UserList({
     currentPage 
   });
 
+  // Define all possible status color classes upfront
+  const statusColorMap = {
+    green: {
+      bgClass: 'bg-green-100',
+      textClass: 'text-green-800',
+      dotClass: 'bg-green-600'
+    },
+    yellow: {
+      bgClass: 'bg-yellow-100',
+      textClass: 'text-yellow-800',
+      dotClass: 'bg-yellow-600'
+    },
+    red: {
+      bgClass: 'bg-red-100',
+      textClass: 'text-red-800',
+      dotClass: 'bg-red-600'
+    },
+    gray: {
+      bgClass: 'bg-gray-100',
+      textClass: 'text-gray-800',
+      dotClass: 'bg-gray-500'
+    },
+    blue: {
+      bgClass: 'bg-blue-100',
+      textClass: 'text-blue-800',
+      dotClass: 'bg-blue-600'
+    },
+    purple: {
+      bgClass: 'bg-purple-100',
+      textClass: 'text-purple-800',
+      dotClass: 'bg-purple-600'
+    }
+  };
+
   // Helper function to get the correct status color classes
   const getStatusClasses = (color) => {
     console.log('Getting status classes for color:', color);
-    if (!color) {
-      console.warn('Color is undefined or null');
-      return { 
-        bgClass: 'bg-gray-100', 
-        textClass: 'text-gray-800', 
-        dotClass: 'bg-gray-500' 
-      };
-    }
-    
-    const bgClass = `bg-${color}-100`;
-    const textClass = `text-${color}-800`;
-    const dotClass = `bg-${color}-${color === 'gray' ? '500' : '600'}`;
-    
-    return { bgClass, textClass, dotClass };
+    // Return the predefined classes or default to gray if color not found
+    return statusColorMap[color] || statusColorMap.gray;
   };
+
+  // Define pagination button classes upfront
+  const activePageClass = "w-9 h-9 bg-purple-600 text-white rounded-md flex items-center justify-center hover:bg-purple-700 transition-colors";
+  const inactivePageClass = "w-9 h-9 border border-gray-300 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors";
 
   // Helper function for pagination button classes
   const getPaginationButtonClasses = (pageNum) => {
-    return currentPage === pageNum 
-      ? "w-9 h-9 bg-purple-600 text-white rounded-md flex items-center justify-center hover:bg-purple-700 transition-colors"
-      : "w-9 h-9 border border-gray-300 rounded-md flex items-center justify-center hover:bg-gray-100 transition-colors";
+    return currentPage === pageNum ? activePageClass : inactivePageClass;
   };
 
   if (!users) {
@@ -124,7 +148,7 @@ export default function UserList({
       </div>
       
       <div className="p-5 flex justify-between items-center border-t bg-gray-50">
-        <div className="text-sm text-gray-500 font-medium">Showing {users.length} of {totalUsers || 0} users</div>
+        <div className="text-sm text-gray-500 font-medium">Showing {users.length} of {totalUsers} users</div>
         <div className="flex items-center gap-2">
           <button 
             className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
