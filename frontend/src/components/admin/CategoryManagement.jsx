@@ -76,7 +76,7 @@ export default function CategoryManagement() {
       {/* Add New Category Form */}
       <div className="mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-          <div>
+          <div className="md:col-span-2">
             <label className="block text-sm text-gray-600 mb-1">Category Name</label>
             <input 
               type="text" 
@@ -90,60 +90,47 @@ export default function CategoryManagement() {
           
           <div>
             <label className="block text-sm text-gray-600 mb-1">Icon</label>
-            <div className="grid grid-cols-6 gap-2 p-2 bg-gray-50 rounded-lg">
-              {AVAILABLE_ICONS.map(({ name, icon }) => (
-                <button
-                  key={icon}
-                  className={`flex flex-col items-center p-2 rounded-lg transition-all ${
-                    newCategoryIcon === icon 
-                      ? 'bg-white shadow-sm border border-primary-200' 
-                      : 'hover:bg-white hover:shadow-sm border border-transparent'
-                  }`}
-                  onClick={() => setNewCategoryIcon(icon)}
-                  title={name}
-                >
-                  <span className={`material-symbols-outlined text-xl ${
-                    newCategoryIcon === icon ? 'text-primary-600' : 'text-gray-600'
-                  }`}>
-                    {icon}
-                  </span>
-                  <span className="text-xs mt-1 text-gray-500 truncate w-full text-center">
-                    {name}
-                  </span>
-                </button>
-              ))}
+            <div className="relative">
+              <select 
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
+                value={newCategoryIcon}
+                onChange={(e) => setNewCategoryIcon(e.target.value)}
+              >
+                {AVAILABLE_ICONS.map(({ name, icon }) => (
+                  <option key={icon} value={icon}>{name}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-2.5 pointer-events-none">
+                <span className="material-symbols-outlined text-gray-400">expand_more</span>
+              </div>
             </div>
           </div>
           
           <div>
             <label className="block text-sm text-gray-600 mb-1">Color</label>
-            <div className="grid grid-cols-6 gap-2 p-2 bg-gray-50 rounded-lg">
-              {AVAILABLE_COLORS.map(({ name, value }) => (
-                <button
-                  key={value}
-                  className={`flex flex-col items-center p-2 rounded-lg transition-all ${
-                    newCategoryColor === value 
-                      ? 'bg-white shadow-sm border border-primary-200' 
-                      : 'hover:bg-white hover:shadow-sm border border-transparent'
-                  }`}
-                  onClick={() => setNewCategoryColor(value)}
-                  title={name}
-                >
-                  <div className={`w-8 h-8 rounded-full bg-${value}-500 shadow-sm`}></div>
-                  <span className="text-xs mt-1 text-gray-500 truncate w-full text-center">
-                    {name}
-                  </span>
-                </button>
-              ))}
+            <div className="relative">
+              <select 
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none"
+                value={newCategoryColor}
+                onChange={(e) => setNewCategoryColor(e.target.value)}
+              >
+                {AVAILABLE_COLORS.map(({ name, value }) => (
+                  <option key={value} value={value}>{name}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-2.5 pointer-events-none">
+                <span className="material-symbols-outlined text-gray-400">expand_more</span>
+              </div>
             </div>
           </div>
           
           <div className="flex items-end">
             <button 
-              className="w-full bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 transition-colors"
+              className="bg-primary-600 text-white p-2 rounded-md hover:bg-primary-700 transition-colors"
               onClick={handleAddCategory}
+              title="Add Category"
             >
-              Add Category
+              <span className="material-symbols-outlined">check</span>
             </button>
           </div>
         </div>
@@ -210,26 +197,18 @@ export default function CategoryManagement() {
               
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Icon</label>
-                <div className="grid grid-cols-6 gap-2 p-2 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-5 gap-2">
                   {AVAILABLE_ICONS.map(({ name, icon }) => (
                     <button
                       key={icon}
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all ${
+                      className={`p-2 rounded-md border ${
                         editingCategory.icon === icon 
-                          ? 'bg-white shadow-sm border border-primary-200' 
-                          : 'hover:bg-white hover:shadow-sm border border-transparent'
+                          ? 'border-primary-500 bg-primary-50' 
+                          : 'border-gray-200 hover:bg-gray-50'
                       }`}
                       onClick={() => setEditingCategory({...editingCategory, icon})}
-                      title={name}
                     >
-                      <span className={`material-symbols-outlined text-xl ${
-                        editingCategory.icon === icon ? 'text-primary-600' : 'text-gray-600'
-                      }`}>
-                        {icon}
-                      </span>
-                      <span className="text-xs mt-1 text-gray-500 truncate w-full text-center">
-                        {name}
-                      </span>
+                      <span className="material-symbols-outlined">{icon}</span>
                     </button>
                   ))}
                 </div>
@@ -237,22 +216,18 @@ export default function CategoryManagement() {
               
               <div>
                 <label className="block text-sm text-gray-600 mb-1">Color</label>
-                <div className="grid grid-cols-6 gap-2 p-2 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-5 gap-2">
                   {AVAILABLE_COLORS.map(({ name, value }) => (
                     <button
                       key={value}
-                      className={`flex flex-col items-center p-2 rounded-lg transition-all ${
+                      className={`p-2 rounded-md border ${
                         editingCategory.color === value 
-                          ? 'bg-white shadow-sm border border-primary-200' 
-                          : 'hover:bg-white hover:shadow-sm border border-transparent'
+                          ? 'border-primary-500 bg-primary-50' 
+                          : 'border-gray-200 hover:bg-gray-50'
                       }`}
                       onClick={() => setEditingCategory({...editingCategory, color: value})}
-                      title={name}
                     >
-                      <div className={`w-8 h-8 rounded-full bg-${value}-500 shadow-sm`}></div>
-                      <span className="text-xs mt-1 text-gray-500 truncate w-full text-center">
-                        {name}
-                      </span>
+                      <div className={`w-6 h-6 rounded-full bg-${value}-500`}></div>
                     </button>
                   ))}
                 </div>
