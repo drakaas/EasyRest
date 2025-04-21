@@ -75,7 +75,7 @@ export default function CategoryManagement() {
       
       {/* Add New Category Form */}
       <div className="mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="md:col-span-2">
             <label className="block text-sm text-gray-600 mb-1">Category Name</label>
             <input 
@@ -123,26 +123,25 @@ export default function CategoryManagement() {
               </div>
             </div>
           </div>
-          
-          <div className="flex items-end">
-            <button 
-              className="bg-primary-600 text-white p-2 rounded-md hover:bg-primary-700 transition-colors"
-              onClick={handleAddCategory}
-              title="Add Category"
-            >
-              <span className="material-symbols-outlined">check</span>
-            </button>
-          </div>
         </div>
         
         {/* Preview */}
-        <div className="flex items-center gap-2 p-3 border border-gray-200 rounded-md bg-gray-50">
-          <div className={`bg-${newCategoryColor}-100 p-2 rounded-full`}>
-            <span className={`material-symbols-outlined text-${newCategoryColor}-600`}>
-              {newCategoryIcon}
-            </span>
+        <div className="flex items-center justify-between p-3 border border-gray-200 rounded-md bg-gray-50">
+          <div className="flex items-center gap-2">
+            <div className={`bg-${newCategoryColor}-100 p-2 rounded-full`}>
+              <span className={`material-symbols-outlined text-${newCategoryColor}-600`}>
+                {newCategoryIcon}
+              </span>
+            </div>
+            <span className="font-medium">{newCategoryName || 'New Category'}</span>
           </div>
-          <span className="font-medium">{newCategoryName || 'New Category'}</span>
+          <button 
+            className="bg-primary-600 text-white p-2 rounded-md hover:bg-primary-700 transition-colors"
+            onClick={handleAddCategory}
+            title="Add Category"
+          >
+            <span className="material-symbols-outlined">check</span>
+          </button>
         </div>
       </div>
       
