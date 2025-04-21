@@ -75,8 +75,8 @@ export default function CategoryManagement() {
       
       {/* Add New Category Form */}
       <div className="mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <div className="md:col-span-2">
+        <div className="space-y-4">
+          <div>
             <label className="block text-sm text-gray-600 mb-1">Category Name</label>
             <input 
               type="text" 
@@ -88,8 +88,8 @@ export default function CategoryManagement() {
             />
           </div>
           
-          <div className="flex gap-4">
-            <div className="flex-1">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">Icon</label>
               <div className="relative">
                 <select 
@@ -107,7 +107,7 @@ export default function CategoryManagement() {
               </div>
             </div>
             
-            <div className="flex-1">
+            <div>
               <label className="block text-sm text-gray-600 mb-1">Color</label>
               <div className="relative">
                 <select 
@@ -128,10 +128,10 @@ export default function CategoryManagement() {
         </div>
         
         {/* Preview */}
-        <div className="flex items-center justify-between p-3 border border-gray-200 rounded-md bg-gray-50">
+        <div className="flex items-center justify-between p-3 border border-gray-200 rounded-md bg-gray-50 mt-4">
           <div className="flex items-center gap-2">
-            <div className={`bg-${newCategoryColor.split('-')[0]}-100 p-2 rounded-full`}>
-              <span className={`material-symbols-outlined text-${newCategoryColor}`}>
+            <div className={`p-2 rounded-full`} style={{ backgroundColor: `var(--${newCategoryColor.split('-')[0]}-100)` }}>
+              <span className="material-symbols-outlined" style={{ color: `var(--${newCategoryColor.split('-')[0]}-500)` }}>
                 {newCategoryIcon}
               </span>
             </div>
