@@ -31,28 +31,27 @@ export default function App() {
       <CategoryProvider>
         <CartProvider>
           <Router>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/auth-success" element={<AuthSuccess />} />
-                
-                {/* Admin Routes */}
-                <Route path="/admin/*" element={
-                  <ProtectedRoute isAdmin>
-                    <AdminLayout />
-                  </ProtectedRoute>
-                }>
-                  <Route index element={<AdminPage />} />
-                  <Route path="users" element={<Users />} />
-                  {/* Add more admin routes here */}
-                </Route>
-              </Routes>
-            </Layout>
-            <LoginModal />
+              </Route>
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={
+                <ProtectedRoute isAdmin>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<AdminPage />} />
+                <Route path="users" element={<Users />} />
+                {/* Add other admin routes here */}
+              </Route>
+            </Routes>
           </Router>
         </CartProvider>
       </CategoryProvider>
     </AuthProvider>
-  )
+  );
 }
