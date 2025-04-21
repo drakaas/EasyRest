@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 
 
- export default function CartPage () {
+export default function CartPage () {
   const { user } = useAuth();
   const { cartItems } = useCart();
   const navigate = useNavigate();
@@ -31,7 +31,6 @@ import { useCart } from '../../context/CartContext';
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
-
       
       <main className="flex-grow container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex justify-between items-center mb-8">
@@ -42,17 +41,13 @@ import { useCart } from '../../context/CartContext';
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <CartItems />
-          </div>
-          <div className="lg:col-span-1">
+        <div className="space-y-8">
+          <CartItems />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <DeliveryInfo />
             <OrderSummary />
           </div>
-        </div>
-
-        <div className="mt-12">
-          <DeliveryInfo />
         </div>
       </main>
 
