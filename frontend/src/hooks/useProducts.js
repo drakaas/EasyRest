@@ -44,11 +44,69 @@ const initialProducts = [
   }
 ];
 
+// Static data - will be replaced with API call later
+const staticData = {
+  supplements: [
+    {
+      _id: '1',
+      name: 'Extra Cheese',
+      description: 'Premium melted mozzarella cheese',
+      price: 2.99,
+      stock: 100,
+      category: 'supplements'
+    },
+    {
+      _id: '2',
+      name: 'Pepperoni',
+      description: 'Classic sliced pepperoni',
+      price: 3.49,
+      stock: 80,
+      category: 'supplements'
+    },
+    {
+      _id: '3',
+      name: 'Mushrooms',
+      description: 'Fresh sliced mushrooms',
+      price: 2.49,
+      stock: 90,
+      category: 'supplements'
+    }
+  ],
+  sauces: [
+    {
+      _id: '4',
+      name: 'Garlic Sauce',
+      description: 'Creamy garlic dipping sauce',
+      price: 1.99,
+      stock: 150,
+      category: 'sauces'
+    },
+    {
+      _id: '5',
+      name: 'BBQ Sauce',
+      description: 'Sweet and tangy barbecue sauce',
+      price: 1.99,
+      stock: 120,
+      category: 'sauces'
+    },
+    {
+      _id: '6',
+      name: 'Hot Sauce',
+      description: 'Spicy chili pepper sauce',
+      price: 1.99,
+      stock: 100,
+      category: 'sauces'
+    }
+  ]
+};
+
 export function useProducts() {
   const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [supplements, setSupplements] = useState([]);
+  const [sauces, setSauces] = useState([]);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -62,6 +120,8 @@ export function useProducts() {
       // Using mock data for demonstration
       setTimeout(() => {
         setProducts(initialProducts);
+        setSupplements(staticData.supplements);
+        setSauces(staticData.sauces);
         setLoading(false);
       }, 500);
     } catch (err) {
@@ -179,6 +239,8 @@ export function useProducts() {
     addProduct,
     updateProduct,
     deleteProduct,
-    duplicateProduct
+    duplicateProduct,
+    supplements,
+    sauces
   };
 } 

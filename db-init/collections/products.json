@@ -256,5 +256,69 @@
     "tags": [{ "text": "Meal Deal", "color": "amber" }],
     "createdAt": "2023-01-19T00:00:00Z",
     "updatedAt": "2023-01-19T00:00:00Z"
+  },
+  {
+    "name": "Protein Shake",
+    "description": "High-quality protein shake for muscle recovery",
+    "price": 24.99,
+    "category": "supplements",
+    "images": ["/images/products/protein-shake.jpg"],
+    "rating": 4.5,
+    "reviewCount": 128,
+    "tags": [
+      {
+        "text": "Protein",
+        "color": "purple"
+      }
+    ],
+    "stock": 50
+  },
+  {
+    "name": "Vitamin C Tablets",
+    "description": "1000mg Vitamin C tablets for immune support",
+    "price": 15.99,
+    "category": "supplements",
+    "images": ["/images/products/vitamin-c.jpg"],
+    "rating": 4.3,
+    "reviewCount": 95,
+    "tags": [
+      {
+        "text": "Vitamins",
+        "color": "purple"
+      }
+    ],
+    "stock": 75
+  },
+  {
+    "name": "BBQ Sauce",
+    "description": "Classic smoky BBQ sauce",
+    "price": 5.99,
+    "category": "sauces",
+    "images": ["/images/products/bbq-sauce.jpg"],
+    "rating": 4.7,
+    "reviewCount": 203,
+    "tags": [
+      {
+        "text": "BBQ",
+        "color": "red"
+      }
+    ],
+    "stock": 100
+  },
+  {
+    "name": "Hot Sauce",
+    "description": "Spicy hot sauce with ghost peppers",
+    "price": 6.99,
+    "category": "sauces",
+    "images": ["/images/products/hot-sauce.jpg"],
+    "rating": 4.8,
+    "reviewCount": 156,
+    "tags": [
+      {
+        "text": "Spicy",
+        "color": "red"
+      }
+    ],
+    "stock": 80
   }
 ]

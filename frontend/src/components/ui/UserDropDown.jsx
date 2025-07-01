@@ -19,15 +19,22 @@ export default function UserDropdown() {
     }
   }, [])
 
+  const handleButtonClick = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    console.log('Button clicked, current state:', isOpen)
+    setIsOpen(!isOpen)
+  }
+
   if (!user) return null
 
   return (
     <div className="relative" ref={dropdownRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleButtonClick}
         className="flex items-center space-x-2 focus:outline-none"
       >
-        <span className="text-sm font-medium">{user.name}</span>
+        <span className="text-sm font-medium">{user.username}</span>
         <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
           <span className="material-symbols-outlined text-primary-600">account_circle</span>
         </div>
@@ -36,7 +43,7 @@ export default function UserDropdown() {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
           <div className="px-4 py-2 border-b border-gray-100">
-            <p className="text-sm font-medium text-gray-900">{user.name}</p>
+            <p className="text-sm font-medium text-gray-900">{user.username}</p>
             <p className="text-xs text-gray-500 truncate">{user.email}</p>
           </div>
           <a

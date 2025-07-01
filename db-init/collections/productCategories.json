@@ -46,6 +46,20 @@
     "description": "Chef's specials and seasonal offerings",
     "color":"pink",
     "icon":"star"
+  },
+  {
+    "name": "Supplements",
+    "slug": "supplements",
+    "description": "Nutritional supplements and health products",
+    "icon": "nutrition",
+    "color": "purple"
+  },
+  {
+    "name": "Sauces",
+    "slug": "sauces",
+    "description": "Various sauces and condiments",
+    "icon": "local_drink",
+    "color": "red"
   }
 ]
 

@@ -2,21 +2,15 @@ import time
 import json
 import os
 from pymongo import MongoClient
-
-# Connection parameters
-MONGODB_URI = "mongodb://admin:secret@mongodb:27017/mydatabase?authSource=admin"
-DB_NAME = "mydatabase"
-DATA_DIR = "/app/collections"  # Directory containing JSON files
-import os
-import json
 from bson import ObjectId
-from pymongo import MongoClient
 from datetime import datetime
 
+# Connection parameters
+# MONGODB_URI = "mongodb://admin:secret@mongodb:27017/mydatabase?authSource=admin"
 
-
-client = MongoClient(MONGODB_URI)
-db = client[DB_NAME]
+MONGODB_URI = "mongodb://admin:secret@host.docker.internal:27017/mydatabase?authSource=admin"
+DB_NAME = "mydatabase"
+DATA_DIR = "/app/collections"  # Directory containing JSON files
 
 def parse_date(value):
     if isinstance(value, str):
@@ -67,14 +61,13 @@ def import_data(db):
                         count += 1
                 print(f"Imported {count} new product categories")
 
+        # --- Import products ---
         prod_file = os.path.join(DATA_DIR, "products.json")
         if os.path.exists(prod_file):
             with open(prod_file, "r") as f:
                 products = json.load(f)
                 count = 0
-                print(products)
                 for prod in products:
-                    # Cast string ID fields to ObjectId
                     if "_id" in prod:
                         prod["_id"] = ObjectId(prod["_id"])
                     if "category" in prod:
@@ -92,10 +85,56 @@ def import_data(db):
                     if result.upserted_id:
                         count += 1
                 print(f"Imported {count} new products")
+
+        # --- Import sauces ---
+        sauces_file = os.path.join(DATA_DIR, "sauces.json")
+        if os.path.exists(sauces_file):
+            with open(sauces_file, "r") as f:
+                sauces = json.load(f)
+                count = 0
+                for sauce in sauces:
+                    if "createdAt" in sauce:
+                        sauce["createdAt"] = parse_date(sauce["createdAt"])
+                    if "updatedAt" in sauce:
+                        sauce["updatedAt"] = parse_date(sauce["updatedAt"])
+                    sauce["category"] = "sauces"
+                    
+                    result = db.products.update_one(
+                        {"name": sauce["name"]},
+                        {"$setOnInsert": sauce},
+                        upsert=True
+                    )
+                    if result.upserted_id:
+                        count += 1
+                print(f"Imported {count} new sauces")
+
+        # --- Import supplements ---
+        supplements_file = os.path.join(DATA_DIR, "supplements.json")
+        if os.path.exists(supplements_file):
+            with open(supplements_file, "r") as f:
+                supplements = json.load(f)
+                count = 0
+                for supplement in supplements:
+                    if "createdAt" in supplement:
+                        supplement["createdAt"] = parse_date(supplement["createdAt"])
+                    if "updatedAt" in supplement:
+                        supplement["updatedAt"] = parse_date(supplement["updatedAt"])
+                    # Do not set 'category' for supplements, use the model fields only
+                    result = db.supplements.update_one(
+                        {"name": supplement["name"]},
+                        {"$setOnInsert": supplement},
+                        upsert=True
+                    )
+                    if result.upserted_id:
+                        count += 1
+                print(f"Imported {count} new supplements")
+
         print("✅ Data import completed successfully!")
 
     except Exception as e:
         print(f"❌ Error importing data: {e}")
 
 if __name__ == "__main__":
-    import_data(db)
+    with MongoClient(MONGODB_URI) as client:
+        db = client[DB_NAME]
+        import_data(db)

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ProductManagement from '../../components/admin/ProductManagement';
 import CategoryManagement from '../../components/admin/CategoryManagement';
+import SupplementManagement from '../../components/admin/SupplementManagement';
 
 export default function AdminPage() {
   const { user } = useAuth();
@@ -62,6 +63,7 @@ export default function AdminPage() {
           {/* Product Management */}
           <div className="lg:col-span-2">
             <ProductManagement initialShowEditor={showProductEditor} />
+            <SupplementManagement />
           </div>
         </div>
       </main>

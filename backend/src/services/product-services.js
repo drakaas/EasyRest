@@ -1,5 +1,6 @@
 const {getAllProducts,getProductCategory}=require("../dao/product-dao");
 const {categoryBySlug,categoryById,allCategories,addCategory,deleteCategory}=require("../dao/productCategory-dao");
+const { getAllSupplements, getSupplementsByType } = require('../dao/supplement-dao');
 const ProductByCategorySlug= async(req,res)=>{
      try {
           const slug = req.params.slug;
@@ -70,10 +71,37 @@ const DeleteCategory = async(req,res)=>{
           return res.status(500).send({message:"erreur "+error});
      }
 }
+
+const GetAllSupplements = async (req, res) => {
+  try {
+    const supplements = await getAllSupplements();
+    if (supplements.message != null) return res.status(500).send({ message: "erreur " + supplements.message });
+    return res.status(200).send(supplements);
+  } catch (error) {
+    return res.status(500).send({ message: "erreur " + error });
+  }
+};
+
+const GetSupplementsByType = async (req, res) => {
+  try {
+    const { type } = req.params;
+    if (!type) return res.status(400).send({ message: "Type is required" });
+    const allowedTypes = ['supplement', 'boisson', 'accompagnement', 'extra'];
+    if (!allowedTypes.includes(type)) return res.status(400).send({ message: "Invalid supplement type" });
+    const supplements = await getSupplementsByType(type);
+    if (supplements.message != null) return res.status(500).send({ message: "erreur " + supplements.message });
+    return res.status(200).send(supplements);
+  } catch (error) {
+    return res.status(500).send({ message: "erreur " + error });
+  }
+};
+
 module.exports = {
      ProductByCategoryId,
      ProductByCategorySlug,GetAllCategories,
      GetAllProducts,
      AddCategory,
-     DeleteCategory
+     DeleteCategory,
+     GetAllSupplements,
+     GetSupplementsByType
 }

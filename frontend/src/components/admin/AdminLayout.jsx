@@ -16,8 +16,11 @@ export default function AdminLayout() {
                 </Link>
               </div>
               <nav className="ml-8 flex space-x-8">
-                <Link to="/admin/products" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                <Link to="/admin" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                   Products
+                </Link>
+                <Link to="/admin/supplements-sauces" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                  Supplements & Sauces
                 </Link>
                 <Link to="/admin/users" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                   Users

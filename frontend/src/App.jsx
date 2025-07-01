@@ -16,44 +16,50 @@ import { CategoryProvider } from './context/CategoryContext'
 import Users from './pages/Admin/Users'
 import AdminLayout from './components/admin/AdminLayout'
 import Orders from './pages/Admin/Orders'
+import SupplementSauceManagement from './components/admin/SupplementSauceManagement'
 
 // Protected Route component
 const ProtectedRoute = ({ children, isAdmin }) => {
-  const { user } = useAuth(); // You'll need to implement this hook
+  const { user } = useAuth();
   if (!user || (isAdmin && !user.isAdmin)) {
     return <Navigate to="/" replace />;
   }
   return children;
 };
 
+function AppContent() {
+  const { showLoginModal } = useAuth();
+  
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="cart" element={<Cart />} />
+          <Route path="auth-success" element={<AuthSuccess />} />
+        </Route>
+        <Route path="/admin" element={<ProtectedRoute isAdmin={true}><AdminLayout /></ProtectedRoute>}>
+          <Route index element={<AdminPage />} />
+          <Route path="users" element={<Users />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="supplements-sauces" element={<SupplementSauceManagement />} />
+        </Route>
+      </Routes>
+      {showLoginModal && <LoginModal />}
+    </>
+  );
+}
+
 export default function App() {
   return (
-    <AuthProvider>
-      <CategoryProvider>
-        <CartProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/auth-success" element={<AuthSuccess />} />
-              </Route>
-              
-              {/* Admin Routes */}
-              <Route path="/admin" element={
-                <ProtectedRoute isAdmin>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }>
-                <Route index element={<AdminPage />} />
-                <Route path="users" element={<Users />} />
-                // Inside your router configuration
-                <Route path="/admin/orders" element={<Orders />} />
-              </Route>
-            </Routes>
-          </Router>
-        </CartProvider>
-      </CategoryProvider>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <CategoryProvider>
+          <CartProvider>
+            <AppContent />
+          </CartProvider>
+        </CategoryProvider>
+      </AuthProvider>
+    </Router>
   );
 }

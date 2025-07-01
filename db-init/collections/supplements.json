@@ -1,0 +1,145 @@
+[
+  {
+    "name": "Whey Protein Powder",
+    "description": "High-quality whey protein for muscle recovery and growth",
+    "price": 29.99,
+    "type": "supplement",
+    "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591"
+  },
+  {
+    "name": "Vitamin C Tablets",
+    "description": "1000mg Vitamin C tablets for immune support",
+    "price": 15.99,
+    "type": "supplement",
+    "image": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5"
+  },
+  {
+    "name": "Omega-3 Fish Oil",
+    "description": "High-strength fish oil capsules for heart health",
+    "price": 19.99,
+    "type": "supplement",
+    "image": "https://images.unsplash.com/photo-1544145945-f90425340c7e.jpeg"
+  },
+  {
+    "name": "BCAA Powder",
+    "description": "Branched-chain amino acids for muscle recovery",
+    "price": 24.99,
+    "type": "supplement",
+    "image": "https://images.unsplash.com/photo-1550547660-d9450f859349"
+  },
+  {
+    "name": "Creatine Monohydrate",
+    "description": "Micronized creatine for strength and power",
+    "price": 22.49,
+    "type": "supplement",
+    "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87"
+  },
+
+  {
+    "name": "Coca-Cola",
+    "description": "Classic refreshing soft drink",
+    "price": 1.99,
+    "type": "boisson",
+    "image": "https://images.unsplash.com/photo-1561758033-7e924f619b47"
+  },
+  {
+    "name": "Orange Juice",
+    "description": "Freshly squeezed orange juice",
+    "price": 2.49,
+    "type": "boisson",
+    "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
+  },
+  {
+    "name": "Mineral Water",
+    "description": "Still mineral water, 500ml",
+    "price": 1.49,
+    "type": "boisson",
+    "image": "https://images.unsplash.com/photo-1578985545062-69928b1d9587"
+  },
+  {
+    "name": "Iced Tea",
+    "description": "Sweetened lemon iced tea",
+    "price": 2.29,
+    "type": "boisson",
+    "image": "https://images.unsplash.com/photo-1585032226651-759b368d7246"
+  },
+  {
+    "name": "Sparkling Water",
+    "description": "Sparkling water, 500ml",
+    "price": 1.69,
+    "type": "boisson",
+    "image": "https://images.unsplash.com/photo-1595708684082-a173bb3a06c5"
+  },
+
+  {
+    "name": "French Fries",
+    "description": "Crispy golden fries",
+    "price": 3.49,
+    "type": "accompagnement",
+    "image": "https://images.unsplash.com/photo-1595981267035-7b04ca84a82d"
+  },
+  {
+    "name": "Side Salad",
+    "description": "Fresh garden salad with vinaigrette",
+    "price": 2.99,
+    "type": "accompagnement",
+    "image": "https://images.unsplash.com/photo-1596662951482-0c4ba74a6df6"
+  },
+  {
+    "name": "Garlic Bread",
+    "description": "Toasted bread with garlic butter",
+    "price": 2.49,
+    "type": "accompagnement",
+    "image": "https://images.unsplash.com/photo-1601924582970-9238bcb495d9"
+  },
+  {
+    "name": "Coleslaw",
+    "description": "Creamy coleslaw with carrots and cabbage",
+    "price": 2.19,
+    "type": "accompagnement",
+    "image": "https://images.unsplash.com/photo-1613478223719-2ab802602423"
+  },
+  {
+    "name": "Mashed Potatoes",
+    "description": "Smooth mashed potatoes with butter",
+    "price": 2.79,
+    "type": "accompagnement",
+    "image": "https://images.unsplash.com/photo-1544145945-f90425340c7e.jpeg"
+  },
+
+  {
+    "name": "BBQ Sauce",
+    "description": "Sweet and tangy barbecue sauce",
+    "price": 0.99,
+    "type": "extra",
+    "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87"
+  },
+  {
+    "name": "Ketchup",
+    "description": "Classic tomato ketchup",
+    "price": 0.49,
+    "type": "extra",
+    "image": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5"
+  },
+  {
+    "name": "Mayonnaise",
+    "description": "Creamy mayonnaise dip",
+    "price": 0.49,
+    "type": "extra",
+    "image": "https://images.unsplash.com/photo-1544145945-f90425340c7e.jpeg"
+  },
+  {
+    "name": "Hot Sauce",
+    "description": "Spicy chili pepper sauce",
+    "price": 0.69,
+    "type": "extra",
+    "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
+  },
+  {
+    "name": "Garlic Sauce",
+    "description": "Creamy garlic dipping sauce",
+    "price": 0.79,
+    "type": "extra",
+    "image": "https://images.unsplash.com/photo-1513104890138-7c749659a591"
+  }
+] 

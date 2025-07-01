@@ -8,8 +8,17 @@ import UserDropdown from '../ui/UserDropDown'
 export default function Header() {
   const { cartCount } = useCart()
   const { user, setShowLoginModal } = useAuth()
+
+  const handleLoginClick = () => {
+    console.log('Login button clicked')
+    console.log('Current showLoginModal state:', setShowLoginModal)
+    setShowLoginModal(true)
+    console.log('showLoginModal set to true')
+  }
+
   const handleCartClick = () => {
     if (!user) {
+      console.log('User not logged in, showing login modal')
       setShowLoginModal(true)
       return false
     }
@@ -53,7 +62,7 @@ export default function Header() {
           <UserDropdown />
         ) : (
           <button 
-            onClick={() => setShowLoginModal(true)}
+            onClick={handleLoginClick}
             className="p-2 rounded-full hover:bg-neutral-100 transition-colors"
           >
             <span className="material-symbols-outlined">person</span>

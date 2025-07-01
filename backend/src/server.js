@@ -18,7 +18,7 @@ require('./routes/auth');
 function init(port, callback) {
     const app = express();
     const corsOptions = {
-      origin: 'http://127.0.0.1:3000',  // Replace with your frontend URL
+      origin: ['http://127.0.0.1:3000', 'http://localhost:5173'],  // Allow both origins
       credentials: true,  // Allow credentials (cookies, authorization headers)
     };
     
