@@ -31,11 +31,11 @@ const productSchema = new mongoose.Schema({
     min: [0, 'Price cannot be negative']
   },
   supplements: [{
-    supplement: {
+    category: {
       type: String,
       required: true,
     },
-    quantity: {
+    maxChoices: {
       type: Number,
       default: 1,
       min: 1,

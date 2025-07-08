@@ -100,6 +100,8 @@ const staticData = {
   ]
 };
 
+const API_BASE = 'http://localhost:5000/product';
+
 export function useProducts() {
   const { user } = useAuth();
   const [products, setProducts] = useState([]);
@@ -111,19 +113,12 @@ export function useProducts() {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     setError(null);
-    
     try {
-      // In a real app, fetch from API
-      // const response = await fetch('/api/products');
-      // const data = await response.json();
-      
-      // Using mock data for demonstration
-      setTimeout(() => {
-        setProducts(initialProducts);
-        setSupplements(staticData.supplements);
-        setSauces(staticData.sauces);
-        setLoading(false);
-      }, 500);
+      const response = await fetch(`${API_BASE}/allProducts`);
+      if (!response.ok) throw new Error('Failed to fetch products');
+      const data = await response.json();
+      setProducts(data);
+      setLoading(false);
     } catch (err) {
       console.error('Error fetching products:', err);
       setError('Failed to load products');
@@ -138,52 +133,95 @@ export function useProducts() {
 
   const addProduct = useCallback(async (productData) => {
     try {
-      // In a real app, post to API
-      // const response = await fetch('/api/products', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(productData)
-      // });
-      // const newProduct = await response.json();
-      
-      // Using mock for demonstration
-      const newProduct = {
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString(),
-        ...productData
-      };
-      
-      setProducts(prev => [...prev, newProduct]);
+      const formData = new FormData();
+      formData.append('name', productData.name);
+      formData.append('description', productData.description);
+      formData.append('price', productData.price);
+      formData.append('category', productData.categoryId);
+      formData.append('stock', productData.stock || 0);
+      if (productData.images && productData.images.length > 0) {
+        productData.images.forEach(img => formData.append('images', img));
+      } else if (productData.image) {
+        // If image is a File or base64 string
+        if (productData.image instanceof File) {
+          formData.append('images', productData.image);
+        } else if (typeof productData.image === 'string' && productData.image.startsWith('data:')) {
+          // Convert base64 to Blob
+          const arr = productData.image.split(',');
+          const mime = arr[0].match(/:(.*?);/)[1];
+          const bstr = atob(arr[1]);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) u8arr[n] = bstr.charCodeAt(n);
+          const file = new File([u8arr], 'image.png', { type: mime });
+          formData.append('images', file);
+        }
+      }
+      if (productData.supplements) {
+        formData.append('supplements', JSON.stringify(productData.supplements));
+      }
+      // Add other fields as needed
+      const response = await fetch(`${API_BASE}/products`, {
+        method: 'POST',
+        body: formData
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to add product');
+      }
+      const newProduct = await response.json();
+      await fetchProducts();
       return newProduct;
     } catch (err) {
       console.error('Error adding product:', err);
       throw new Error('Failed to add product');
     }
-  }, []);
+  }, [fetchProducts]);
 
   const updateProduct = useCallback(async (id, productData) => {
     try {
-      // In a real app, put to API
-      // const response = await fetch(`/api/products/${id}`, {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(productData)
-      // });
-      // const updatedProduct = await response.json();
-      
-      // Using mock for demonstration
-      setProducts(prev => 
-        prev.map(product => 
-          product.id === id ? { ...product, ...productData } : product
-        )
-      );
-      
-      return productData;
+      const formData = new FormData();
+      formData.append('name', productData.name);
+      formData.append('description', productData.description);
+      formData.append('price', productData.price);
+      formData.append('category', productData.categoryId);
+      formData.append('stock', productData.stock || 0);
+      if (productData.images && productData.images.length > 0) {
+        productData.images.forEach(img => formData.append('images', img));
+      } else if (productData.image) {
+        if (productData.image instanceof File) {
+          formData.append('images', productData.image);
+        } else if (typeof productData.image === 'string' && productData.image.startsWith('data:')) {
+          const arr = productData.image.split(',');
+          const mime = arr[0].match(/:(.*?);/)[1];
+          const bstr = atob(arr[1]);
+          let n = bstr.length;
+          const u8arr = new Uint8Array(n);
+          while (n--) u8arr[n] = bstr.charCodeAt(n);
+          const file = new File([u8arr], 'image.png', { type: mime });
+          formData.append('images', file);
+        }
+      }
+      if (productData.supplements) {
+        formData.append('supplements', JSON.stringify(productData.supplements));
+      }
+      // Add other fields as needed
+      const response = await fetch(`${API_BASE}/products/${id}`, {
+        method: 'PUT',
+        body: formData
+      });
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to update product');
+      }
+      const updatedProduct = await response.json();
+      await fetchProducts();
+      return updatedProduct;
     } catch (err) {
       console.error('Error updating product:', err);
       throw new Error('Failed to update product');
     }
-  }, []);
+  }, [fetchProducts]);
 
   const deleteProduct = useCallback(async (id) => {
     try {

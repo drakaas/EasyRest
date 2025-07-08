@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useProducts } from '../../hooks/useProducts';
+import axios from 'axios';
 
 export default function ProductEditor({ product, categories, onSave, onCancel }) {
   const { addProduct, updateProduct } = useProducts();
@@ -12,11 +13,17 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
     hasPromotion: false,
     discount: '',
     promoEndDate: '',
-    tags: []
+    tags: [],
+    supplements: []
   });
   const [tagInput, setTagInput] = useState('');
   const [imagePreview, setImagePreview] = useState('');
   const [errors, setErrors] = useState({});
+  const [supplementCategory, setSupplementCategory] = useState('');
+  const [supplementMaxChoices, setSupplementMaxChoices] = useState(1);
+  const [supplementTypes, setSupplementTypes] = useState([]);
+  const [supplementTypesLoading, setSupplementTypesLoading] = useState(false);
+  const [supplementTypesError, setSupplementTypesError] = useState(null);
 
   // Initialize form data if editing existing product
   useEffect(() => {
@@ -31,7 +38,8 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
         hasPromotion: !!product.discount,
         discount: product.discount || '',
         promoEndDate: product.promoEndDate || '',
-        tags: product.tags || []
+        tags: product.tags || [],
+        supplements: product.supplements || []
       });
       setImagePreview(product.image || '');
     } else {
@@ -44,6 +52,19 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
       }
     }
   }, [product, categories]);
+
+  useEffect(() => {
+    setSupplementTypesLoading(true);
+    axios.get('http://localhost:5000/product/supplements/types')
+      .then(res => {
+        setSupplementTypes(res.data);
+        setSupplementTypesLoading(false);
+      })
+      .catch(err => {
+        setSupplementTypesError('Failed to load supplement categories');
+        setSupplementTypesLoading(false);
+      });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -93,6 +114,26 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
     }));
   };
 
+  const handleAddSupplementCategory = () => {
+    if (!supplementCategory.trim()) return;
+    setFormData(prev => ({
+      ...prev,
+      supplements: [
+        ...prev.supplements,
+        { category: supplementCategory.trim(), maxChoices: Number(supplementMaxChoices) || 1 }
+      ]
+    }));
+    setSupplementCategory('');
+    setSupplementMaxChoices(1);
+  };
+
+  const handleRemoveSupplementCategory = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      supplements: prev.supplements.filter((_, i) => i !== index)
+    }));
+  };
+
   const validate = () => {
     const newErrors = {};
     
@@ -119,11 +160,14 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
     
     if (!validate()) return;
     
+    console.log('[ProductEditor] Submitting formData:', formData);
     try {
       if (product) {
-        await updateProduct(formData.id, formData);
+        const resp = await updateProduct(formData.id, formData);
+        console.log('[ProductEditor] updateProduct response:', resp);
       } else {
-        await addProduct(formData);
+        const resp = await addProduct(formData);
+        console.log('[ProductEditor] addProduct response:', resp);
       }
       onSave();
     } catch (error) {
@@ -327,6 +371,54 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
                     className="border-none outline-none bg-transparent text-sm w-full" 
                   />
                 </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm text-gray-600 mb-1">Supplement Categories</label>
+              <div className="flex gap-2 mb-2">
+                <select
+                  value={supplementCategory}
+                  onChange={e => setSupplementCategory(e.target.value)}
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+                  disabled={supplementTypesLoading}
+                >
+                  <option value="">Select supplement category</option>
+                  {supplementTypes.map(type => (
+                    <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+                  ))}
+                </select>
+                <input
+                  type="number"
+                  min="1"
+                  value={supplementMaxChoices}
+                  onChange={e => setSupplementMaxChoices(e.target.value)}
+                  className="border border-gray-300 rounded-md px-3 py-2 w-24 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
+                  placeholder="Max choices"
+                />
+                <button
+                  type="button"
+                  className="bg-primary-600 text-white px-3 py-2 rounded-md font-medium hover:bg-primary-700 transition-colors"
+                  onClick={handleAddSupplementCategory}
+                  disabled={!supplementCategory}
+                >
+                  Add
+                </button>
+              </div>
+              {supplementTypesError && <div className="text-red-500 text-xs mb-2">{supplementTypesError}</div>}
+              <div className="flex flex-wrap gap-2">
+                {formData.supplements.map((supp, idx) => (
+                  <div key={idx} className="bg-gray-100 px-3 py-1 rounded flex items-center gap-2 text-sm">
+                    <span>{supp.category} (max: {supp.maxChoices})</span>
+                    <button
+                      type="button"
+                      className="text-gray-500 hover:text-red-500"
+                      onClick={() => handleRemoveSupplementCategory(idx)}
+                    >
+                      <span className="material-symbols-outlined text-sm">close</span>
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
