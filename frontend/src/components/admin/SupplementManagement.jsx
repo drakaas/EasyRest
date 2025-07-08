@@ -5,13 +5,15 @@ import SupplementList from './SupplementList';
 
 export default function SupplementManagement({ initialShowEditor = false }) {
   const [selectedType, setSelectedType] = useState('all');
-  const { supplements, loading, error } = useSupplements(selectedType === 'all' ? null : selectedType);
+  const { supplements, loading, error, fetchSupplements } = useSupplements(selectedType === 'all' ? null : selectedType);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('newest');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [selectedSupplement, setSelectedSupplement] = useState(null);
   const [showEditor, setShowEditor] = useState(initialShowEditor);
+
+  console.log('[SupplementManagement] Rendered, supplements:', supplements);
 
   // Filter supplements based on search term
   const filteredSupplements = supplements.filter(supplement => {
@@ -64,6 +66,7 @@ export default function SupplementManagement({ initialShowEditor = false }) {
   const handleSupplementSaved = () => {
     setShowEditor(false);
     setSelectedSupplement(null);
+    fetchSupplements();
   };
 
   const handleSupplementDeleted = (supplementId) => {
@@ -73,7 +76,7 @@ export default function SupplementManagement({ initialShowEditor = false }) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mt-8">
       <h3 className="text-xl font-medium mb-4">Supplement Management</h3>
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3 mb-4">
           <div className="relative">
             <input 
@@ -96,21 +99,14 @@ export default function SupplementManagement({ initialShowEditor = false }) {
             <option value="accompagnement">Accompagnement</option>
             <option value="extra">Extra</option>
           </select>
-          <div className="flex-1"></div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">Sort by:</span>
-            <select 
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all"
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-            >
-              <option value="newest">Newest</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="name">Alphabetical</option>
-            </select>
-          </div>
         </div>
+        <button
+          className="bg-primary-600 text-white px-4 py-2 rounded-md font-medium hover:bg-primary-700 transition-colors inline-flex items-center gap-2"
+          onClick={handleNewSupplement}
+        >
+          <span className="material-symbols-outlined">add</span>
+          Add Supplement
+        </button>
       </div>
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">

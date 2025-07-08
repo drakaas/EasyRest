@@ -16,13 +16,13 @@ export function CartProvider({ children }) {
   
   // Fetch cart from the backend when user logs in
   useEffect(() => {
-    if (user && token) {
-      console.log('User logged in, fetching cart...')
-      fetchCartFromBackend()
-    } else {
-      console.log('No user or token, clearing cart...')
-      setCartItems([])
+    if (!user || !token) {
+      setCartItems([]);
+      setLoading(false);
+      return;
     }
+    console.log('User logged in, fetching cart...')
+    fetchCartFromBackend()
   }, [user, token])
   
   // Fetch cart data from the backend

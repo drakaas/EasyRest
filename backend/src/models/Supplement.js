@@ -19,7 +19,7 @@ const supplementSchema = new mongoose.Schema({
   type: {
     type: String,
     required: [true, 'Type is required'],
-    enum: ['supplement', 'boisson', 'accompagnement', 'extra'],
+    // enum: ['supplement', 'boisson', 'accompagnement', 'extra'],
   },
   image: {
     type: String,

@@ -25,9 +25,14 @@ export default function ProductManagement({ initialShowEditor = false }) {
   // Update local products when backend data is loaded
   useEffect(() => {
     if (backendProducts) {
+      console.log('[ProductManagement] backendProducts loaded:', backendProducts);
       setProducts(backendProducts);
     }
   }, [backendProducts]);
+
+  useEffect(() => {
+    console.log('[ProductManagement] Rendered, products:', products);
+  });
 
   // Handle initialShowEditor prop changes
   useEffect(() => {

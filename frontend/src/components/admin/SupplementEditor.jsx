@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSupplements } from '../../hooks/useSupplements';
-
-const typeOptions = [
-  { value: 'supplement', label: 'Supplement' },
-  { value: 'boisson', label: 'Boisson' },
-  { value: 'accompagnement', label: 'Accompagnement' },
-  { value: 'extra', label: 'Extra' }
-];
+import axios from 'axios';
 
 export default function SupplementEditor({ supplement, onSave, onCancel }) {
   const { addSupplement, updateSupplement } = useSupplements();
@@ -19,6 +13,30 @@ export default function SupplementEditor({ supplement, onSave, onCancel }) {
   });
   const [imagePreview, setImagePreview] = useState('');
   const [errors, setErrors] = useState({});
+  const [typeOptions, setTypeOptions] = useState([
+    { value: 'supplement', label: 'Supplement' },
+    { value: 'boisson', label: 'Boisson' },
+    { value: 'accompagnement', label: 'Accompagnement' },
+    { value: 'extra', label: 'Extra' }
+  ]);
+  const [typeLoading, setTypeLoading] = useState(false);
+  const [typeError, setTypeError] = useState(null);
+  const [customType, setCustomType] = useState('');
+  const [typeSelectValue, setTypeSelectValue] = useState('supplement');
+
+  useEffect(() => {
+    setTypeLoading(true);
+    axios.get('http://localhost:5000/product/supplements/types')
+      .then(res => {
+        const opts = res.data.map(t => ({ value: t, label: t.charAt(0).toUpperCase() + t.slice(1) }));
+        setTypeOptions([...opts, { value: '__other__', label: 'Other (specify)' }]);
+        setTypeLoading(false);
+      })
+      .catch(err => {
+        setTypeError('Failed to load types');
+        setTypeLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     if (supplement) {
@@ -31,8 +49,21 @@ export default function SupplementEditor({ supplement, onSave, onCancel }) {
         image: supplement.image || ''
       });
       setImagePreview(supplement.image || '');
+      setTypeSelectValue(
+        typeOptions.some(opt => opt.value === (supplement.type || 'supplement'))
+          ? (supplement.type || 'supplement')
+          : '__other__'
+      );
+      setCustomType(
+        typeOptions.some(opt => opt.value === (supplement.type || 'supplement'))
+          ? ''
+          : (supplement.type || '')
+      );
+    } else {
+      setTypeSelectValue('supplement');
+      setCustomType('');
     }
-  }, [supplement]);
+  }, [supplement, typeOptions]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,6 +82,22 @@ export default function SupplementEditor({ supplement, onSave, onCancel }) {
       setFormData(prev => ({ ...prev, image: reader.result }));
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleTypeSelectChange = (e) => {
+    const value = e.target.value;
+    setTypeSelectValue(value);
+    if (value === '__other__') {
+      setFormData(prev => ({ ...prev, type: '' }));
+    } else {
+      setFormData(prev => ({ ...prev, type: value }));
+      setCustomType('');
+    }
+  };
+
+  const handleCustomTypeChange = (e) => {
+    setCustomType(e.target.value);
+    setFormData(prev => ({ ...prev, type: e.target.value }));
   };
 
   const validate = () => {
@@ -156,14 +203,26 @@ export default function SupplementEditor({ supplement, onSave, onCancel }) {
               <label className="block text-sm text-gray-600 mb-1">Type</label>
               <select
                 name="type"
-                value={formData.type}
-                onChange={handleChange}
+                value={typeSelectValue}
+                onChange={handleTypeSelectChange}
                 className={`w-full border ${errors.type ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all`}
+                disabled={typeLoading}
               >
+                <option value="" disabled>Select type...</option>
                 {typeOptions.map(option => (
                   <option key={option.value} value={option.value}>{option.label}</option>
                 ))}
               </select>
+              {typeSelectValue === '__other__' && (
+                <input
+                  type="text"
+                  placeholder="Enter new type"
+                  value={customType}
+                  onChange={handleCustomTypeChange}
+                  className={`mt-2 w-full border ${errors.type ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all`}
+                />
+              )}
+              {typeError && <p className="text-red-500 text-xs mt-1">{typeError}</p>}
               {errors.type && <p className="text-red-500 text-xs mt-1">{errors.type}</p>}
             </div>
           </div>

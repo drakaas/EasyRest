@@ -237,14 +237,18 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
                 <label className="block text-sm text-gray-600 mb-1">Category</label>
                 <select 
                   name="categoryId"
+                  id="categoryId"
                   value={formData.categoryId}
                   onChange={handleChange}
                   className={`w-full border ${errors.categoryId ? 'border-red-500' : 'border-gray-300'} rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all`}
                 >
                   <option value="">Select a category</option>
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>{category.name}</option>
-                  ))}
+                  {categories.map(category => {
+                    console.log('[ProductEditor] category option:', category);
+                    return (
+                      <option key={category.id || category._id || category.slug} value={category.id || category._id || category.slug}>{typeof category === 'object' ? category.name : String(category)}</option>
+                    );
+                  })}
                 </select>
                 {errors.categoryId && <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>}
               </div>
@@ -298,18 +302,21 @@ export default function ProductEditor({ product, categories, onSave, onCancel })
             <div>
               <label className="block text-sm text-gray-600 mb-1">Tags</label>
               <div className="border border-gray-300 rounded-md p-2 flex flex-wrap gap-2">
-                {formData.tags.map((tag, index) => (
-                  <div key={index} className="bg-gray-100 px-2 py-1 rounded-md text-sm flex items-center gap-1">
-                    <span>{tag}</span>
-                    <button 
-                      type="button"
-                      className="text-gray-500 hover:text-red-500 transition-colors"
-                      onClick={() => handleRemoveTag(tag)}
-                    >
-                      <span className="material-symbols-outlined text-sm">close</span>
-                    </button>
-                  </div>
-                ))}
+                {formData.tags.map((tag, index) => {
+                  // Render tag.text if tag is an object, otherwise render tag as string
+                  return (
+                    <div key={index} className="bg-gray-100 px-2 py-1 rounded-md text-sm flex items-center gap-1">
+                      <span>{typeof tag === 'object' && tag !== null ? tag.text : tag}</span>
+                      <button 
+                        type="button"
+                        className="text-gray-500 hover:text-red-500 transition-colors"
+                        onClick={() => handleRemoveTag(tag)}
+                      >
+                        <span className="material-symbols-outlined text-sm">close</span>
+                      </button>
+                    </div>
+                  );
+                })}
                 <div className="flex-1 min-w-[100px]">
                   <input 
                     type="text" 

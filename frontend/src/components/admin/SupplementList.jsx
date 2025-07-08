@@ -97,7 +97,11 @@ export default function SupplementList({ supplements, onEdit, onAddNew, onDelete
       <div className="divide-y">
         {supplements.map((supplement) => {
           const price = parseFloat(supplement.price || 0);
-          const imageUrl = supplement.image;
+          const imageUrl = supplement.image?.startsWith('http')
+            ? supplement.image
+            : supplement.image
+              ? `http://localhost:5000${supplement.image}`
+              : null;
           return (
             <div key={supplement.id} className="grid grid-cols-12 gap-2 p-4 items-center hover:bg-gray-50 transition-colors">
               <div className="col-span-1 flex justify-center">
@@ -112,14 +116,15 @@ export default function SupplementList({ supplements, onEdit, onAddNew, onDelete
                       className="w-full h-full object-cover" 
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "/no-image.png";
+                        e.target.src = "";
+                        e.target.style.display = 'none';
+                        e.target.parentNode.querySelector('.supplement-fallback-icon').style.display = 'flex';
                       }}
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50">
-                      <span className="material-symbols-outlined">image_not_supported</span>
-                    </div>
-                  )}
+                  ) : null}
+                  <div className="supplement-fallback-icon w-full h-full flex items-center justify-center text-gray-400 bg-gray-50" style={{display: imageUrl ? 'none' : 'flex'}}>
+                    <span className="material-symbols-outlined text-3xl">restaurant</span>
+                  </div>
                 </div>
                 <div className="min-w-0 flex-1">
                   <h4 className="font-medium text-gray-800 truncate">{supplement.name}</h4>

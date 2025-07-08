@@ -132,14 +132,15 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
                       className="w-full h-full object-cover" 
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = "/no-image.png";
+                        e.target.src = "";
+                        e.target.style.display = 'none';
+                        e.target.parentNode.querySelector('.product-fallback-icon').style.display = 'flex';
                       }}
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50">
-                      <span className="material-symbols-outlined">image_not_supported</span>
-                    </div>
-                  )}
+                  ) : null}
+                  <div className="product-fallback-icon w-full h-full flex items-center justify-center text-gray-400 bg-gray-50" style={{display: imageUrl ? 'none' : 'flex'}}>
+                    <span className="material-symbols-outlined text-3xl">fastfood</span>
+                  </div>
                 </div>
                 <div className="min-w-0 flex-1">
                   <h4 className="font-medium text-gray-800 truncate">{product.name}</h4>
@@ -158,7 +159,7 @@ export default function ProductList({ products, categories, onEdit, onAddNew, on
               </div>
               <div className="col-span-2 flex justify-center">
                 <span className={`px-2 py-1 rounded-full text-xs whitespace-nowrap bg-${categoryColor}-100 text-${categoryColor}-600`}>
-                  {categorySlug}
+                  {categoryName}
                 </span>
               </div>
               <div className="col-span-2 flex justify-center space-x-1">

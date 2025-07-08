@@ -31,8 +31,15 @@ const productSchema = new mongoose.Schema({
     min: [0, 'Price cannot be negative']
   },
   supplements: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'supplements',
+    supplement: {
+      type: String,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      default: 1,
+      min: 1,
+    }
   }],
   createdAt: {
     type: Date,
